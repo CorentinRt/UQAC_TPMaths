@@ -23,7 +23,17 @@ class Vecteur3D
   
   float ScalarProduct(Vecteur3D other)
   {
-    return this.x * other.x + this.y * other.y + this.z * otherz;
+    return this.x * other.x + this.y * other.y + this.z * other.z;
+  }
+  
+  float Norm()
+  {
+    return (float)Math.sqrt(SquaredNorm());
+  }
+  
+  float SquaredNorm()
+  {
+    return (float)(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
   }
   
 }
