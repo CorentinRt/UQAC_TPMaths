@@ -18,6 +18,19 @@ class Vector3D
     this.z = z;
   }
   
+  boolean IsEqualWith(Vector3D v2) {
+    float epsilon = 0.0001f; 
+    return Math.abs(x - v2.x) < epsilon && 
+           Math.abs(y - v2.y) < epsilon && 
+           Math.abs(z - v2.z) < epsilon;
+  }
+  
+  String GetText()
+  {
+    return "(x: " + x + ", y: " + y + ", z: " + z + ")" ;
+  }
+  
+  
   float Norm()
   {
     return (float)Math.sqrt(SquaredNorm());
@@ -60,7 +73,7 @@ class Vector3D
     return this.x * other.x + this.y * other.y + this.z * other.z;
   }
   
-  Vector3D VectorielProduct(Vector3D other)
+  Vector3D VectorProduct(Vector3D other)
   {
     Vector3D result = new Vector3D();
     

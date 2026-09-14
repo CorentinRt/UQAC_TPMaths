@@ -1,13 +1,20 @@
+Vector3DUnitTests VectorTests = new Vector3DUnitTests();
+
+
+
 void setup()
 {
-  size(800,600,P3D);
+  size(800,600);
   background(100);
+  
+  VectorTests.TestAll();
 
 }
 
 
 void draw()
 {
+ 
   //Delta time
   //Calcul et utilisation
   //Affichage
