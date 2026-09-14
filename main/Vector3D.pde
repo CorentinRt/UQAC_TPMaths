@@ -60,7 +60,7 @@ class Vector3D
     return this.x * other.x + this.y * other.y + this.z * other.z;
   }
   
-  Vector3D VectorielProduct(Vecteur3D other)
+  Vector3D VectorielProduct(Vector3D other)
   {
     Vector3D result = new Vector3D();
     
