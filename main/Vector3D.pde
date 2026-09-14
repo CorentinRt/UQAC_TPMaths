@@ -1,17 +1,17 @@
-class Vecteur3D
+class Vector3D
 {
   float x = 0;
   float y = 0;
   float z = 0;
   
-  Vecteur3D()
+  Vector3D()
   {
     this.x = 0;
     this.y = 0;
     this.z = 0;
   }
   
-  Vecteur3D(float x, float y, float z)
+  Vector3D(float x, float y, float z)
   {
     this.x = x;
     this.y = y;
@@ -28,41 +28,41 @@ class Vecteur3D
     return (float)(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
   }
   
-  Vecteur3D Normalize()
+  Vector3D Normalize()
   {
     float norm = Norm();
     
     if (norm == 0f)
     {
-        return new Vecteur3D(0f, 0f, 0f); 
+        return new Vector3D(0f, 0f, 0f); 
     }
     
-    return new Vecteur3D(this.x / norm, this.y / norm, this.z / norm);
+    return new Vector3D(this.x / norm, this.y / norm, this.z / norm);
   }
   
-  Vecteur3D MultiplyByScalar(float scalar)
+  Vector3D MultiplyByScalar(float scalar)
   {
-    return new Vecteur3D(this.x * scalar, this.y * scalar, this.z * scalar);
+    return new Vector3D(this.x * scalar, this.y * scalar, this.z * scalar);
   }
   
-  Vecteur3D Add(Vecteur3D other)
+  Vector3D Add(Vector3D other)
   {
-    return new Vecteur3D(this.x + other.x, this.y + other.y, this.z + other.z);
+    return new Vector3D(this.x + other.x, this.y + other.y, this.z + other.z);
   }
   
-  Vecteur3D Multiply(Vecteur3D other)
+  Vector3D Multiply(Vector3D other)
   {
-    return new Vecteur3D(this.x * other.x, this.y * other.y, this.z * other.z);
+    return new Vector3D(this.x * other.x, this.y * other.y, this.z * other.z);
   }
   
-  float ScalarProduct(Vecteur3D other)
+  float ScalarProduct(Vector3D other)
   {
     return this.x * other.x + this.y * other.y + this.z * other.z;
   }
   
-  Vecteur3D VectorielProduct(Vecteur3D other)
+  Vector3D VectorielProduct(Vecteur3D other)
   {
-    Vecteur3D result = new Vecteur3D();
+    Vector3D result = new Vector3D();
     
     result.x = this.y * other.z - this.z * other.y;
     
