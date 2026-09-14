@@ -36,4 +36,16 @@ class Vecteur3D
     return (float)(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
   }
   
+  Vecteur3D Normalize()
+  {
+    float norm = Norm();
+    
+    if (norm == 0f)
+    {
+        return new Vecteur3D(0f, 0f, 0f); 
+    }
+    
+    return new Vecteur3D(this.x / norm, this.y / norm, this.z / norm);
+  }
+  
 }
