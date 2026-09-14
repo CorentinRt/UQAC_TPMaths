@@ -1,13 +1,13 @@
 void setup()
 {
-  
+  size(800,600,P3D);
+  background(100);
+
 }
 
 
 void draw()
 {
-  
-  
   //Delta time
   //Calcul et utilisation
   //Affichage
