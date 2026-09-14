@@ -8,6 +8,11 @@ void draw()
 {
   
   
+  //Delta time
+  //Calcul et utilisation
+  //Affichage
+  
+  
   // Gameloop
   //4 différents projectiles (balles, boulets, laser et boule de feu)
   //Tir
