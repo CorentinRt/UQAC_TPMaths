@@ -48,4 +48,8 @@ class Vecteur3D
     return new Vecteur3D(this.x / norm, this.y / norm, this.z / norm);
   }
   
+  Vecteur3D MultiplyByScalar(float scalar)
+  {
+    return new Vecteur3D(this.x * scalar, this.y * scalar, this.z * scalar);
+  }
 }
