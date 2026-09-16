@@ -1,7 +1,11 @@
 Vector3DUnitTests VectorTests = new Vector3DUnitTests();
-Particle testParticle = new Particle();
 
+//Constante force gravitationnel
+Vector3D gravitationalForce = new Vector3D(0, 9.81, 0);
 
+//Variables
+Particle testParticle;
+int lastFrameUpdate = 0;
 
 void setup()
 {
@@ -9,7 +13,8 @@ void setup()
   background(100);
   
   VectorTests.TestAll();
-
+  
+  testParticle = new Particle(10, new Vector3D(-100, 100, 0), new Vector3D(5, -20, 5));
 }
 
 
@@ -23,12 +28,20 @@ void draw()
   sphere(1); //Center of Scene
  
   //Delta time
+  float deltaTime = (millis() - lastFrameUpdate) / 1000.0;
+  lastFrameUpdate = millis();
+  
+  if (mousePressed){
+    deltaTime *= 20;
+  }
+  
   //Calcul et utilisation
   //Affichage
   
   //Drawing Test particle at given position
-  testParticle.SetPosition(100, 0, -400);
+  testParticle.EulerIntegrate(deltaTime);
   testParticle.Draw(color(0,0,255), 20);
+  println(testParticle.position.x + ", " + testParticle.position.y + ", " + testParticle.position.z);
   
   
   // Gameloop
