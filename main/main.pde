@@ -1,11 +1,16 @@
 Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 
 //Constante force gravitationnel
-Vector3D gravitationalForce = new Vector3D(0, 9.81, 0);
+float pixelsPerMeter = 30;
+Vector3D gravitationalAcceleration = new Vector3D(0, 9.81, 0);
 
 //Variables
 Particle testParticle;
 int lastFrameUpdate = 0;
+
+// Fix time step
+float accumulator = 0;
+float fixedTimeStep = (1.0 / 60.0);
 
 void setup()
 {
@@ -14,7 +19,7 @@ void setup()
   
   VectorTests.TestAll();
   
-  testParticle = new Particle(10, new Vector3D(-100, 100, 0), new Vector3D(0.7, -20, 0), 1);
+  testParticle = new Particle(1, new Vector3D(-20, 25, 0), new Vector3D(8, -25, 0), 1);
 }
 
 
@@ -36,12 +41,26 @@ void draw()
   }
   
   //Calcul et utilisation
+  
+  // Physique
+  accumulator += deltaTime;
+  
+  while (accumulator >= fixedTimeStep)
+  {
+    accumulator -= fixedTimeStep;
+    
+    testParticle.EulerIntegrate(fixedTimeStep);
+  //testParticle.VerletIntegrate(fixedTimeStep);
+
+  }
+  
+  
+  
   //Affichage
+  testParticle.Draw(color(0,0,255), 20);
+  
   
   //Drawing Test particle at given position
-  //testParticle.EulerIntegrate(deltaTime);
-  testParticle.VerletIntegrate(deltaTime);
-  testParticle.Draw(color(0,0,255), 20);
   //println(testParticle.position.x + ", " + testParticle.position.y + ", " + testParticle.position.z);
   //println(deltaTime);
   

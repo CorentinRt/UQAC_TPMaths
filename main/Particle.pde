@@ -65,7 +65,7 @@ class Particle
   void Draw(color c, float radius){
     pushMatrix();
     stroke(c);
-    translate(position.x, position.y, position.z);
+    translate(position.x * pixelsPerMeter, position.y * pixelsPerMeter, position.z * pixelsPerMeter);
     sphere(radius);
     popMatrix(); //Reset translation for futur Draws
   }
@@ -74,7 +74,8 @@ class Particle
   //prendre en compte damping
   
   void EulerIntegrate(float deltaTime){
-    Vector3D acceleration = gravitationalForce.MultiplyByScalar(mass).MultiplyByScalar(InverseMass());  // 9.81 * Mobj * (1 / InverseMobj)
+    Vector3D gravitionalForce = gravitationalAcceleration.MultiplyByScalar(mass);  // Fg = 9.81 * Mobj
+    Vector3D acceleration = gravitionalForce.MultiplyByScalar(InverseMass()); // Accg = Fg * (1/m) = 9.81 (retour case départ) car F = a * m donc a = F * (1 / m)
     
     linearVelocity = linearVelocity.MultiplyByScalar((float)Math.pow(damping, deltaTime));  // Damping
     
@@ -86,7 +87,7 @@ class Particle
   void VerletIntegrate (float deltaTime){
     Vector3D tempPos = position;
     
-    Vector3D acceleration = gravitationalForce.MultiplyByScalar(mass).MultiplyByScalar(InverseMass());
+    Vector3D acceleration = gravitationalAcceleration.MultiplyByScalar(mass).MultiplyByScalar(InverseMass());
     
     Vector3D aT = acceleration.MultiplyByScalar((float)Math.pow(deltaTime, 2));
    
