@@ -87,7 +87,7 @@ class Particle
     this.position = position.Add(linearVelocity.MultiplyByScalar(deltaTime));
   }
   
-  void VerletIntegrate (float deltaTime){
+  void VerletIntegrate(float deltaTime){
     Vector3D tempPos = position;
     
     Vector3D gravitionalForce = gravitationalAcceleration.MultiplyByScalar(mass);  // Fg = 9.81 * Mobj
