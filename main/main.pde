@@ -49,8 +49,8 @@ void draw()
   {
     accumulator -= fixedTimeStep;
     
-    testParticle.EulerIntegrate(fixedTimeStep);
-  //testParticle.VerletIntegrate(fixedTimeStep);
+    //testParticle.EulerIntegrate(fixedTimeStep);
+    testParticle.VerletIntegrate(fixedTimeStep);
 
   }
   
