@@ -63,6 +63,11 @@ class Vector3D
     return new Vector3D(this.x + other.x, this.y + other.y, this.z + other.z);
   }
   
+  Vector3D Substract(Vector3D other)
+  {
+    return new Vector3D(this.x - other.x, this.y - other.y, this.z - other.z);
+  }
+  
   Vector3D Multiply(Vector3D other)
   {
     return new Vector3D(this.x * other.x, this.y * other.y, this.z * other.z);

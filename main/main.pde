@@ -14,7 +14,7 @@ void setup()
   
   VectorTests.TestAll();
   
-  testParticle = new Particle(10, new Vector3D(-100, 100, 0), new Vector3D(5, -20, 5));
+  testParticle = new Particle(10, new Vector3D(-100, 100, 0), new Vector3D(0.7, -20, 0), 1);
 }
 
 
@@ -22,7 +22,7 @@ void draw()
 {
   //Basic Camera just to display (TODO: Verify with teacher if we are allowed to use all this)
   background(100);
-  camera(mouseX, height/2, (height/2) / tan(PI/6), mouseX, height/2, 0, 0, 1, 0);
+  camera(/*mouseX*/width/2, height/2, (height/2) / tan(PI/6), /*mouseX*/width/2, height/2, 0, 0, 1, 0);
   translate(width/2, height/2, -100); //Center of Scene
   stroke(color(0,0,0));
   sphere(1); //Center of Scene
@@ -39,10 +39,11 @@ void draw()
   //Affichage
   
   //Drawing Test particle at given position
-  testParticle.EulerIntegrate(deltaTime);
+  //testParticle.EulerIntegrate(deltaTime);
+  testParticle.VerletIntegrate(deltaTime);
   testParticle.Draw(color(0,0,255), 20);
-  println(testParticle.position.x + ", " + testParticle.position.y + ", " + testParticle.position.z);
-  
+  //println(testParticle.position.x + ", " + testParticle.position.y + ", " + testParticle.position.z);
+  //println(deltaTime);
   
   // Gameloop
   //4 différents projectiles (balles, boulets, laser et boule de feu)
