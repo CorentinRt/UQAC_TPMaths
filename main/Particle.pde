@@ -73,7 +73,6 @@ class Particle
     popMatrix(); //Reset translation for futur Draws
   }
   
-  //Intégrateur pour update pos et vel de Particule (Euler ou Verlet ou les 2 qu'on pourrait switch manuellement)
   //prendre en compte damping
   
   void EulerIntegrate(float deltaTime){
@@ -103,6 +102,8 @@ class Particle
     linearVelocity = linearVelocity.MultiplyByScalar(1 / deltaTime);  // vitesse inst = d / dt
     
     lastPosition = tempPos;
+    
+    // TODO : prendre en compte damping pour Verlet
   }
   
 }
