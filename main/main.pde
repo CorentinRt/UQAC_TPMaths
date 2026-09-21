@@ -8,9 +8,8 @@ Vector3D gravitationalAcceleration = new Vector3D(0, 9.81, 0);
 Particle testParticle;
 int lastFrameUpdate = 0;
 
-// Fix time step
-float accumulator = 0;
-float fixedTimeStep = (1.0 / 60.0);
+boolean isFirstFrame = true;
+
 
 void setup()
 {
@@ -19,7 +18,7 @@ void setup()
   
   VectorTests.TestAll();
   
-  testParticle = new Particle(1, new Vector3D(-20, 25, 0), new Vector3D(8, -25, 0), 0.5);
+  testParticle = new Particle(1, new Vector3D(-20, 15, 0), new Vector3D(8, -25, 0), 1.0);
 }
 
 
@@ -41,19 +40,9 @@ void draw()
   }
   
   //Calcul et utilisation
-  
   // Physique
-  accumulator += deltaTime;
-  
-  while (accumulator >= fixedTimeStep)
-  {
-    accumulator -= fixedTimeStep;
-    
-    testParticle.EulerIntegrate(fixedTimeStep);
-    //testParticle.VerletIntegrate(fixedTimeStep);
-
-  }
-  
+  testParticle.EulerIntegrate(deltaTime);
+  //testParticle.VerletIntegrate(deltaTime);sFirstFrame = false;
   
   
   //Affichage
