@@ -84,6 +84,13 @@ class Particle
     position = new Vector3D(x, y, z);
   }
   
+  Vector3D ComputeGravitationalAcceleration()
+  {
+    Vector3D gravitionalForce = gravitationalAcceleration.MultiplyByScalar(mass);  // Fg = 9.81 * Mobj
+    
+    return gravitionalForce.MultiplyByScalar(InverseMass());  // Accg = Fg * (1/m) = 9.81 (retour case départ) car F = a * m donc a = F * (1 / m)
+  }
+  
   void Draw(color c, float radius){
     pushMatrix();
     stroke(c);
@@ -95,8 +102,8 @@ class Particle
   //prendre en compte damping
   
   void EulerIntegrate(float deltaTime){
-    Vector3D gravitionalForce = gravitationalAcceleration.MultiplyByScalar(mass);  // Fg = 9.81 * Mobj
-    Vector3D acceleration = gravitionalForce.MultiplyByScalar(InverseMass()); // Accg = Fg * (1/m) = 9.81 (retour case départ) car F = a * m donc a = F * (1 / m)
+    
+    Vector3D acceleration = ComputeGravitationalAcceleration();
     
     linearVelocity = linearVelocity.MultiplyByScalar((float)Math.pow(damping, deltaTime));  // Damping
     
@@ -107,23 +114,22 @@ class Particle
   
   void VerletIntegrate(float deltaTime){
     
-    Vector3D tempPosition =
-    new Vector3D(position.x, position.y, position.z);
+    Vector3D tempPosition = new Vector3D(position.x, position.y, position.z);
     
     Vector3D lastPosition = ComputeLastPosition(deltaTime);
     
-    Vector3D gravitionalForce = gravitationalAcceleration.MultiplyByScalar(mass);  // Fg = 9.81 * Mobj
-    Vector3D acceleration = gravitionalForce.MultiplyByScalar(InverseMass());  // Accg = Fg * (1/m) = 9.81 (retour case départ) car F = a * m donc a = F * (1 / m)
+    Vector3D acceleration = ComputeGravitationalAcceleration();
     
     Vector3D accDeltaTimeSquared = acceleration.MultiplyByScalar(deltaTime * deltaTime);
-   
-    Vector3D diffPosDamped = ((position).Substract(lastPosition)).MultiplyByScalar((float)Math.pow(damping, deltaTime));  // p+1 = p + (p - p-1) * damping + dt * a²
-   
-    position = position.Add(diffPosDamped).Add(accDeltaTimeSquared);  // formule de Verlet  p+1 = 2p0 - p-1 + dt * a²
+      
+    position = position.MultiplyByScalar(2.0).Substract(lastPosition).Add(accDeltaTimeSquared);  // formule de Verlet  p+1 = 2p0 - p-1 + dt * a²
     
-    println(position.GetText());
+    //println(position.GetText());
+    
+    float dampingDt = (float)Math.pow(damping, deltaTime);
     
     linearVelocity = (position.Substract(tempPosition)).MultiplyByScalar(1 / (deltaTime));  // vitesse inst = d / dt
+    linearVelocity = linearVelocity.MultiplyByScalar(dampingDt);  // apply damping
   }
   
 }

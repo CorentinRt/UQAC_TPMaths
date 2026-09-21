@@ -5,7 +5,8 @@ float pixelsPerMeter = 30;
 Vector3D gravitationalAcceleration = new Vector3D(0, 9.81, 0);
 
 //Variables
-Particle testParticle;
+Particle eulerParticle;
+Particle verletParticle;
 int lastFrameUpdate = 0;
 
 boolean isFirstFrame = true;
@@ -18,7 +19,9 @@ void setup()
   
   VectorTests.TestAll();
   
-  testParticle = new Particle(1, new Vector3D(-20, 15, 0), new Vector3D(8, -15, 0), 1.0);
+  eulerParticle = new Particle(1, new Vector3D(-15, 10, 0), new Vector3D(8, -15, 0), 1.0);
+  
+  verletParticle = new Particle(1, new Vector3D(-15, 10, 0), new Vector3D(8, -15, 0), 1.0);
   
   lastFrameUpdate = millis();
 }
@@ -52,12 +55,13 @@ void draw()
   
   //Calcul et utilisation
   // Physique
-  //testParticle.EulerIntegrate(deltaTime);
-  testParticle.VerletIntegrate(deltaTime);
+  eulerParticle.EulerIntegrate(deltaTime);
+  verletParticle.VerletIntegrate(deltaTime);
   
   
   //Affichage
-  testParticle.Draw(color(0,0,255), 20);
+  eulerParticle.Draw(color(0,0,255), 20);
+  verletParticle.Draw(color(255, 0, 0), 20);
   
   
   //Drawing Test particle at given position
