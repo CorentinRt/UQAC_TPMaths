@@ -54,16 +54,14 @@ class Particle
       Vector3D gravitionalForce = gravitationalAcceleration.MultiplyByScalar(mass);  // Fg = 9.81 * Mobj
       Vector3D acceleration = gravitionalForce.MultiplyByScalar(InverseMass());  // Accg = Fg * (1/m) = 9.81 (retour case départ) car F = a * m donc a = F * (1 / m)
     
-      Vector3D accelerationModifier = acceleration.MultiplyByScalar(2.0 * (float)Math.pow(deltaTime, 2));
+      Vector3D accelerationModifier = acceleration.MultiplyByScalar(0.5 * (float)Math.pow(deltaTime, 2));
       
       float inverseDamping = (float)Math.pow(damping, deltaTime);
-      
+                
       Vector3D velocityDamped = linearVelocity.MultiplyByScalar(inverseDamping);
     
-      //return (position.Substract(velocityDamped.MultiplyByScalar(deltaTime))).Substract(accelerationModifier);
       
-      
-      return (position.Substract(velocityDamped.MultiplyByScalar(deltaTime))).Substract(acceleration.MultiplyByScalar(deltaTime));
+      return (position.Substract(velocityDamped.MultiplyByScalar(deltaTime))).Add(accelerationModifier);
     }
     else
     {
@@ -108,17 +106,16 @@ class Particle
   }
   
   void VerletIntegrate(float deltaTime){
-    Vector3D tempPos = position;
+    
+    Vector3D tempPosition =
+    new Vector3D(position.x, position.y, position.z);
     
     Vector3D lastPosition = ComputeLastPosition(deltaTime);
-    
-    linearVelocity = tempPos.Substract(lastPosition);  // d
-    linearVelocity = linearVelocity.MultiplyByScalar(1 / deltaTime);  // vitesse inst = d / dt
     
     Vector3D gravitionalForce = gravitationalAcceleration.MultiplyByScalar(mass);  // Fg = 9.81 * Mobj
     Vector3D acceleration = gravitionalForce.MultiplyByScalar(InverseMass());  // Accg = Fg * (1/m) = 9.81 (retour case départ) car F = a * m donc a = F * (1 / m)
     
-    Vector3D accDeltaTimeSquared = acceleration.MultiplyByScalar((float)Math.pow(deltaTime, 2));
+    Vector3D accDeltaTimeSquared = acceleration.MultiplyByScalar(deltaTime * deltaTime);
    
     Vector3D diffPosDamped = ((position).Substract(lastPosition)).MultiplyByScalar((float)Math.pow(damping, deltaTime));  // p+1 = p + (p - p-1) * damping + dt * a²
    
@@ -126,10 +123,7 @@ class Particle
     
     println(position.GetText());
     
-    linearVelocity = position.Substract(tempPos);  // d
-    linearVelocity = linearVelocity.MultiplyByScalar(1 / deltaTime);  // vitesse inst = d / dt
-    
-    lastPosition = tempPos;
+    linearVelocity = (position.Substract(tempPosition)).MultiplyByScalar(1 / (deltaTime));  // vitesse inst = d / dt
   }
   
 }

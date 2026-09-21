@@ -18,7 +18,9 @@ void setup()
   
   VectorTests.TestAll();
   
-  testParticle = new Particle(1, new Vector3D(-20, 15, 0), new Vector3D(8, -25, 0), 1.0);
+  testParticle = new Particle(1, new Vector3D(-20, 15, 0), new Vector3D(8, -15, 0), 1.0);
+  
+  lastFrameUpdate = millis();
 }
 
 
@@ -39,10 +41,19 @@ void draw()
     deltaTime *= 20;
   }
   
+  if (isFirstFrame)
+  {
+    isFirstFrame = false;
+    return;
+    //deltaTime = 1.0 / 60.0;
+  }
+  
+  println(deltaTime);
+  
   //Calcul et utilisation
   // Physique
-  testParticle.EulerIntegrate(deltaTime);
-  //testParticle.VerletIntegrate(deltaTime);sFirstFrame = false;
+  //testParticle.EulerIntegrate(deltaTime);
+  testParticle.VerletIntegrate(deltaTime);
   
   
   //Affichage
