@@ -59,8 +59,7 @@ class Particle
                 
       Vector3D velocityDamped = linearVelocity.MultiplyByScalar(dampingDt);
     
-      
-      return (position.Substract(velocityDamped.MultiplyByScalar(deltaTime))).Substract(accelerationModifier);
+      return (position.Substract(velocityDamped.MultiplyByScalar(deltaTime)).Substract(accelerationModifier));
     }
     else
     {
@@ -113,8 +112,6 @@ class Particle
   
   void VerletIntegrate(float deltaTime){
     
-    Vector3D tempPosition = new Vector3D(position.x, position.y, position.z);
-    
     Vector3D lastPosition = ComputeLastPosition(deltaTime);
     
     Vector3D acceleration = ComputeGravitationalAcceleration();
@@ -127,7 +124,7 @@ class Particle
     
     float dampingDt = (float)Math.pow(damping, deltaTime);
     
-    linearVelocity = (position.Substract(tempPosition)).MultiplyByScalar(1 / (deltaTime));  // vitesse inst = d / dt
+    linearVelocity = (position.Substract(lastPosition)).MultiplyByScalar(1 / (2.0 * deltaTime));  // vitesse inst = d / dt
     linearVelocity = linearVelocity.MultiplyByScalar(dampingDt);  // apply damping
   }
   
