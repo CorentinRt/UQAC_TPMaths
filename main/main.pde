@@ -19,7 +19,7 @@ void setup()
   
   VectorTests.TestAll();
   
-  testParticle = new Particle(1, new Vector3D(-20, 25, 0), new Vector3D(8, -25, 0), 1);
+  testParticle = new Particle(1, new Vector3D(-20, 25, 0), new Vector3D(8, -25, 0), 0.5);
 }
 
 
