@@ -56,12 +56,12 @@ class Particle
     
       Vector3D accelerationModifier = acceleration.MultiplyByScalar(0.5 * (float)Math.pow(deltaTime, 2));
       
-      float inverseDamping = (float)Math.pow(damping, deltaTime);
+      float dampingDt = (float)Math.pow(damping, deltaTime);
                 
-      Vector3D velocityDamped = linearVelocity.MultiplyByScalar(inverseDamping);
+      Vector3D velocityDamped = linearVelocity.MultiplyByScalar(dampingDt);
     
       
-      return (position.Substract(velocityDamped.MultiplyByScalar(deltaTime))).Add(accelerationModifier);
+      return (position.Substract(velocityDamped.MultiplyByScalar(deltaTime))).Substract(accelerationModifier);
     }
     else
     {
