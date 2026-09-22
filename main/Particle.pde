@@ -47,6 +47,15 @@ class Particle implements IPhysicsEntity, IUpdatable
     
   }
   
+  Particle(float mass, Vector3D position, Vector3D linearVelocity, float damping, EIntegrationMethod inIntegrationMethod){
+    this.mass = mass;
+    this.position = position;
+    this.linearVelocity = linearVelocity;
+    this.damping = damping;
+    
+    this.integrationMethod = inIntegrationMethod;
+  }
+  
   // IPhysicsEntity
   void UpdatePhysics(float deltaTime)
   {
@@ -84,6 +93,11 @@ class Particle implements IPhysicsEntity, IUpdatable
   void SetIntegrationMethod(EIntegrationMethod inIntegration)
   {
     integrationMethod = inIntegration;
+  }
+  
+  EIntegrationMethod GetIntegrationMethod()
+  {
+    return integrationMethod;
   }
   
   Vector3D ComputeLastPosition(Vector3D currentPos, Vector3D currentVelocity, Vector3D currentAcceleration, float deltaTime)

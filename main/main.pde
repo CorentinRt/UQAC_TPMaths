@@ -6,6 +6,9 @@ UpdateManager updateManager = new UpdateManager();
 // Physics Engine
 PhysicsEngine physicsEngine = new PhysicsEngine();
 
+// PhysicsIntegrationSelector
+PhysicsIntegrationSelector integrationSelector;
+
 // GameManager
 GameManager gameManager;
 
@@ -56,10 +59,16 @@ void setup()
   deltaTimeDisplay.SetAlignment(RIGHT);
   deltaTimeDisplay.SetBackground(color(255, 255, 255, 155), true);
   
+  // Init PhysicsIntegrationSelector
+  integrationSelector = new PhysicsIntegrationSelector(width, 60, font);
+  integrationSelector.textDisplay.SetAlignment(RIGHT);
+  integrationSelector.textDisplay.SetBackground(color(255, 255, 255, 155), true);
+  
   // UpdateManager
   updateManager.Register(deltaTimeDisplay);
   updateManager.Register(eulerParticle);
   updateManager.Register(verletParticle);
+  updateManager.Register(integrationSelector.textDisplay);
   
   // PhysicsEngine
   physicsEngine.Register(eulerParticle);
@@ -120,6 +129,17 @@ void draw()
   //Propre vélocité et masse
   //Frottement négligeable (près de 1)
   //Trajectoire des tirs visible
+}
+
+void keyPressed()
+{
   
+  if (key == CODED)
+  {
+    if (keyCode == LEFT || keyCode == RIGHT)
+    {
+      integrationSelector.ToggleIntegrationMethod();
+    }
+  }
   
 }
