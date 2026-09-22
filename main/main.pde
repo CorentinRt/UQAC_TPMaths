@@ -48,8 +48,9 @@ void draw()
   {
     isFirstFrame = false;
     return;
-    //deltaTime = 1.0 / 60.0;
   }
+  
+  text("Frame Rate : " + deltaTime, 0, 0);
   
   println(deltaTime);
   
