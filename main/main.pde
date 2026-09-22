@@ -3,9 +3,13 @@ Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 // UpdateManager 
 UpdateManager updateManager = new UpdateManager();
 
+// GameManager
+GameManager gameManager;
+
 // Texts & Font
 PFont font;
 TextDisplay deltaTimeDisplay;
+TextDisplay timerDisplay;
 
 //Constante force gravitationnel
 float pixelsPerMeter = 30;
@@ -49,6 +53,10 @@ void setup()
   
   // UpdateManager
   updateManager.Register(deltaTimeDisplay);
+  
+  // GameManager
+  gameManager = new GameManager(font);
+  gameManager.StartGame(); // a faire plus tard quand click sur jouer 
 }
 
 
@@ -78,14 +86,18 @@ void draw()
   // Update texts
   deltaTimeDisplay.SetText("Delta Time : " + nf(deltaTime, 0, 3) + "ms");
    
-  // Update Manager
+  // UpdateManager
   updateManager.UpdateAll(deltaTime);
+  
+  // GameManager
+  gameManager.Update(deltaTime);
   
   //Calcul et utilisation
   // Physique
   eulerParticle.Integrate(deltaTime);
   verletParticle.Integrate(deltaTime);
   
+  // mettre physique particules que si game manager state == playing
   
   //Affichage
   eulerParticle.Draw(color(0,0,255), 20);
