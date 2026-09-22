@@ -61,14 +61,12 @@ void setup()
   
   // Init PhysicsIntegrationSelector
   integrationSelector = new PhysicsIntegrationSelector(width, 60, font);
-  integrationSelector.textDisplay.SetAlignment(RIGHT);
-  integrationSelector.textDisplay.SetBackground(color(255, 255, 255, 155), true);
   
   // UpdateManager
   updateManager.Register(deltaTimeDisplay);
   updateManager.Register(eulerParticle);
   updateManager.Register(verletParticle);
-  updateManager.Register(integrationSelector.textDisplay);
+  updateManager.Register(integrationSelector);
   
   // PhysicsEngine
   physicsEngine.Register(eulerParticle);
