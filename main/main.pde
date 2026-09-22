@@ -22,6 +22,7 @@ void setup()
   eulerParticle = new Particle(1, new Vector3D(-15, 10, 0), new Vector3D(8, -15, 0), 1.0);
   
   verletParticle = new Particle(1, new Vector3D(-15, 10, 0), new Vector3D(8, -15, 0), 1.0);
+  verletParticle.SetIntegrationMethod(EIntegrationMethod.VERLET);
   
   lastFrameUpdate = millis();
 }
