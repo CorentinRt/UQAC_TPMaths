@@ -52,19 +52,17 @@ class Particle
     integrationMethod = inIntegration;
   }
   
-  Vector3D ComputeLastPosition(float deltaTime)
+  Vector3D ComputeLastPosition(Vector3D currentPos, Vector3D currentVelocity, Vector3D currentAcceleration, float deltaTime)
   {
     if (damping != 0)
     {
-      Vector3D acceleration = ComputeGravitationalAcceleration();
-    
-      Vector3D accelerationModifier = acceleration.MultiplyByScalar(0.5 * (float)Math.pow(deltaTime, 2));
+      Vector3D accelerationModifier = currentAcceleration.MultiplyByScalar(0.5 * (float)Math.pow(deltaTime, 2));
       
       float dampingDt = (float)Math.pow(damping, deltaTime);
                 
-      Vector3D velocityDamped = linearVelocity.MultiplyByScalar(dampingDt);
+      Vector3D velocityDamped = currentVelocity.MultiplyByScalar(dampingDt);
     
-      return (position.Substract(velocityDamped.MultiplyByScalar(deltaTime)).Substract(accelerationModifier));
+      return (currentPos.Substract(velocityDamped.MultiplyByScalar(deltaTime)).Substract(accelerationModifier));
     }
     else
     {
@@ -113,24 +111,6 @@ class Particle
   
   void DrawPredictedTrajectoryDebug(float predictedTime, float deltaTime, float stepTimeByDraw)
   {
-    switch (integrationMethod)
-    {
-      case EULER:
-        DrawEulerPredictedTrajectoryDebug(predictedTime, deltaTime, stepTimeByDraw);
-        break;
-        
-      case VERLET:
-        DrawVerletPredictedTrajectoryDebug(predictedTime, deltaTime);
-        break;
-        
-      default:
-        break;
-      
-    }
-  }
-  
-  void DrawEulerPredictedTrajectoryDebug(float predictedTime, float deltaTime, float stepTimeByDraw)
-  {
     Vector3D currentSimulatedPos = new Vector3D(position.x, position.y, position.z);
     
     Vector3D currentSimulatedVelocity = new Vector3D(linearVelocity.x, linearVelocity.y, linearVelocity.z);
@@ -143,7 +123,20 @@ class Particle
     
     while (currentSimulatedTime < predictedTime)
     {
-      SimulateEulerIntegrate(currentSimulatedPos, currentSimulatedVelocity, deltaTime);
+      switch (integrationMethod)
+      {
+        case EULER:
+          SimulateEulerIntegrate(currentSimulatedPos, currentSimulatedVelocity, deltaTime);
+          break;
+          
+        case VERLET:
+          SimulateVerletIntegrate(currentSimulatedPos, currentSimulatedVelocity, deltaTime);
+          break;
+          
+        default:
+          break;
+        
+      }
       
       currentSimulatedTime += deltaTime;
       
@@ -157,18 +150,28 @@ class Particle
       
       if (canDraw)
       {
-        DrawAtPosition(currentSimulatedPos, color(0, 255, 0), 20);
+        color predictedColor = color(255, 255, 0);
+        switch (integrationMethod)
+        {
+          case EULER:
+            predictedColor = color(0, 255, 0);
+            break;
+            
+          case VERLET:
+            predictedColor = color(255, 200, 50);
+            break;
+            
+          default:
+            break;
+          
+        }
+        
+        DrawAtPosition(currentSimulatedPos, predictedColor, 20);
         
         canDraw = false;
       }
       
     }
-  }
-  
-  void DrawVerletPredictedTrajectoryDebug(float predictedTime, float deltaTime)
-  {
-    
-    
   }
   
   void SimulateEulerIntegrate(Vector3D outPosition, Vector3D outVelocity, float deltaTime)
@@ -198,22 +201,19 @@ class Particle
     Vector3D tempPos = new Vector3D(outPosition.x, outPosition.y, outPosition.z);
     Vector3D tempVelocity = new Vector3D(outVelocity.x, outVelocity.y, outVelocity.z);
     
-    /*
-    Vector3D lastPosition = ComputeLastPosition(deltaTime);
-    
     Vector3D acceleration = ComputeGravitationalAcceleration();
+
+    Vector3D lastPosition = ComputeLastPosition(tempPos, tempVelocity, acceleration, deltaTime);
+    
     
     Vector3D accDeltaTimeSquared = acceleration.MultiplyByScalar(deltaTime * deltaTime);
       
-    position = position.MultiplyByScalar(2.0).Substract(lastPosition).Add(accDeltaTimeSquared);  // formule de Verlet  p+1 = 2p0 - p-1 + dt * a²
-    
-    //println(position.GetText());
+    tempPos = tempPos.MultiplyByScalar(2.0).Substract(lastPosition).Add(accDeltaTimeSquared);  // formule de Verlet  p+1 = 2p0 - p-1 + dt * a²
     
     float dampingDt = (float)Math.pow(damping, deltaTime);
     
-    linearVelocity = (position.Substract(lastPosition)).MultiplyByScalar(1 / (2.0 * deltaTime));  // vitesse inst = d / dt
-    linearVelocity = linearVelocity.MultiplyByScalar(dampingDt);  // apply damping
-    */
+    tempVelocity = (tempPos.Substract(lastPosition)).MultiplyByScalar(1 / (2.0 * deltaTime));  // vitesse inst = d / dt
+    tempVelocity = tempVelocity.MultiplyByScalar(dampingDt);  // apply damping
     
     outPosition.x = tempPos.x;
     outPosition.y = tempPos.y;
@@ -254,15 +254,13 @@ class Particle
   
   void VerletIntegrate(float deltaTime){
     
-    Vector3D lastPosition = ComputeLastPosition(deltaTime);
-    
     Vector3D acceleration = ComputeGravitationalAcceleration();
+    
+    Vector3D lastPosition = ComputeLastPosition(position, linearVelocity, acceleration, deltaTime);
     
     Vector3D accDeltaTimeSquared = acceleration.MultiplyByScalar(deltaTime * deltaTime);
       
     position = position.MultiplyByScalar(2.0).Substract(lastPosition).Add(accDeltaTimeSquared);  // formule de Verlet  p+1 = 2p0 - p-1 + dt * a²
-    
-    //println(position.GetText());
     
     float dampingDt = (float)Math.pow(damping, deltaTime);
     
