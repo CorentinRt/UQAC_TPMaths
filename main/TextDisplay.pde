@@ -1,4 +1,4 @@
-class TextDisplay
+class TextDisplay implements IUpdatable
 {
   String text;
   float x, y;
@@ -45,7 +45,7 @@ class TextDisplay
     alignment = newAlignment;
   }
   
-  void Update()
+  void Update(float deltaTime)
   {
     pushStyle();
     pushMatrix();

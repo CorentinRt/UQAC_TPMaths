@@ -1,5 +1,8 @@
 Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 
+// UpdateManager 
+UpdateManager updateManager = new UpdateManager();
+
 // Texts & Font
 PFont font;
 TextDisplay deltaTimeDisplay;
@@ -43,6 +46,9 @@ void setup()
   deltaTimeDisplay = new TextDisplay("", width, 20, font);
   deltaTimeDisplay.SetAlignment(RIGHT);
   deltaTimeDisplay.SetBackground(color(255, 255, 255, 155), true);
+  
+  // UpdateManager
+  updateManager.Register(deltaTimeDisplay);
 }
 
 
@@ -71,7 +77,9 @@ void draw()
   
   // Update texts
   deltaTimeDisplay.SetText("Delta Time : " + nf(deltaTime, 0, 3) + "ms");
-  deltaTimeDisplay.Update();
+   
+  // Update Manager
+  updateManager.UpdateAll(deltaTime);
   
   //Calcul et utilisation
   // Physique
