@@ -193,6 +193,37 @@ class Particle
     outVelocity.z = tempVelocity.z;
   }
   
+  void SimulateVerletIntegrate(Vector3D outPosition, Vector3D outVelocity, float deltaTime)
+  {
+    Vector3D tempPos = new Vector3D(outPosition.x, outPosition.y, outPosition.z);
+    Vector3D tempVelocity = new Vector3D(outVelocity.x, outVelocity.y, outVelocity.z);
+    
+    /*
+    Vector3D lastPosition = ComputeLastPosition(deltaTime);
+    
+    Vector3D acceleration = ComputeGravitationalAcceleration();
+    
+    Vector3D accDeltaTimeSquared = acceleration.MultiplyByScalar(deltaTime * deltaTime);
+      
+    position = position.MultiplyByScalar(2.0).Substract(lastPosition).Add(accDeltaTimeSquared);  // formule de Verlet  p+1 = 2p0 - p-1 + dt * a²
+    
+    //println(position.GetText());
+    
+    float dampingDt = (float)Math.pow(damping, deltaTime);
+    
+    linearVelocity = (position.Substract(lastPosition)).MultiplyByScalar(1 / (2.0 * deltaTime));  // vitesse inst = d / dt
+    linearVelocity = linearVelocity.MultiplyByScalar(dampingDt);  // apply damping
+    */
+    
+    outPosition.x = tempPos.x;
+    outPosition.y = tempPos.y;
+    outPosition.z = tempPos.z;
+    
+    outVelocity.x = tempVelocity.x;
+    outVelocity.y = tempVelocity.y;
+    outVelocity.z = tempVelocity.z;
+  }
+  
   void Integrate(float deltaTime){
     
     switch (integrationMethod)
