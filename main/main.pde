@@ -103,6 +103,8 @@ void draw()
   eulerParticle.Draw(color(0,0,255), 20);
   verletParticle.Draw(color(255, 0, 0), 20);
   
+  eulerParticle.DrawPredictedTrajectoryDebug(2.0, deltaTime, 0.15);
+  
   
   //Drawing Test particle at given position
   //println(testParticle.position.x + ", " + testParticle.position.y + ", " + testParticle.position.z);
