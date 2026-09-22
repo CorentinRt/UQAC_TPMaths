@@ -56,8 +56,8 @@ void draw()
   
   //Calcul et utilisation
   // Physique
-  eulerParticle.EulerIntegrate(deltaTime);
-  verletParticle.VerletIntegrate(deltaTime);
+  eulerParticle.Integrate(deltaTime);
+  verletParticle.Integrate(deltaTime);
   
   
   //Affichage

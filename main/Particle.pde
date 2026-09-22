@@ -1,6 +1,6 @@
 class Particle
 {
-  //Accesseurs pour l'attribut InverseMasse
+  EIntegrationMethod integrationMethod = EIntegrationMethod.EULER;
   
   //Variables for class Particle
   Vector3D position = new Vector3D();
@@ -45,6 +45,11 @@ class Particle
     this.linearVelocity = linearVelocity;
     this.damping = damping;
     
+  }
+  
+  void SetIntegrationMethod(EIntegrationMethod inIntegration)
+  {
+    integrationMethod = inIntegration;
   }
   
   Vector3D ComputeLastPosition(float deltaTime)
@@ -97,7 +102,23 @@ class Particle
     popMatrix(); //Reset translation for futur Draws
   }
   
-  //prendre en compte damping
+  
+  void Integrate(float deltaTime){
+    
+    switch (integrationMethod)
+    {
+      case EULER:
+        EulerIntegrate(deltaTime);
+        break;
+        
+       case VERLET:
+         VerletIntegrate(deltaTime);
+         break;
+         
+       default:
+         break;
+    }
+  }
   
   void EulerIntegrate(float deltaTime){
     
