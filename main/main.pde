@@ -1,5 +1,9 @@
 Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 
+// Texts & Font
+PFont font;
+TextDisplay deltaTimeDisplay;
+
 //Constante force gravitationnel
 float pixelsPerMeter = 30;
 Vector3D gravitationalAcceleration = new Vector3D(0, 9.81, 0);
@@ -25,6 +29,20 @@ void setup()
   verletParticle.SetIntegrationMethod(EIntegrationMethod.VERLET);
   
   lastFrameUpdate = millis();
+  
+  // Debug possible fonts
+  /*
+  String[] fontList = PFont.list();
+  printArray(fontList);
+  */
+  
+  // Font
+  font = createFont("Arial Bold", 16, true); // true = anti-aliasing
+  
+  // Setup texts
+  deltaTimeDisplay = new TextDisplay("", width, 20, font);
+  deltaTimeDisplay.SetAlignment(RIGHT);
+  deltaTimeDisplay.SetBackground(color(255, 255, 255, 155), true);
 }
 
 
@@ -51,9 +69,9 @@ void draw()
     return;
   }
   
-  text("Frame Rate : " + deltaTime, 0, 0);
-  
-  println(deltaTime);
+  // Update texts
+  deltaTimeDisplay.SetText("Delta Time : " + nf(deltaTime, 0, 3) + "ms");
+  deltaTimeDisplay.Update();
   
   //Calcul et utilisation
   // Physique
