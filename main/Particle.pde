@@ -102,6 +102,96 @@ class Particle
     popMatrix(); //Reset translation for futur Draws
   }
   
+  void DrawAtPosition(Vector3D inPosition, color c, float radius)
+  {
+    pushMatrix();
+    stroke(c);
+    translate(inPosition.x * pixelsPerMeter, inPosition.y * pixelsPerMeter, inPosition.z * pixelsPerMeter);
+    sphere(radius);
+    popMatrix(); //Reset translation for futur Draws
+  }
+  
+  void DrawPredictedTrajectoryDebug(float predictedTime, float deltaTime, float stepTimeByDraw)
+  {
+    switch (integrationMethod)
+    {
+      case EULER:
+        DrawEulerPredictedTrajectoryDebug(predictedTime, deltaTime, stepTimeByDraw);
+        break;
+        
+      case VERLET:
+        DrawVerletPredictedTrajectoryDebug(predictedTime, deltaTime);
+        break;
+        
+      default:
+        break;
+      
+    }
+  }
+  
+  void DrawEulerPredictedTrajectoryDebug(float predictedTime, float deltaTime, float stepTimeByDraw)
+  {
+    Vector3D currentSimulatedPos = new Vector3D(position.x, position.y, position.z);
+    
+    Vector3D currentSimulatedVelocity = new Vector3D(linearVelocity.x, linearVelocity.y, linearVelocity.z);
+    
+    float currentSimulatedTime = 0.0;
+    
+    float currentStepTimeByDraw = 0.0;
+    
+    boolean canDraw = true;
+    
+    while (currentSimulatedTime < predictedTime)
+    {
+      SimulateEulerIntegrate(currentSimulatedPos, currentSimulatedVelocity, deltaTime);
+      
+      currentSimulatedTime += deltaTime;
+      
+      currentStepTimeByDraw += deltaTime;
+      
+      if (currentStepTimeByDraw > stepTimeByDraw)
+      {
+        canDraw = true;
+        currentStepTimeByDraw = 0.0;
+      }
+      
+      if (canDraw)
+      {
+        DrawAtPosition(currentSimulatedPos, color(0, 255, 0), 20);
+        
+        canDraw = false;
+      }
+      
+    }
+  }
+  
+  void DrawVerletPredictedTrajectoryDebug(float predictedTime, float deltaTime)
+  {
+    
+    
+  }
+  
+  void SimulateEulerIntegrate(Vector3D outPosition, Vector3D outVelocity, float deltaTime)
+  {
+    Vector3D tempPos = new Vector3D(outPosition.x, outPosition.y, outPosition.z);
+    Vector3D tempVelocity = new Vector3D(outVelocity.x, outVelocity.y, outVelocity.z);
+    
+    Vector3D acceleration = ComputeGravitationalAcceleration();
+    
+    tempVelocity = tempVelocity.MultiplyByScalar((float)Math.pow(damping, deltaTime));  // Damping
+    
+    tempVelocity = tempVelocity.Add(acceleration.MultiplyByScalar(deltaTime));
+    
+    tempPos = tempPos.Add(tempVelocity.MultiplyByScalar(deltaTime));
+    
+    outPosition.x = tempPos.x;
+    outPosition.y = tempPos.y;
+    outPosition.z = tempPos.z;
+    
+    outVelocity.x = tempVelocity.x;
+    outVelocity.y = tempVelocity.y;
+    outVelocity.z = tempVelocity.z;
+  }
   
   void Integrate(float deltaTime){
     
