@@ -1,4 +1,4 @@
-class Particle
+class Particle implements IPhysicsEntity, IUpdatable
 {
   EIntegrationMethod integrationMethod = EIntegrationMethod.EULER;
   
@@ -46,6 +46,41 @@ class Particle
     this.damping = damping;
     
   }
+  
+  // IPhysicsEntity
+  void UpdatePhysics(float deltaTime)
+  {
+    Integrate(deltaTime);
+  }
+  
+  // ------------
+  
+  // IUpdatable
+  void Update(float deltaTime)
+  {
+    switch (integrationMethod)
+    {
+      case EULER:
+        Draw(color(0,0,255), 20);
+        break;
+        
+      case VERLET:
+        Draw(color(255, 0, 0), 20);
+        DrawPredictedTrajectoryDebug(2.0, deltaTime, 0.15);
+        break;
+        
+      default:
+        Draw(color(100, 50, 200), 20);
+        break;
+      
+    }
+    
+    DrawPredictedTrajectoryDebug(2.0, deltaTime, 0.15);
+  }
+
+  // ------------
+  
+  
   
   void SetIntegrationMethod(EIntegrationMethod inIntegration)
   {

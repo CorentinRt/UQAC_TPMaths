@@ -3,6 +3,9 @@ Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 // UpdateManager 
 UpdateManager updateManager = new UpdateManager();
 
+// Physics Engine
+PhysicsEngine physicsEngine = new PhysicsEngine();
+
 // GameManager
 GameManager gameManager;
 
@@ -28,13 +31,15 @@ void setup()
   size(800,600, P3D);
   background(100);
   
+  // Tests unitaires TP1
   VectorTests.TestAll();
   
+  // Créations Particules
   eulerParticle = new Particle(1, new Vector3D(-15, 10, 0), new Vector3D(8, -15, 0), 1.0);
-  
   verletParticle = new Particle(1, new Vector3D(-15, 10, 0), new Vector3D(8, -15, 0), 1.0);
   verletParticle.SetIntegrationMethod(EIntegrationMethod.VERLET);
   
+  // Initialisation deltaTime 1st frame
   lastFrameUpdate = millis();
   
   // Debug possible fonts
@@ -53,6 +58,12 @@ void setup()
   
   // UpdateManager
   updateManager.Register(deltaTimeDisplay);
+  updateManager.Register(eulerParticle);
+  updateManager.Register(verletParticle);
+  
+  // PhysicsEngine
+  physicsEngine.Register(eulerParticle);
+  physicsEngine.Register(verletParticle);
   
   // GameManager
   gameManager = new GameManager(font);
@@ -93,22 +104,15 @@ void draw()
   gameManager.Update(deltaTime);
   
   //Calcul et utilisation
-  // Physique
-  eulerParticle.Integrate(deltaTime);
-  verletParticle.Integrate(deltaTime);
   
-  // mettre physique particules que si game manager state == playing
+  if (gameManager.state == GameState.PLAYING)
+  {
+    // Physique
+    physicsEngine.UpdateAll(deltaTime);
+  }
   
   //Affichage
-  //eulerParticle.Draw(color(0,0,255), 20);
-  verletParticle.Draw(color(255, 0, 0), 20);
   
-  //eulerParticle.DrawPredictedTrajectoryDebug(2.0, deltaTime, 0.15);
-  verletParticle.DrawPredictedTrajectoryDebug(2.0, deltaTime, 0.15);
-  
-  //Drawing Test particle at given position
-  //println(testParticle.position.x + ", " + testParticle.position.y + ", " + testParticle.position.z);
-  //println(deltaTime);
   
   // Gameloop
   //4 différents projectiles (balles, boulets, laser et boule de feu)
