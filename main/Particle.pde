@@ -66,7 +66,6 @@ class Particle implements IPhysicsEntity, IUpdatable
         
       case VERLET:
         Draw(color(255, 0, 0), 20);
-        DrawPredictedTrajectoryDebug(2.0, deltaTime, 0.15);
         break;
         
       default:
