@@ -3,6 +3,9 @@ Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 // UpdateManager 
 UpdateManager updateManager = new UpdateManager();
 
+// Physics Debug Predictor
+PhysicsDebugPredictor physicsDebugPredictor = new PhysicsDebugPredictor();
+
 // Physics Engine
 PhysicsEngine physicsEngine = new PhysicsEngine();
 
@@ -19,7 +22,6 @@ TextDisplay timerDisplay;
 
 //Constante force gravitationnel
 float pixelsPerMeter = 30;
-Vector3D gravitationalAcceleration = new Vector3D(0, 9.81, 0);
 
 //Variables
 Particle eulerParticle;
@@ -119,8 +121,7 @@ void draw()
   }
   
   //Affichage
-  
-  
+  physicsDebugPredictor.DrawDebugSimulation(EIntegrationMethod.EULER, new Vector3D(-15, 10, 0), new Vector3D(8, -15, 0), PhysicsUtilities.ComputeGravitationalAcceleration(1.0), 1, color(100, 101, 250), 20.0, 2.0, 0.15, deltaTime);
   // Gameloop
   //4 différents projectiles (balles, boulets, laser et boule de feu)
   //Tir

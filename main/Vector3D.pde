@@ -1,4 +1,4 @@
-class Vector3D
+static class Vector3D
 {
   float x = 0;
   float y = 0;
