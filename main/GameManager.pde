@@ -4,13 +4,18 @@ class GameManager
   
   // Score & timer
   ScoreManager scoreManager = new ScoreManager();
-  GameTimer gameTimer = new GameTimer(15); // secondes par partie (court pour test)
+  GameTimer gameTimer = new GameTimer(10); // secondes par partie (court pour test)
 
   // Texts
   TextDisplay scoreDisplay;
   TextDisplay timerDisplay;
-  TextDisplay waitingDisplay;
-  TextDisplay gameOverDisplay;
+  
+  TextDisplay waitingDisplayClickToPlay;
+  TextDisplay gameOverDisplayScore;
+  TextDisplay gameOverClickToRestart;
+  
+  TextDisplay menuDisplayNames;
+  TextDisplay menuGameName;
   
   GameManager(PFont font)
   {
@@ -19,11 +24,20 @@ class GameManager
     timerDisplay = new TextDisplay("", width / 2, 20, font);
     timerDisplay.SetAlignment(CENTER);
     
-    waitingDisplay = new TextDisplay("Appuyez sur une touche pour commencer", width / 2, height / 2, font);
-    waitingDisplay.SetAlignment(CENTER);
+    waitingDisplayClickToPlay = new TextDisplay("Appuyez sur une touche pour commencer", width / 2, height / 2, font);
+    waitingDisplayClickToPlay.SetAlignment(CENTER);
     
-    gameOverDisplay = new TextDisplay("", width / 2, height / 2, font);
-    gameOverDisplay.SetAlignment(CENTER);
+    gameOverDisplayScore = new TextDisplay("", width / 2, height / 2, font);
+    gameOverDisplayScore.SetAlignment(CENTER);
+    
+    gameOverClickToRestart = new TextDisplay("Appuyez sur une touche pour retenter votre chance", width / 2, height / 2 + 50, font);
+    gameOverClickToRestart.SetAlignment(CENTER);
+    
+    menuDisplayNames = new TextDisplay("Un jeu créé par Volodia Bussereau, Jérémy Lombard, Corentin Remot & Manon Wimmer", width / 2, height - 20, font);
+    menuDisplayNames.SetAlignment(CENTER);
+    
+    menuGameName = new TextDisplay("Projectile Game", width / 2, height / 2 -50, font);
+    menuGameName.SetAlignment(CENTER);
   }
   
   void StartGame()
@@ -38,7 +52,7 @@ class GameManager
     state = GameState.GAME_OVER;
     gameTimer.Stop();
     
-    gameOverDisplay.SetText("Partie terminée ! Score final : " + scoreManager.GetScore());
+    gameOverDisplayScore.SetText("Partie terminée ! Score final : " + scoreManager.GetScore());
   }
 
   boolean CheckEndCondition()
@@ -76,7 +90,9 @@ class GameManager
       // Waiting = waiting display
       case WAITING:
         DrawFullscreenOverlay(color(0, 0, 0, 255));
-        waitingDisplay.Update(deltaTime);
+        waitingDisplayClickToPlay.Update(deltaTime);
+        menuDisplayNames.Update(deltaTime);
+        menuGameName.Update(deltaTime);
         break;
         
       // Play = score + timer
@@ -88,7 +104,10 @@ class GameManager
       // Game over = game over display
       case GAME_OVER:
         DrawFullscreenOverlay(color(0, 0, 0, 255));
-        gameOverDisplay.Update(deltaTime);
+        gameOverDisplayScore.Update(deltaTime);
+        menuDisplayNames.Update(deltaTime);
+        menuGameName.Update(deltaTime);
+        gameOverClickToRestart.Update(deltaTime);
         break;
     }
   }
