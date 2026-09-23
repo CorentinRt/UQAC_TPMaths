@@ -82,6 +82,7 @@ void setup()
 
 void draw()
 {
+  pushMatrix();
   //Basic Camera just to display (TODO: Verify with teacher if we are allowed to use all this)
   background(100);
   camera(/*mouseX*/width/2, height/2, (height/2) / tan(PI/6), /*mouseX*/width/2, height/2, 0, 0, 1, 0);
@@ -129,6 +130,9 @@ void draw()
   //Propre vélocité et masse
   //Frottement négligeable (près de 1)
   //Trajectoire des tirs visible
+  
+  
+  popMatrix();
 }
 
 void keyPressed()
