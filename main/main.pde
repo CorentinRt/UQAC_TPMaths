@@ -59,12 +59,13 @@ void setup()
   */
   
   // Font
-  font = createFont("Arial Bold", 16, true); // true = anti-aliasing
+  font = createFont("Arial Bold", 64, true); // true = anti-aliasing, 64 = max size
   
   // Setup texts
   deltaTimeDisplay = new TextDisplay("", width, 20, font);
   deltaTimeDisplay.SetAlignment(RIGHT);
-  deltaTimeDisplay.SetBackground(color(255, 255, 255, 155), true);
+  deltaTimeDisplay.SetSize(20);
+  deltaTimeDisplay.SetBackground(color(0, 0, 0, 155), true);
   
   // Init PhysicsIntegrationSelector
   integrationSelector = new PhysicsIntegrationSelector(width, 60, font);
@@ -126,6 +127,7 @@ void draw()
     //Targets
     targetManager.CheckCollisions(inGameProjectiles);
   }
+  // Else : waiting ou game over ; reset les particules si il y en a (pour le restart) svp :)
   
   //Removes Projectiles outside of screen on x positive and y positive (doesn't remove balls falling down back on screen)
   RemoveOutsideProjectiles();
@@ -136,18 +138,11 @@ void draw()
   //Targets DrawCall
   targetManager.DrawAll();
   
-  popMatrix(); // sort de 3D pour background bien placé
+  popMatrix();
   camera();
+  
   // GameManager (en dernier pour avoir la box background des menus au dessus de tout)
   gameManager.Update(deltaTime);
-  
-  // Gameloop
-  //4 différents projectiles (balles, boulets, laser et boule de feu)
-  //Tir
-  //Propre vélocité et masse
-  //Frottement négligeable (près de 1)
-  //Trajectoire des tirs visible
-  
 }
 
 void keyPressed()

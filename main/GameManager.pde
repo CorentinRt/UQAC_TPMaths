@@ -21,23 +21,34 @@ class GameManager
   {
     // Init texts
     scoreDisplay = new TextDisplay("Score : 0", 0, 20, font);
-    timerDisplay = new TextDisplay("", width / 2, 20, font);
+    scoreDisplay.SetBackground(color(0, 0, 0, 155), true);
+    scoreDisplay.SetSize(20);
+     
+    timerDisplay = new TextDisplay("", width / 2, 30, font);
     timerDisplay.SetAlignment(CENTER);
+    timerDisplay.SetSize(30);
+   
+    timerDisplay.SetBackground(color(0, 0, 0, 155), true);
     
     waitingDisplayClickToPlay = new TextDisplay("Appuyez sur une touche pour commencer", width / 2, height / 2, font);
     waitingDisplayClickToPlay.SetAlignment(CENTER);
+    waitingDisplayClickToPlay.SetSize(20);
     
     gameOverDisplayScore = new TextDisplay("", width / 2, height / 2, font);
     gameOverDisplayScore.SetAlignment(CENTER);
+    gameOverDisplayScore.SetSize(20);
     
     gameOverClickToRestart = new TextDisplay("Appuyez sur une touche pour retenter votre chance", width / 2, height / 2 + 50, font);
     gameOverClickToRestart.SetAlignment(CENTER);
+    gameOverClickToRestart.SetSize(20);
     
     menuDisplayNames = new TextDisplay("Un jeu créé par Volodia Bussereau, Jérémy Lombard, Corentin Remot & Manon Wimmer", width / 2, height - 20, font);
     menuDisplayNames.SetAlignment(CENTER);
+    menuDisplayNames.SetSize(12);
     
     menuGameName = new TextDisplay("Projectile Game", width / 2, height / 2 -50, font);
     menuGameName.SetAlignment(CENTER);
+    menuGameName.SetSize(64);
   }
   
   void StartGame()

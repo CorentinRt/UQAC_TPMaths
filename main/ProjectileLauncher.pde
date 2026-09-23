@@ -36,9 +36,9 @@ public class ProjectileLauncher implements IUpdatable
     textDisplayProjectileStatistics.SetAlignment(LEFT);
     textDisplayInputs.SetAlignment(LEFT);
     
-    textDisplaySelectedProjectile.SetBackground(color(255, 255, 255, 155), true);
-    textDisplayProjectileStatistics.SetBackground(color(255,255,255,155), true);
-    textDisplayInputs.SetBackground(color(255, 255, 255, 155), true); 
+    textDisplaySelectedProjectile.SetBackground(color(255, 255, 255, 50), true);
+    textDisplayProjectileStatistics.SetBackground(color(255,255,255,50), true);
+    textDisplayInputs.SetBackground(color(255, 255, 255, 50), true); 
   }
   
   public void IncrementSelectedProjectile()

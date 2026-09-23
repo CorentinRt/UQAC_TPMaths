@@ -4,11 +4,12 @@ class TextDisplay implements IUpdatable
   float x, y;
   PFont font;
   
-  color textColor = color(0);
+  color textColor = color(255,255,255,255);
   color bgColor = color(255, 200);
-  boolean hasBackground = true;
+  boolean hasBackground = false;
   int padding = 8;
   int alignment = LEFT;
+  int customSize = 16;
   
   TextDisplay(String text, float x, float y, PFont font)
   {
@@ -45,6 +46,11 @@ class TextDisplay implements IUpdatable
     alignment = newAlignment;
   }
   
+  void SetSize(int size)
+  {
+    customSize = size;
+  }
+  
   void Update(float deltaTime)
   {
     pushStyle();
@@ -55,6 +61,8 @@ class TextDisplay implements IUpdatable
 
     textFont(font);
     textAlign(alignment);
+    if (customSize != 0)
+      textSize(customSize);
 
     // Background
     if (hasBackground)

@@ -16,8 +16,8 @@ class PhysicsIntegrationSelector implements IUpdatable
     textDisplayCurrentIntegration.SetAlignment(RIGHT);
     textInputsToggleIntegration.SetAlignment(RIGHT);
     
-    textDisplayCurrentIntegration.SetBackground(color(255, 255, 255, 155), true);
-    textInputsToggleIntegration.SetBackground(color(255, 255, 255, 155), true);
+    textDisplayCurrentIntegration.SetBackground(color(255, 255, 255, 50), true);
+    textInputsToggleIntegration.SetBackground(color(255, 255, 255, 50), true);
   }
   
   
