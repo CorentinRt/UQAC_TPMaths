@@ -51,7 +51,7 @@ class PhysicsDebugPredictor
       
       if (canDraw)
       { 
-        DrawAtPosition(currentSimulatedPos, c, 20);
+        DrawAtPosition(currentSimulatedPos, c, radius);
         
         canDraw = false;
       }

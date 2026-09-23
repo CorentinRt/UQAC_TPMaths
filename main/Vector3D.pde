@@ -90,4 +90,8 @@ static class Vector3D
     
     return result;
   }
+  
+  Vector3D Copy(){
+    return new Vector3D(this.x, this.y, this.z);
+  }
 }

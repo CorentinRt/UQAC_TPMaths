@@ -68,7 +68,7 @@ class Particle implements IPhysicsEntity, IUpdatable
   void Update(float deltaTime)
   {
     
-    color predictedColor = color(255, 255, 0);
+    /*color predictedColor = color(255, 255, 0);
     switch (integrationMethod)
     {
       case EULER:
@@ -85,7 +85,7 @@ class Particle implements IPhysicsEntity, IUpdatable
     }
     
     physicsDebugPredictor.DrawDebugSimulation(integrationMethod, position, linearVelocity, ComputeGravitationalAcceleration(), damping, predictedColor, 20.0, 2.0, 0.15, deltaTime);
-    
+    */
     color c = color(255, 0, 0);
     
     switch (integrationMethod)

@@ -3,14 +3,15 @@ Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 // UpdateManager 
 UpdateManager updateManager = new UpdateManager();
 
-// Physics Debug Predictor
-PhysicsDebugPredictor physicsDebugPredictor = new PhysicsDebugPredictor();
 
 // Physics Engine
 PhysicsEngine physicsEngine = new PhysicsEngine();
 
 // PhysicsIntegrationSelector
 PhysicsIntegrationSelector integrationSelector;
+
+//Projectile Launcher
+ProjectileLauncher projectileLauncher = new ProjectileLauncher();
 
 // GameManager
 GameManager gameManager;
@@ -20,13 +21,16 @@ PFont font;
 TextDisplay deltaTimeDisplay;
 TextDisplay timerDisplay;
 
-//Constante force gravitationnel
 float pixelsPerMeter = 30;
 
+//Projectiles Statistics
+ProjectileStatistics ballDefaultStats = new ProjectileStatistics(10, new Vector3D(8,-15,0));
+ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, new Vector3D(8,-8,0));
+ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20, new Vector3D(10,-15,0));
+ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, new Vector3D(15,-5,0));
+
 //Variables
-Particle eulerParticle;
-Particle verletParticle;
-int lastFrameUpdate = 0;
+float lastFrameUpdate = 0;
 
 boolean isFirstFrame = true;
 
@@ -40,9 +44,6 @@ void setup()
   VectorTests.TestAll();
   
   // Créations Particules
-  eulerParticle = new Particle(1, new Vector3D(-15, 10, 0), new Vector3D(8, -15, 0), 1.0);
-  verletParticle = new Particle(1, new Vector3D(-15, 10, 0), new Vector3D(8, -15, 0), 1.0);
-  verletParticle.SetIntegrationMethod(EIntegrationMethod.VERLET);
   
   // Initialisation deltaTime 1st frame
   lastFrameUpdate = millis();
@@ -66,13 +67,10 @@ void setup()
   
   // UpdateManager
   updateManager.Register(deltaTimeDisplay);
-  updateManager.Register(eulerParticle);
-  updateManager.Register(verletParticle);
   updateManager.Register(integrationSelector);
+  updateManager.Register(projectileLauncher);
   
   // PhysicsEngine
-  physicsEngine.Register(eulerParticle);
-  physicsEngine.Register(verletParticle);
   
   // GameManager
   gameManager = new GameManager(font);
@@ -92,10 +90,6 @@ void draw()
   //Delta time
   float deltaTime = (millis() - lastFrameUpdate) / 1000.0;
   lastFrameUpdate = millis();
-  
-  if (mousePressed){
-    deltaTime *= 20;
-  }
   
   if (isFirstFrame)
   {
@@ -121,7 +115,10 @@ void draw()
   }
   
   //Affichage
-  physicsDebugPredictor.DrawDebugSimulation(EIntegrationMethod.EULER, new Vector3D(-15, 10, 0), new Vector3D(8, -15, 0), PhysicsUtilities.ComputeGravitationalAcceleration(1.0), 1, color(100, 101, 250), 20.0, 2.0, 0.15, deltaTime);
+  projectileLauncher.DrawTrajectory(deltaTime);
+  
+  println("Velocity Multiplier : " + projectileLauncher.velocityMultiplier.GetText());
+  
   // Gameloop
   //4 différents projectiles (balles, boulets, laser et boule de feu)
   //Tir
@@ -139,6 +136,25 @@ void keyPressed()
     {
       integrationSelector.ToggleIntegrationMethod();
     }
+    if (keyCode == DOWN)
+    {
+       projectileLauncher.DecrementSelectedProjectile();
+    }
+    else if (keyCode == UP)
+    {
+      projectileLauncher.IncrementSelectedProjectile();
+    }
   }
   
+}
+
+void mousePressed(){
+    if (projectileLauncher.CanLaunchProjectile())
+    {
+      //Launching Projectile
+      Particle launchedProjectile = projectileLauncher.LaunchProjectile();
+      println("Summoning projectile at position : " + projectileLauncher.launchPosition.GetText());
+      physicsEngine.Register(launchedProjectile);
+      updateManager.Register(launchedProjectile);
+    }
 }
