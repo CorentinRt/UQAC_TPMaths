@@ -59,7 +59,7 @@ void setup()
   */
   
   // Font
-  font = createFont("Arial Bold", 64, true); // true = anti-aliasing, 64 = max size
+  font = createFont("Calibri Bold", 64, true); // true = anti-aliasing, 64 = max size
   
   // Setup texts
   deltaTimeDisplay = new TextDisplay("", width, 20, font);

@@ -38,7 +38,7 @@ class GameManager
     gameOverDisplayScore.SetAlignment(CENTER);
     gameOverDisplayScore.SetSize(20);
     
-    gameOverClickToRestart = new TextDisplay("Appuyez sur une touche pour retenter votre chance", width / 2, height / 2 + 50, font);
+    gameOverClickToRestart = new TextDisplay("Appuyez sur une touche pour retenter votre chance", width / 2, height / 2 + 40, font);
     gameOverClickToRestart.SetAlignment(CENTER);
     gameOverClickToRestart.SetSize(20);
     
@@ -130,5 +130,10 @@ class GameManager
     fill(c);
     rect(0, 0, width, height);
     popStyle();
+  }
+  
+  void AddScore(int amount)
+  {
+    scoreManager.AddScore(amount);
   }
 }
