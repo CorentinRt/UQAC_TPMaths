@@ -3,7 +3,6 @@ Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 // UpdateManager 
 UpdateManager updateManager = new UpdateManager();
 
-
 // Physics Engine
 PhysicsEngine physicsEngine = new PhysicsEngine();
 
@@ -12,6 +11,9 @@ PhysicsIntegrationSelector integrationSelector;
 
 //Projectile Launcher
 ProjectileLauncher projectileLauncher = new ProjectileLauncher();
+
+//Target Manager
+TargetManager targetManager = new TargetManager();
 
 // GameManager
 GameManager gameManager;
@@ -72,6 +74,11 @@ void setup()
   updateManager.Register(integrationSelector);
   updateManager.Register(projectileLauncher);
   
+  //Setup Targets
+  targetManager.AddTarget(new Target(new Vector3D(5, -5, 0), 1.5));
+  targetManager.AddTarget(new Target(new Vector3D(10, -8, 0), 1.0));
+  targetManager.AddTarget(new Target(new Vector3D(15, -3, 0), 2.0));
+  
   // PhysicsEngine
   
   // GameManager
@@ -115,6 +122,9 @@ void draw()
   {
     // Physique
     physicsEngine.UpdateAll(deltaTime);
+    
+    //Targets
+    targetManager.CheckCollisions(inGameProjectiles);
   }
   
   //Removes Projectiles outside of screen on x positive and y positive (doesn't remove balls falling down back on screen)
@@ -122,6 +132,9 @@ void draw()
   
   //Affichage
   projectileLauncher.DrawTrajectory(deltaTime);
+    
+  //Targets DrawCall
+  targetManager.DrawAll();
   
   
   // Gameloop
