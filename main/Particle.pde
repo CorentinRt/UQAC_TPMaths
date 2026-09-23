@@ -6,6 +6,7 @@ class Particle implements IPhysicsEntity, IUpdatable
   Vector3D position = new Vector3D();
   Vector3D linearVelocity = new Vector3D();
   float mass = 0;
+  float radius = 20.0f;
   
   
   float damping = 1.0;
@@ -104,7 +105,7 @@ class Particle implements IPhysicsEntity, IUpdatable
       
     }
     
-    Draw(c, 20);
+    Draw(c,radius);
   }
 
   // ------------
