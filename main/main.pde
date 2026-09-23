@@ -29,6 +29,8 @@ ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, new Vec
 ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20, new Vector3D(10,-15,0));
 ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, new Vector3D(15,-5,0));
 
+ArrayList<Particle> inGameProjectiles = new ArrayList<Particle>();
+
 //Variables
 float lastFrameUpdate = 0;
 
@@ -114,10 +116,12 @@ void draw()
     physicsEngine.UpdateAll(deltaTime);
   }
   
+  //Removes Projectiles outside of screen on x positive and y positive (doesn't remove balls falling down back on screen)
+  RemoveOutsideProjectiles();
+  
   //Affichage
   projectileLauncher.DrawTrajectory(deltaTime);
   
-  println("Velocity Multiplier : " + projectileLauncher.velocityMultiplier.GetText());
   
   // Gameloop
   //4 différents projectiles (balles, boulets, laser et boule de feu)
@@ -153,8 +157,25 @@ void mousePressed(){
     {
       //Launching Projectile
       Particle launchedProjectile = projectileLauncher.LaunchProjectile();
+      inGameProjectiles.add(launchedProjectile);
       println("Summoning projectile at position : " + projectileLauncher.launchPosition.GetText());
       physicsEngine.Register(launchedProjectile);
       updateManager.Register(launchedProjectile);
     }
+}
+
+void RemoveOutsideProjectiles()
+{
+  int i = 0;
+  while (i < inGameProjectiles.size()){; 
+    if (inGameProjectiles.get(i).position.x > (width * 2) / pixelsPerMeter || inGameProjectiles.get(i).position.y > (height * 2) / pixelsPerMeter)
+    {
+      println("Removing projectile : " + inGameProjectiles.get(i).position.GetText());
+      physicsEngine.Unregister(inGameProjectiles.get(i));
+      updateManager.Unregister(inGameProjectiles.get(i));
+      inGameProjectiles.remove(i);
+      continue;
+    }
+    i++;
+  }
 }
