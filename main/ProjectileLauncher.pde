@@ -15,21 +15,71 @@ public class ProjectileLauncher implements IUpdatable
   // Physics Debug Predictor
   PhysicsDebugPredictor physicsDebugPredictor = new PhysicsDebugPredictor();
   
+   
+  //Text Displays
+  TextDisplay textDisplaySelectedProjectile;
+  TextDisplay textDisplayProjectileStatistics;
+  TextDisplay textDisplayInputs;
+  
+  String prefixText = "Current Selected Projectile : ";
+  String prefixMassText = "Mass : ";
+  String prefixVelocityText = ", Initial Velocity : ";
+    
+  public void CreateTexts(float x, float y, PFont font){
+    textDisplaySelectedProjectile = new TextDisplay(prefixText + availableProjectiles[selectedProjectile], x, y, font);
+    
+    ProjectileStatistics stats = GetSelectedProjectileStatistics();
+    textDisplayProjectileStatistics = new TextDisplay(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocity.GetText() + " ", x, y + 35.0, font);
+    textDisplayInputs = new TextDisplay(" UP or DOWN arrows to switch selected projectile", x, y + 70.0, font);
+    
+    textDisplaySelectedProjectile.SetAlignment(LEFT);
+    textDisplayProjectileStatistics.SetAlignment(LEFT);
+    textDisplayInputs.SetAlignment(LEFT);
+    
+    textDisplaySelectedProjectile.SetBackground(color(255, 255, 255, 155), true);
+    textDisplayProjectileStatistics.SetBackground(color(255,255,255,155), true);
+    textDisplayInputs.SetBackground(color(255, 255, 255, 155), true); 
+  }
+  
   public void IncrementSelectedProjectile()
   {
     selectedProjectile += 1;
     if (selectedProjectile >= availableProjectiles.length) selectedProjectile = 0;
+    
+    textDisplaySelectedProjectile.SetText(prefixText + availableProjectiles[selectedProjectile]);
+    ProjectileStatistics stats = GetSelectedProjectileStatistics();
+    textDisplayProjectileStatistics.SetText(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocity.GetText() + " ");
   }
   
   public void DecrementSelectedProjectile()
   {
     selectedProjectile -= 1;
     if (selectedProjectile < 0) selectedProjectile = availableProjectiles.length - 1;
+    
+    textDisplaySelectedProjectile.SetText(prefixText + availableProjectiles[selectedProjectile]);
+    ProjectileStatistics stats = GetSelectedProjectileStatistics();
+    textDisplayProjectileStatistics.SetText(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocity.GetText() + " ");
   }
   
   public EProjectileType GetSelectedProjectileType()
   {
     return availableProjectiles[selectedProjectile];
+  }
+  
+  public ProjectileStatistics GetSelectedProjectileStatistics(){
+    switch (availableProjectiles[selectedProjectile])
+    {
+      case BALL:
+        return ballDefaultStats;
+      case BOULDER:
+        return boulderDefaultStats;
+      case FIREBALL:
+        return fireballDefaultStats;
+      case LASER:
+        return laserDefaultStats;
+      default:
+        return new ProjectileStatistics(1, new Vector3D());
+    }
   }
   
   public Particle LaunchProjectile()
@@ -67,28 +117,16 @@ public class ProjectileLauncher implements IUpdatable
       launchClock += deltaTime;
     }
     
+    textDisplaySelectedProjectile.Update(deltaTime);
+    textDisplayProjectileStatistics.Update(deltaTime);
+    textDisplayInputs.Update(deltaTime);
+    
   }
   
   public void DrawTrajectory(float deltaTime)
   {
-    ProjectileStatistics projectileStatistics;
-    switch (availableProjectiles[selectedProjectile])
-    {
-      case BALL:
-        projectileStatistics = ballDefaultStats;
-        break;
-      case BOULDER:
-        projectileStatistics = boulderDefaultStats;
-        break;
-      case FIREBALL:
-        projectileStatistics = fireballDefaultStats;
-        break;
-      case LASER:
-        projectileStatistics = laserDefaultStats;
-        break;
-      default:
-      projectileStatistics = new ProjectileStatistics(1, new Vector3D());
-    }
+    ProjectileStatistics projectileStatistics = GetSelectedProjectileStatistics();
+    
     physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, projectileStatistics.initialVelocity.Multiply(velocityMultiplier), PhysicsUtilities.ComputeGravitationalAcceleration(projectileStatistics.mass), damping, color(100, 101, 250), 20.0, 2.0, 0.15, deltaTime);
   }
 }

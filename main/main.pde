@@ -69,6 +69,8 @@ void setup()
   // Init PhysicsIntegrationSelector
   integrationSelector = new PhysicsIntegrationSelector(width, 60, font);
   
+  projectileLauncher.CreateTexts(2.f, 60.f, font);
+  
   // UpdateManager
   updateManager.Register(deltaTimeDisplay);
   updateManager.Register(integrationSelector);
