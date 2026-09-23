@@ -85,7 +85,6 @@ void setup()
   
   // GameManager
   gameManager = new GameManager(font);
-  gameManager.StartGame(); // a faire plus tard quand click sur jouer 
 }
 
 
@@ -93,7 +92,7 @@ void draw()
 {
   pushMatrix();
   //Basic Camera just to display (TODO: Verify with teacher if we are allowed to use all this)
-  background(100);
+  background(100); // background géré dans game manager en fonction des menus
   camera(/*mouseX*/width/2, height/2, (height/2) / tan(PI/6), /*mouseX*/width/2, height/2, 0, 0, 1, 0);
   translate(width/2, height/2, -100); //Center of Scene
   stroke(color(0,0,0));
@@ -115,8 +114,7 @@ void draw()
   // UpdateManager
   updateManager.UpdateAll(deltaTime);
   
-  // GameManager
-  gameManager.Update(deltaTime);
+  
   
   //Calcul et utilisation
   
@@ -138,6 +136,10 @@ void draw()
   //Targets DrawCall
   targetManager.DrawAll();
   
+  popMatrix(); // sort de 3D pour background bien placé
+  camera();
+  // GameManager (en dernier pour avoir la box background des menus au dessus de tout)
+  gameManager.Update(deltaTime);
   
   // Gameloop
   //4 différents projectiles (balles, boulets, laser et boule de feu)
@@ -146,8 +148,6 @@ void draw()
   //Frottement négligeable (près de 1)
   //Trajectoire des tirs visible
   
-  
-  popMatrix();
 }
 
 void keyPressed()
@@ -171,7 +171,22 @@ void keyPressed()
   
 }
 
-void mousePressed(){
+void mousePressed()
+{
+  // Start game ?
+  if (gameManager.state == GameState.WAITING)
+  {
+    gameManager.StartGame();
+    return; 
+  }
+  
+  // Restart game ? 
+  if (gameManager.state == GameState.GAME_OVER)
+  {
+    gameManager.StartGame();
+    return;
+  }
+  
     if (projectileLauncher.CanLaunchProjectile())
     {
       //Launching Projectile
