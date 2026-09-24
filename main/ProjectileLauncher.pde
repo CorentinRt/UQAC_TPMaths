@@ -7,7 +7,7 @@ public class ProjectileLauncher implements IUpdatable
   
   float damping = 1.0f;
   Vector3D velocityMultiplier = new Vector3D(1, 1, 1);
-  Vector3D launchPosition = new Vector3D(-15, 10, 0);
+  Vector3D launchPosition = new Vector3D(-40, 20, 0);
   
   float launchCooldown = 0.5f;
   float launchClock = 0.5f;
@@ -109,7 +109,7 @@ public class ProjectileLauncher implements IUpdatable
   // IUpdatable
   void Update(float deltaTime)
   {
-    velocityMultiplier.x = 1 + ((mouseX - width/2) / pixelsPerMeter) / 10;
+    velocityMultiplier.x = 1 + ((mouseX - width/4) / pixelsPerMeter) / 10;
     velocityMultiplier.y = 1 + ((height/2 - mouseY) / pixelsPerMeter) / 10;
     
     if (launchClock <= launchCooldown)

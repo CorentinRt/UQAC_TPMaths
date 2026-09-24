@@ -4,7 +4,7 @@ class GameManager
   
   // Score & timer
   ScoreManager scoreManager = new ScoreManager();
-  GameTimer gameTimer = new GameTimer(10); // secondes par partie (court pour test)
+  GameTimer gameTimer = new GameTimer(40); // secondes par partie (court pour test)
 
   // Texts
   TextDisplay scoreDisplay;
