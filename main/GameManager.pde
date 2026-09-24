@@ -20,35 +20,35 @@ class GameManager
   GameManager(PFont font)
   {
     // Init texts
-    scoreDisplay = new TextDisplay("Score : 0", 0, 20, font);
+    scoreDisplay = new TextDisplay("Score : 0", 5, 30, font);
     scoreDisplay.SetBackground(color(0, 0, 0, 155), true);
-    scoreDisplay.SetSize(20);
+    scoreDisplay.SetSize(30);
      
-    timerDisplay = new TextDisplay("", width / 2, 30, font);
+    timerDisplay = new TextDisplay("", width / 2, 42, font);
     timerDisplay.SetAlignment(CENTER);
-    timerDisplay.SetSize(30);
+    timerDisplay.SetSize(45);
    
     timerDisplay.SetBackground(color(0, 0, 0, 155), true);
     
-    waitingDisplayClickToPlay = new TextDisplay("Appuyez sur une touche pour commencer", width / 2, height / 2, font);
+    waitingDisplayClickToPlay = new TextDisplay("Appuyez sur clic gauche pour commencer", width / 2, height / 2, font);
     waitingDisplayClickToPlay.SetAlignment(CENTER);
-    waitingDisplayClickToPlay.SetSize(20);
+    waitingDisplayClickToPlay.SetSize(25);
     
     gameOverDisplayScore = new TextDisplay("", width / 2, height / 2, font);
     gameOverDisplayScore.SetAlignment(CENTER);
-    gameOverDisplayScore.SetSize(20);
+    gameOverDisplayScore.SetSize(25);
     
-    gameOverClickToRestart = new TextDisplay("Appuyez sur une touche pour retenter votre chance", width / 2, height / 2 + 40, font);
+    gameOverClickToRestart = new TextDisplay("Appuyez sur clic gauche pour retenter votre chance", width / 2, height / 2 + 40, font);
     gameOverClickToRestart.SetAlignment(CENTER);
-    gameOverClickToRestart.SetSize(20);
+    gameOverClickToRestart.SetSize(25);
     
-    menuDisplayNames = new TextDisplay("Un jeu créé par Volodia Bussereau, Jérémy Lombard, Corentin Remot & Manon Wimmer", width / 2, height - 20, font);
+    menuDisplayNames = new TextDisplay("Un jeu créé par Volodia Bussereau, Jérémy Lombard, Corentin Remot & Manon Wimmer", width / 2, height - 100, font);
     menuDisplayNames.SetAlignment(CENTER);
-    menuDisplayNames.SetSize(12);
+    menuDisplayNames.SetSize(20);
     
-    menuGameName = new TextDisplay("Projectile Game", width / 2, height / 2 -50, font);
+    menuGameName = new TextDisplay("Maths TP - Phase 1", width / 2, height / 2 -50, font);
     menuGameName.SetAlignment(CENTER);
-    menuGameName.SetSize(64);
+    menuGameName.SetSize(80);
   }
   
   void StartGame()

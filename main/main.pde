@@ -66,15 +66,15 @@ void setup()
   font = createFont("Calibri Bold", 64, true); // true = anti-aliasing, 64 = max size
   
   // Setup texts
-  deltaTimeDisplay = new TextDisplay("", width, 20, font);
+  deltaTimeDisplay = new TextDisplay("", width - 10, 30, font);
   deltaTimeDisplay.SetAlignment(RIGHT);
-  deltaTimeDisplay.SetSize(20);
+  deltaTimeDisplay.SetSize(30);
   deltaTimeDisplay.SetBackground(color(0, 0, 0, 155), true);
   
   // Init PhysicsIntegrationSelector
-  integrationSelector = new PhysicsIntegrationSelector(width, 60, font);
+  integrationSelector = new PhysicsIntegrationSelector(width - 10, 70, font);
   
-  projectileLauncher.CreateTexts(2.f, 60.f, font);
+  projectileLauncher.CreateTexts(5, 70.f, font);
   
   // UpdateManager
   updateManager.Register(deltaTimeDisplay);

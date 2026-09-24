@@ -9,7 +9,7 @@ class TextDisplay implements IUpdatable
   boolean hasBackground = false;
   int padding = 8;
   int alignment = LEFT;
-  int customSize = 16;
+  int customSize = 25;
   
   TextDisplay(String text, float x, float y, PFont font)
   {

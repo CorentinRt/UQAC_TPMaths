@@ -30,7 +30,7 @@ public class ProjectileLauncher implements IUpdatable
     
     ProjectileStatistics stats = GetSelectedProjectileStatistics();
     textDisplayProjectileStatistics = new TextDisplay(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocity.GetText() + " ", x, y + 35.0, font);
-    textDisplayInputs = new TextDisplay(" UP or DOWN arrows to switch selected projectile", x, y + 70.0, font);
+    textDisplayInputs = new TextDisplay("UP or DOWN arrows to switch selected projectile", x, y + 70.0, font);
     
     textDisplaySelectedProjectile.SetAlignment(LEFT);
     textDisplayProjectileStatistics.SetAlignment(LEFT);
