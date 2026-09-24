@@ -127,8 +127,14 @@ void draw()
     //Targets
     targetManager.CheckCollisions(inGameProjectiles);
   }
-  // Else : waiting ou game over ; reset les particules si il y en a (pour le restart) svp :)
-  
+  else if (inGameProjectiles.size() > 0){
+   while (inGameProjectiles.size() > 0){
+      physicsEngine.Unregister(inGameProjectiles.get(0));
+      updateManager.Unregister(inGameProjectiles.get(0));
+      inGameProjectiles.remove(0);
+    }
+  }
+
   //Removes Projectiles outside of screen on x positive and y positive (doesn't remove balls falling down back on screen)
   RemoveOutsideProjectiles();
   
@@ -182,16 +188,16 @@ void mousePressed()
     return;
   }
   
-    if (projectileLauncher.CanLaunchProjectile())
-    {
-      //Launching Projectile
-      Particle launchedProjectile = projectileLauncher.LaunchProjectile();
-      launchedProjectile.SetIntegrationMethod(integrationSelector.GetIntegrationMethod());
-      inGameProjectiles.add(launchedProjectile);
-      println("Summoning projectile at position : " + projectileLauncher.launchPosition.GetText());
-      physicsEngine.Register(launchedProjectile);
-      updateManager.Register(launchedProjectile);
-    }
+  if (projectileLauncher.CanLaunchProjectile())
+  {
+    //Launching Projectile
+    Particle launchedProjectile = projectileLauncher.LaunchProjectile();
+    launchedProjectile.SetIntegrationMethod(integrationSelector.GetIntegrationMethod());
+    inGameProjectiles.add(launchedProjectile);
+    println("Summoning projectile at position : " + projectileLauncher.launchPosition.GetText());
+    physicsEngine.Register(launchedProjectile);
+    updateManager.Register(launchedProjectile);
+  }
 }
 
 void RemoveOutsideProjectiles()
