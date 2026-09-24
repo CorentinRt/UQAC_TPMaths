@@ -8,6 +8,9 @@ class Particle implements IPhysicsEntity, IUpdatable
   float mass = 0;
   float radius = 20.0f;
   
+  color eulerColor;
+  color verletColor;
+  
   
   float damping = 1.0;
   
@@ -92,11 +95,11 @@ class Particle implements IPhysicsEntity, IUpdatable
     switch (integrationMethod)
     {
       case EULER:
-        c = color(0,0,255);
+        c = eulerColor;
         break;
         
       case VERLET:
-        c = color(255, 0, 0);
+        c = verletColor;
         break;
         
       default:
@@ -120,6 +123,11 @@ class Particle implements IPhysicsEntity, IUpdatable
   EIntegrationMethod GetIntegrationMethod()
   {
     return integrationMethod;
+  }
+  
+  void SetDrawColors(color eulerColor, color verletColor){
+    this.eulerColor = eulerColor;
+    this.verletColor = verletColor;
   }
   
   Vector3D ComputeLastPosition(Vector3D currentPos, Vector3D currentVelocity, Vector3D currentAcceleration, float deltaTime)
@@ -149,7 +157,8 @@ class Particle implements IPhysicsEntity, IUpdatable
   
   void Draw(color c, float radius){
     pushMatrix();
-    stroke(c);
+    noStroke();
+    fill(c);
     translate(position.x * pixelsPerMeter, position.y * pixelsPerMeter, position.z * pixelsPerMeter);
     sphere(radius);
     popMatrix(); //Reset translation for futur Draws

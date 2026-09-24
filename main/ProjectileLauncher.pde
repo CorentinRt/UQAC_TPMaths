@@ -78,7 +78,7 @@ public class ProjectileLauncher implements IUpdatable
       case LASER:
         return laserDefaultStats;
       default:
-        return new ProjectileStatistics(1, new Vector3D());
+        return new ProjectileStatistics(1, new Vector3D(), color(0), color(0));
     }
   }
   
@@ -127,6 +127,7 @@ public class ProjectileLauncher implements IUpdatable
   {
     ProjectileStatistics projectileStatistics = GetSelectedProjectileStatistics();
     
-    physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, projectileStatistics.initialVelocity.Multiply(velocityMultiplier), PhysicsUtilities.ComputeGravitationalAcceleration(projectileStatistics.mass), damping, color(100, 101, 250), 20.0, 2.0, 0.15, deltaTime);
+    color c = integrationSelector.GetIntegrationMethod() == EIntegrationMethod.EULER ? color(0,255,0) : color(255,255,0);
+    physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, projectileStatistics.initialVelocity.Multiply(velocityMultiplier), PhysicsUtilities.ComputeGravitationalAcceleration(projectileStatistics.mass), damping, c, 20.0, 2.0, 0.15, deltaTime);
   }
 }
