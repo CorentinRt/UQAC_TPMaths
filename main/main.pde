@@ -86,8 +86,6 @@ void setup()
   targetManager.AddTarget(new Target(new Vector3D(10, -8, 0), 1.0));
   targetManager.AddTarget(new Target(new Vector3D(15, -3, 0), 2.0));
   
-  // PhysicsEngine
-  
   // GameManager
   gameManager = new GameManager(font);
 }
