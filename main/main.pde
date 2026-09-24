@@ -38,10 +38,14 @@ float lastFrameUpdate = 0;
 
 boolean isFirstFrame = true;
 
+static 
+  {
+    System.setProperty("sun.java2d.uiScale", "1.01"); // If this is 1.0 it does NOT work!
+  }
 
 void setup()
 {
-  size(800,600, P3D);
+  fullScreen(P3D);
   background(100);
   
   // Tests unitaires TP1
