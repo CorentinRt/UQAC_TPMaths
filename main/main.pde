@@ -82,9 +82,9 @@ void setup()
   updateManager.Register(projectileLauncher);
   
   //Setup Targets
-  targetManager.AddTarget(new Target(new Vector3D(5, -5, 0), 1.5));
-  targetManager.AddTarget(new Target(new Vector3D(10, -8, 0), 1.0));
-  targetManager.AddTarget(new Target(new Vector3D(15, -3, 0), 2.0));
+  targetManager.AddTarget(new Target(new Vector3D(5, -5, 0), 10, 1));
+  targetManager.AddTarget(new Target(new Vector3D(10, -8, 0), 15, 2));
+  targetManager.AddTarget(new Target(new Vector3D(15, -3, 0), 5, 3));
   
   // GameManager
   gameManager = new GameManager(font);

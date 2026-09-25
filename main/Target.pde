@@ -3,7 +3,7 @@ class Target
   Vector3D position;
   float radius;
   boolean isHit = false;
-  color colorDefault = color(0,255,0);
+  color colorDefault = color(255,255,0);
   color colorHit = color(255,0,0);
   int scoreValue = 1;
 
