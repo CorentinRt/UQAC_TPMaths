@@ -66,13 +66,17 @@ static class PhysicsUtilities
     }
   }
   
+  static float InverseMass(float inMass)
+  {
+    if (inMass <= 0)
+      return 0;  // Pour éviter un crash et ainsi mettre les objets immobiles sur 0
+    else
+      return 1 / inMass;
+  }
+  
   static Vector3D ComputeGravitationalAcceleration(float inMass)
   {
-    float inverseMass = 0.0f;
-    if (inMass <= 0)
-      inverseMass = 0;  // Pour éviter un crash et ainsi mettre les objets immobiles sur 0
-    else
-      inverseMass = 1 / inMass;
+    float inverseMass = InverseMass(inMass);
     
     Vector3D gravitionalForce = gravitationalAcceleration.MultiplyByScalar(inMass);  // Fg = 9.81 * Mobj
     
