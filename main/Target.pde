@@ -5,11 +5,20 @@ class Target
   boolean isHit = false;
   color colorDefault = color(0,255,0);
   color colorHit = color(255,0,0);
+  int scoreValue = 1;
+
   
   Target(Vector3D newPosition, float radiusToSet)
   {
     position = newPosition;
     radius = radiusToSet;
+  }
+  
+  Target(Vector3D newPosition, float radiusToSet, int customScore)
+  {
+    position = newPosition;
+    radius = radiusToSet;
+    scoreValue = customScore;
   }
   
   //Check if a particle hit a target
@@ -34,6 +43,26 @@ class Target
   {
     isHit = true;
     println("Target touched at : " + position.GetText());
+  }
+  
+  void RespawnElsewhere()
+  {
+    // Spawn écran milieu droite
+    float minXPixel = width * 0.50;
+    float maxXPixel = width * 0.90;
+    
+    float minYPixel = height * 0.30;
+    float maxYPixel = height * 0.65;
+    
+    float xPixel = random(minXPixel, maxXPixel);
+    float yPixel = random(minYPixel, maxYPixel);
+    
+    // Conversion pixels -> mètres, relatif au centre de la scène (width/2, height/2)
+    float newX = (xPixel - width / 2.0) / pixelsPerMeter;
+    float newY = (yPixel - height / 2.0) / pixelsPerMeter;
+    
+    position = new Vector3D(newX, newY, 0);
+    isHit = false;
   }
   
   void Draw()

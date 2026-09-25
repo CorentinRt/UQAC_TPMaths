@@ -99,7 +99,7 @@ void draw()
   camera(/*mouseX*/width/2, height/2, (height/2) / tan(PI/6), /*mouseX*/width/2, height/2, 0, 0, 1, 0);
   translate(width/2, height/2, -100); //Center of Scene
   stroke(color(0,0,0));
-  sphere(1); //Center of Scene
+  //sphere(1); //Center of Scene
  
   //Delta time
   float deltaTime = (millis() - lastFrameUpdate) / 1000.0;

@@ -23,6 +23,13 @@ class TargetManager
         if (t.CheckCollision(p))
         {
           println("Target Collision Check Launched");
+          
+          // Add score
+          gameManager.AddScore(t.scoreValue);
+          
+          // Respawn
+          t.RespawnElsewhere();
+          
           break; 
         }
       }
@@ -41,7 +48,8 @@ class TargetManager
   {
     for (Target t : targets)
     {
-      t.Reset();
+      //t.Reset();
+      t.RespawnElsewhere();
     }
   }
 }
