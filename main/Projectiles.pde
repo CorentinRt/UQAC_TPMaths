@@ -69,7 +69,7 @@ public class Laser extends Particle
   
   Laser(Vector3D position, Vector3D direction, float damping){
     this.position = position;
-    this.linearVelocity = direction.Multiply(fireballDefaultStats.initialVelocityMultiplier);
+    this.linearVelocity = direction.Multiply(laserDefaultStats.initialVelocityMultiplier);
     this.damping = damping;
     this.mass = laserDefaultStats.mass;
     this.eulerColor = laserDefaultStats.eulerColor;
