@@ -26,10 +26,10 @@ TextDisplay timerDisplay;
 float pixelsPerMeter = 30;
 
 //Projectiles Statistics
-ProjectileStatistics ballDefaultStats = new ProjectileStatistics(10, new Vector3D(8,-15,0), color(0,0,255), color(0,0,255));
-ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, new Vector3D(8,-8,0), color(67,67,67), color(67,67,67));
-ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20, new Vector3D(10,-15,0), color(255,150,0), color(255,150,0));
-ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, new Vector3D(15,-5,0), color(255,0,0), color(255,0,0));
+ProjectileStatistics ballDefaultStats = new ProjectileStatistics(10, new Vector3D(1 ,1 ,1), color(0,0,255), color(0,0,255));
+ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, new Vector3D(1 ,0.5 ,1), color(67,67,67), color(67,67,67));
+ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20, new Vector3D(2 ,1.2 ,1), color(255,150,0), color(255,150,0));
+ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, new Vector3D(1.5 ,2 ,1), color(255,0,0), color(255,0,0));
 
 ArrayList<Particle> inGameProjectiles = new ArrayList<Particle>();
 

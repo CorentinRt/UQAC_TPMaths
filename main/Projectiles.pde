@@ -11,13 +11,13 @@ public enum EProjectileType
 public class ProjectileStatistics
 {
   float mass = 100;
-  Vector3D initialVelocity = new Vector3D(8, -15, 0);
+  Vector3D initialVelocityMultiplier = new Vector3D(1, 1, 1);
   color eulerColor;
   color verletColor;
   
-  ProjectileStatistics(float mass, Vector3D initialVelocity, color eulerColor, color verletColor){
+  ProjectileStatistics(float mass, Vector3D initialVelocityMultiplier, color eulerColor, color verletColor){
     this.mass = mass;
-    this.initialVelocity = initialVelocity;
+    this.initialVelocityMultiplier = initialVelocityMultiplier;
     this.eulerColor = eulerColor;
     this.verletColor = verletColor;
   }
@@ -28,9 +28,9 @@ public class ProjectileStatistics
 public class Ball extends Particle
 {
   
-  Ball(Vector3D position, Vector3D velocityMultiplier, float damping){
+  Ball(Vector3D position, Vector3D direction, float damping){
     this.position = position;
-    this.linearVelocity = ballDefaultStats.initialVelocity.Multiply(velocityMultiplier);
+    this.linearVelocity = direction.Multiply(ballDefaultStats.initialVelocityMultiplier);
     this.damping = damping;
     this.mass = ballDefaultStats.mass;
     this.eulerColor = ballDefaultStats.eulerColor;
@@ -41,9 +41,9 @@ public class Ball extends Particle
 public class Boulder extends Particle
 {
   
-  Boulder(Vector3D position, Vector3D velocityMultiplier, float damping){
+  Boulder(Vector3D position, Vector3D direction, float damping){
     this.position = position;
-    this.linearVelocity = boulderDefaultStats.initialVelocity.Multiply(velocityMultiplier);
+    this.linearVelocity = direction.Multiply(boulderDefaultStats.initialVelocityMultiplier);
     this.damping = damping;
     this.mass = boulderDefaultStats.mass;
     this.eulerColor = boulderDefaultStats.eulerColor;
@@ -54,9 +54,9 @@ public class Boulder extends Particle
 public class Fireball extends Particle
 {
   
-  Fireball(Vector3D position, Vector3D velocityMultiplier, float damping){
+  Fireball(Vector3D position, Vector3D direction, float damping){
     this.position = position;
-    this.linearVelocity = fireballDefaultStats.initialVelocity.Multiply(velocityMultiplier);
+    this.linearVelocity = direction.Multiply(fireballDefaultStats.initialVelocityMultiplier);
     this.damping = damping;
     this.mass = fireballDefaultStats.mass;
     this.eulerColor = fireballDefaultStats.eulerColor;
@@ -67,9 +67,9 @@ public class Fireball extends Particle
 public class Laser extends Particle
 {
   
-  Laser(Vector3D position, Vector3D velocityMultiplier, float damping){
+  Laser(Vector3D position, Vector3D direction, float damping){
     this.position = position;
-    this.linearVelocity = laserDefaultStats.initialVelocity.Multiply(velocityMultiplier);
+    this.linearVelocity = direction.Multiply(fireballDefaultStats.initialVelocityMultiplier);
     this.damping = damping;
     this.mass = laserDefaultStats.mass;
     this.eulerColor = laserDefaultStats.eulerColor;

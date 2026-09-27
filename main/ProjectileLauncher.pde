@@ -6,7 +6,7 @@ public class ProjectileLauncher implements IUpdatable
   EProjectileType[] availableProjectiles = {EProjectileType.BALL, EProjectileType.BOULDER, EProjectileType.FIREBALL, EProjectileType.LASER};
   
   float damping = 1.0f;
-  Vector3D velocityMultiplier = new Vector3D(1, 1, 1);
+  Vector3D direction = new Vector3D(1, 1, 1);
   Vector3D launchPosition = new Vector3D(-40, 20, 0);
   
   float launchCooldown = 0.5f;
@@ -23,13 +23,13 @@ public class ProjectileLauncher implements IUpdatable
   
   String prefixText = "Current Selected Projectile : ";
   String prefixMassText = "Mass : ";
-  String prefixVelocityText = ", Initial Velocity : ";
+  String prefixVelocityText = ", Velocity Multiplier : ";
     
   public void CreateTexts(float x, float y, PFont font){
     textDisplaySelectedProjectile = new TextDisplay(prefixText + availableProjectiles[selectedProjectile], x, y, font);
     
     ProjectileStatistics stats = GetSelectedProjectileStatistics();
-    textDisplayProjectileStatistics = new TextDisplay(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocity.GetText() + " ", x, y + 35.0, font);
+    textDisplayProjectileStatistics = new TextDisplay(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocityMultiplier.GetText() + " ", x, y + 35.0, font);
     textDisplayInputs = new TextDisplay("UP or DOWN arrows to switch selected projectile", x, y + 70.0, font);
     
     textDisplaySelectedProjectile.SetAlignment(LEFT);
@@ -48,7 +48,7 @@ public class ProjectileLauncher implements IUpdatable
     
     textDisplaySelectedProjectile.SetText(prefixText + availableProjectiles[selectedProjectile]);
     ProjectileStatistics stats = GetSelectedProjectileStatistics();
-    textDisplayProjectileStatistics.SetText(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocity.GetText() + " ");
+    textDisplayProjectileStatistics.SetText(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocityMultiplier.GetText() + " ");
   }
   
   public void DecrementSelectedProjectile()
@@ -58,7 +58,7 @@ public class ProjectileLauncher implements IUpdatable
     
     textDisplaySelectedProjectile.SetText(prefixText + availableProjectiles[selectedProjectile]);
     ProjectileStatistics stats = GetSelectedProjectileStatistics();
-    textDisplayProjectileStatistics.SetText(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocity.GetText() + " ");
+    textDisplayProjectileStatistics.SetText(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocityMultiplier.GetText() + " ");
   }
   
   public EProjectileType GetSelectedProjectileType()
@@ -85,17 +85,17 @@ public class ProjectileLauncher implements IUpdatable
   public Particle LaunchProjectile()
   {
     launchClock = 0;
-    println(velocityMultiplier.GetText());
+    println("direction" + direction.GetText());
     
     switch( GetSelectedProjectileType() ){
       case BALL:
-        return new Ball(launchPosition.Copy(), velocityMultiplier, damping);
+        return new Ball(launchPosition.Copy(), direction, damping);
       case BOULDER:
-        return new Boulder(launchPosition.Copy(), velocityMultiplier, damping);
+        return new Boulder(launchPosition.Copy(), direction, damping);
       case FIREBALL:
-        return new Fireball(launchPosition.Copy(), velocityMultiplier, damping);
+        return new Fireball(launchPosition.Copy(), direction, damping);
       case LASER:
-        return new Laser(launchPosition.Copy(), velocityMultiplier, damping);
+        return new Laser(launchPosition.Copy(), direction, damping);
       default:
         return new Particle();
     }
@@ -109,8 +109,9 @@ public class ProjectileLauncher implements IUpdatable
   // IUpdatable
   void Update(float deltaTime)
   {
-    velocityMultiplier.x = 1 + ((mouseX - width/4) / pixelsPerMeter) / 10;
-    velocityMultiplier.y = 1 + ((height/2 - mouseY) / pixelsPerMeter) / 10;
+    Vector3D mousePosition = new Vector3D((mouseX - width/2)/pixelsPerMeter, (mouseY - height/2)/pixelsPerMeter, launchPosition.z);
+    direction = (mousePosition.Substract(launchPosition)).Normalize();
+    direction = direction.MultiplyByScalar(pixelsPerMeter * 1.5);
     
     if (launchClock <= launchCooldown)
     {
@@ -121,6 +122,7 @@ public class ProjectileLauncher implements IUpdatable
     textDisplayProjectileStatistics.Update(deltaTime);
     textDisplayInputs.Update(deltaTime);
     
+    textDisplayProjectileStatistics.SetText(direction.GetText());
   }
   
   public void DrawTrajectory(float deltaTime)
@@ -128,6 +130,6 @@ public class ProjectileLauncher implements IUpdatable
     ProjectileStatistics projectileStatistics = GetSelectedProjectileStatistics();
     
     color c = integrationSelector.GetIntegrationMethod() == EIntegrationMethod.EULER ? color(0,255,0) : color(255,255,0);
-    physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, projectileStatistics.initialVelocity.Multiply(velocityMultiplier), PhysicsUtilities.ComputeGravitationalAcceleration(projectileStatistics.mass), damping, c, 20.0, 2.0, 0.15, deltaTime);
+    physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, direction.Multiply(projectileStatistics.initialVelocityMultiplier), PhysicsUtilities.ComputeGravitationalAcceleration(projectileStatistics.mass), damping, c, 20.0, 2.0, 0.15, deltaTime);
   }
 }
