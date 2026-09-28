@@ -192,11 +192,17 @@ class Particle implements IPhysicsEntity, IUpdatable
   
   void EulerIntegrate(float deltaTime)
   {
+    if (InverseMass() == 0.0)
+      return;
+      
     PhysicsUtilities.SimulateEulerIntegrate(position, linearVelocity, ComputeGravitationalAcceleration(), damping, deltaTime);
   }
   
   void VerletIntegrate(float deltaTime)
   {
+    if (InverseMass() == 0.0)
+      return;
+      
     PhysicsUtilities.SimulateVerletIntegrate(position, linearVelocity, ComputeGravitationalAcceleration(), damping, deltaTime);
   }
   
