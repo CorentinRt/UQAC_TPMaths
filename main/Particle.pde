@@ -5,6 +5,9 @@ class Particle implements IPhysicsEntity, IUpdatable
   //Variables for class Particle
   Vector3D position = new Vector3D();
   Vector3D linearVelocity = new Vector3D();
+  
+  Vector3D accumForce = new Vector3D();
+  
   float mass = 0;
   float radius = 20.0f;
   
@@ -66,30 +69,21 @@ class Particle implements IPhysicsEntity, IUpdatable
     Integrate(deltaTime);
   }
   
+  void AddForce(Vector3D force)
+  {
+    accumForce.Add(force);
+  }
+  
+  void ClearAccum()
+  {
+    accumForce = new Vector3D(0, 0, 0);
+  }
+  
   // ------------
   
   // IUpdatable
   void Update(float deltaTime)
   {
-    
-    /*color predictedColor = color(255, 255, 0);
-    switch (integrationMethod)
-    {
-      case EULER:
-        predictedColor = color(0, 255, 0);
-        break;
-        
-      case VERLET:
-        predictedColor = color(255, 200, 50);
-        break;
-        
-      default:
-        break;
-        
-    }
-    
-    physicsDebugPredictor.DrawDebugSimulation(integrationMethod, position, linearVelocity, ComputeGravitationalAcceleration(), damping, predictedColor, 20.0, 2.0, 0.15, deltaTime);
-    */
     color c = color(255, 0, 0);
     
     switch (integrationMethod)
@@ -205,5 +199,7 @@ class Particle implements IPhysicsEntity, IUpdatable
       
     PhysicsUtilities.SimulateVerletIntegrate(position, linearVelocity, ComputeGravitationalAcceleration(), damping, deltaTime);
   }
+  
+  
   
 }
