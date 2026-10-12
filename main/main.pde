@@ -6,6 +6,13 @@ UpdateManager updateManager = new UpdateManager();
 // Physics Engine
 PhysicsEngine physicsEngine = new PhysicsEngine();
 
+// Particle Force Registry
+ParticleForceRegistry particleForceRegistry = new ParticleForceRegistry();
+
+// Forces
+ParticleGravity gravityForce = new ParticleGravity();
+
+
 // PhysicsIntegrationSelector
 PhysicsIntegrationSelector integrationSelector;
 
@@ -111,12 +118,20 @@ void draw()
     return;
   }
   
+  // Force Registry
+  for (int i = 0; i < inGameProjectiles.size(); ++i)
+  {
+    particleForceRegistry.Add(inGameProjectiles.get(i), gravityForce);
+  }
+  particleForceRegistry.UpdateForces(deltaTime);
+  particleForceRegistry.Clear();
+  
+  
   // Update texts
   deltaTimeDisplay.SetText("Delta Time : " + nf(deltaTime, 0, 3) + "ms");
    
   // UpdateManager
   updateManager.UpdateAll(deltaTime);
-  
   
   
   //Calcul et utilisation

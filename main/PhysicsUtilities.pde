@@ -1,7 +1,5 @@
 static class PhysicsUtilities
 {
-  static Vector3D gravitationalAcceleration = new Vector3D(0, 9.81, 0);
-  
   static void SimulateEulerIntegrate(Vector3D outPosition, Vector3D outVelocity, Vector3D inAcceleration, float damping, float deltaTime)
   {
     Vector3D tempPos = new Vector3D(outPosition.x, outPosition.y, outPosition.z);
@@ -74,12 +72,10 @@ static class PhysicsUtilities
       return 1 / inMass;
   }
   
-  static Vector3D ComputeGravitationalAcceleration(float inMass)
+  static Vector3D ComputeAccelerationByForce(float inMass, Vector3D accumForces)
   {
     float inverseMass = InverseMass(inMass);
     
-    Vector3D gravitionalForce = gravitationalAcceleration.MultiplyByScalar(inMass);  // Fg = 9.81 * Mobj
-    
-    return gravitionalForce.MultiplyByScalar(inverseMass);  // Accg = Fg * (1/m) = 9.81 (retour case départ) car F = a * m donc a = F * (1 / m)
+    return accumForces.MultiplyByScalar(inverseMass);  // si seulement gravité : Accg = Fg * (1/m) = 9.81 (retour case départ) car F = a * m donc a = F * (1 / m)
   }
 }

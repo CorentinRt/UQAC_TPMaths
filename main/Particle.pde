@@ -67,6 +67,8 @@ class Particle implements IPhysicsEntity, IUpdatable
   void UpdatePhysics(float deltaTime)
   {
     Integrate(deltaTime);
+    
+    ClearAccum();
   }
   
   void AddForce(Vector3D force)
@@ -144,9 +146,9 @@ class Particle implements IPhysicsEntity, IUpdatable
     position = new Vector3D(x, y, z);
   }
   
-  Vector3D ComputeGravitationalAcceleration()
+  Vector3D ComputeAccelerationByForce()
   {
-    return PhysicsUtilities.ComputeGravitationalAcceleration(mass);
+    return PhysicsUtilities.ComputeAccelerationByForce(mass, accumForce);
   }
   
   void Draw(color c, float radius){
@@ -189,7 +191,7 @@ class Particle implements IPhysicsEntity, IUpdatable
     if (InverseMass() == 0.0)
       return;
       
-    PhysicsUtilities.SimulateEulerIntegrate(position, linearVelocity, ComputeGravitationalAcceleration(), damping, deltaTime);
+    PhysicsUtilities.SimulateEulerIntegrate(position, linearVelocity, ComputeAccelerationByForce(), damping, deltaTime);
   }
   
   void VerletIntegrate(float deltaTime)
@@ -197,7 +199,7 @@ class Particle implements IPhysicsEntity, IUpdatable
     if (InverseMass() == 0.0)
       return;
       
-    PhysicsUtilities.SimulateVerletIntegrate(position, linearVelocity, ComputeGravitationalAcceleration(), damping, deltaTime);
+    PhysicsUtilities.SimulateVerletIntegrate(position, linearVelocity, ComputeAccelerationByForce(), damping, deltaTime);
   }
   
   
