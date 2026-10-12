@@ -73,7 +73,7 @@ class Particle implements IPhysicsEntity, IUpdatable
   
   void AddForce(Vector3D force)
   {
-    accumForce.Add(force);
+    accumForce = accumForce.Add(force);
   }
   
   void ClearAccum()

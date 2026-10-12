@@ -130,6 +130,10 @@ public class ProjectileLauncher implements IUpdatable
     ProjectileStatistics projectileStatistics = GetSelectedProjectileStatistics();
     
     color c = integrationSelector.GetIntegrationMethod() == EIntegrationMethod.EULER ? color(0,255,0) : color(255,255,0);
-    physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, direction.Multiply(projectileStatistics.initialVelocityMultiplier), PhysicsUtilities.ComputeAccelerationByForce(projectileStatistics.mass, new Vector3D(0, 9.81, 0)), damping, c, 20.0, 2.0, 0.15, deltaTime);
+    
+    Vector3D accumForcePredicted = new Vector3D(0, 9.81, 0);
+    accumForcePredicted = accumForcePredicted.MultiplyByScalar(projectileStatistics.mass);
+    
+    physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, direction.Multiply(projectileStatistics.initialVelocityMultiplier), PhysicsUtilities.ComputeAccelerationByForce(projectileStatistics.mass, accumForcePredicted), damping, c, 20.0, 2.0, 0.15, deltaTime);
   }
 }
