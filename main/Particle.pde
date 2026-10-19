@@ -8,14 +8,14 @@ class Particle implements IPhysicsEntity, IUpdatable
   
   Vector3D accumForce = new Vector3D();
   
+  float coefStaticFriction = 0.0f;
+  float coefCineticFriction = 0.f;
+
   float mass = 0;
   float radius = 20.0f;
   
   color eulerColor;
   color verletColor;
-  
-  
-  float damping = 1.0;
   
   Particle(){
     this.mass = 0;
@@ -46,19 +46,20 @@ class Particle implements IPhysicsEntity, IUpdatable
     
   }
   
-  Particle(float mass, Vector3D position, Vector3D linearVelocity, float damping){
+  Particle(float mass, Vector3D position, Vector3D linearVelocity, float coefStaticFriction, float coefCineticFriction){
     this.mass = mass;
     this.position = position;
     this.linearVelocity = linearVelocity;
-    this.damping = damping;
-    
+    this.coefStaticFriction = coefStaticFriction;
+    this.coefCineticFriction = coefCineticFriction;
   }
   
-  Particle(float mass, Vector3D position, Vector3D linearVelocity, float damping, EIntegrationMethod inIntegrationMethod){
+  Particle(float mass, Vector3D position, Vector3D linearVelocity, float coefStaticFriction, float coefCineticFriction, EIntegrationMethod inIntegrationMethod){
     this.mass = mass;
     this.position = position;
     this.linearVelocity = linearVelocity;
-    this.damping = damping;
+    this.coefStaticFriction = coefStaticFriction;
+    this.coefCineticFriction = coefCineticFriction;
     
     this.integrationMethod = inIntegrationMethod;
   }
@@ -128,7 +129,7 @@ class Particle implements IPhysicsEntity, IUpdatable
   
   Vector3D ComputeLastPosition(Vector3D currentPos, Vector3D currentVelocity, Vector3D currentAcceleration, float deltaTime)
   {
-    return PhysicsUtilities.ComputeLastPosition(currentPos, currentVelocity, currentAcceleration, damping, deltaTime);
+    return PhysicsUtilities.ComputeLastPosition(currentPos, currentVelocity, currentAcceleration, deltaTime);
   }
   
   float InverseMass() {
@@ -191,7 +192,7 @@ class Particle implements IPhysicsEntity, IUpdatable
     if (InverseMass() == 0.0)
       return;
       
-    PhysicsUtilities.SimulateEulerIntegrate(position, linearVelocity, ComputeAccelerationByForce(), damping, deltaTime);
+    PhysicsUtilities.SimulateEulerIntegrate(position, linearVelocity, ComputeAccelerationByForce(), deltaTime);
   }
   
   void VerletIntegrate(float deltaTime)
@@ -199,7 +200,7 @@ class Particle implements IPhysicsEntity, IUpdatable
     if (InverseMass() == 0.0)
       return;
       
-    PhysicsUtilities.SimulateVerletIntegrate(position, linearVelocity, ComputeAccelerationByForce(), damping, deltaTime);
+    PhysicsUtilities.SimulateVerletIntegrate(position, linearVelocity, ComputeAccelerationByForce(), deltaTime);
   }
   
   

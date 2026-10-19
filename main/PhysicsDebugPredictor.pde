@@ -27,11 +27,11 @@ class PhysicsDebugPredictor
       switch (inIntegrationMethod)
       {
         case EULER:
-          PhysicsUtilities.SimulateEulerIntegrate(currentSimulatedPos, currentSimulatedVelocity, inAcceleration, damping, deltaTime);
+          PhysicsUtilities.SimulateEulerIntegrate(currentSimulatedPos, currentSimulatedVelocity, inAcceleration, deltaTime);
           break;
           
         case VERLET:
-          PhysicsUtilities.SimulateVerletIntegrate(currentSimulatedPos, currentSimulatedVelocity, inAcceleration, damping, deltaTime);
+          PhysicsUtilities.SimulateVerletIntegrate(currentSimulatedPos, currentSimulatedVelocity, inAcceleration, deltaTime);
           break;
           
         default:

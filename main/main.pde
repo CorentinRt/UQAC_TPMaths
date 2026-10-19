@@ -122,6 +122,12 @@ void draw()
   for (int i = 0; i < inGameProjectiles.size(); ++i)
   {
     particleForceRegistry.Add(inGameProjectiles.get(i), gravityForce);
+
+    ParticleStaticFriction staticFriction = new ParticleStaticFriction();
+    particleForceRegistry.Add(inGameProjectiles.get(i), staticFriction);
+
+    ParticleCineticFriction cineticFriction = new ParticleCineticFriction();
+    particleForceRegistry.Add(inGameProjectiles.get(i), cineticFriction);
   }
   particleForceRegistry.UpdateForces(deltaTime);
   particleForceRegistry.Clear();

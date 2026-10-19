@@ -1,11 +1,9 @@
 static class PhysicsUtilities
 {
-  static void SimulateEulerIntegrate(Vector3D outPosition, Vector3D outVelocity, Vector3D inAcceleration, float damping, float deltaTime)
+  static void SimulateEulerIntegrate(Vector3D outPosition, Vector3D outVelocity, Vector3D inAcceleration, float deltaTime)
   {
     Vector3D tempPos = new Vector3D(outPosition.x, outPosition.y, outPosition.z);
     Vector3D tempVelocity = new Vector3D(outVelocity.x, outVelocity.y, outVelocity.z);
-    
-    tempVelocity = tempVelocity.MultiplyByScalar((float)Math.pow(damping, deltaTime));  // Damping
     
     tempVelocity = tempVelocity.Add(inAcceleration.MultiplyByScalar(deltaTime));
     
@@ -20,22 +18,19 @@ static class PhysicsUtilities
     outVelocity.z = tempVelocity.z;
   }
   
-  static void SimulateVerletIntegrate(Vector3D outPosition, Vector3D outVelocity, Vector3D inAcceleration, float damping, float deltaTime)
+  static void SimulateVerletIntegrate(Vector3D outPosition, Vector3D outVelocity, Vector3D inAcceleration, float deltaTime)
   {
     Vector3D tempPos = new Vector3D(outPosition.x, outPosition.y, outPosition.z);
     Vector3D tempVelocity = new Vector3D(outVelocity.x, outVelocity.y, outVelocity.z);
     
-    Vector3D lastPosition = ComputeLastPosition(tempPos, tempVelocity, inAcceleration, damping, deltaTime);
+    Vector3D lastPosition = ComputeLastPosition(tempPos, tempVelocity, inAcceleration, deltaTime);
     
     
     Vector3D accDeltaTimeSquared = inAcceleration.MultiplyByScalar(deltaTime * deltaTime);
       
     tempPos = tempPos.MultiplyByScalar(2.0).Substract(lastPosition).Add(accDeltaTimeSquared);  // formule de Verlet  p+1 = 2p0 - p-1 + dt * a²
     
-    float dampingDt = (float)Math.pow(damping, deltaTime);
-    
     tempVelocity = (tempPos.Substract(lastPosition)).MultiplyByScalar(1 / (2.0 * deltaTime));  // vitesse inst = d / dt
-    tempVelocity = tempVelocity.MultiplyByScalar(dampingDt);  // apply damping
     
     outPosition.x = tempPos.x;
     outPosition.y = tempPos.y;
@@ -46,22 +41,11 @@ static class PhysicsUtilities
     outVelocity.z = tempVelocity.z;
   }
   
-  static Vector3D ComputeLastPosition(Vector3D currentPos, Vector3D currentVelocity, Vector3D currentAcceleration, float damping, float deltaTime)
+  static Vector3D ComputeLastPosition(Vector3D currentPos, Vector3D currentVelocity, Vector3D currentAcceleration, float deltaTime)
   {
-    if (damping != 0)
-    {
       Vector3D accelerationModifier = currentAcceleration.MultiplyByScalar(0.5 * (float)Math.pow(deltaTime, 2));
       
-      float dampingDt = (float)Math.pow(damping, deltaTime);
-                
-      Vector3D velocityDamped = currentVelocity.MultiplyByScalar(dampingDt);
-    
-      return (currentPos.Substract(velocityDamped.MultiplyByScalar(deltaTime)).Substract(accelerationModifier));
-    }
-    else
-    {
-      return  currentPos;
-    }
+      return (currentPos.Substract(currentVelocity.MultiplyByScalar(deltaTime)).Substract(accelerationModifier));
   }
   
   static float InverseMass(float inMass)
