@@ -9,7 +9,7 @@ class PhysicsDebugPredictor
     popMatrix(); //Reset translation for futur Draws
   }
   
-  void DrawDebugSimulation(EIntegrationMethod inIntegrationMethod, Vector3D startPosition, Vector3D startVelocity, Vector3D inAcceleration, float damping, color c, float radius, float predictedTime, float stepTimeByDraw, float deltaTime)
+  void DrawDebugSimulation(EIntegrationMethod inIntegrationMethod, Vector3D startPosition, Vector3D startVelocity, Vector3D inAcceleration, color c, float radius, float predictedTime, float stepTimeByDraw, float deltaTime)
   {
     Vector3D currentSimulatedPos = new Vector3D(startPosition.x, startPosition.y, startPosition.z);
     

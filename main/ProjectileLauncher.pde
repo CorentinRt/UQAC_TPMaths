@@ -5,7 +5,6 @@ public class ProjectileLauncher implements IUpdatable
   int selectedProjectile = 0;
   EProjectileType[] availableProjectiles = {EProjectileType.BALL, EProjectileType.BOULDER, EProjectileType.FIREBALL, EProjectileType.LASER};
   
-  float damping = 1.0f;
   Vector3D direction = new Vector3D(1, 1, 1);
   Vector3D launchPosition = new Vector3D(-40, 20, 0);
   
@@ -89,13 +88,13 @@ public class ProjectileLauncher implements IUpdatable
     
     switch( GetSelectedProjectileType() ){
       case BALL:
-        return new Ball(launchPosition.Copy(), direction, damping);
+        return new Ball(launchPosition.Copy(), direction);
       case BOULDER:
-        return new Boulder(launchPosition.Copy(), direction, damping);
+        return new Boulder(launchPosition.Copy(), direction);
       case FIREBALL:
-        return new Fireball(launchPosition.Copy(), direction, damping);
+        return new Fireball(launchPosition.Copy(), direction);
       case LASER:
-        return new Laser(launchPosition.Copy(), direction, damping);
+        return new Laser(launchPosition.Copy(), direction);
       default:
         return new Particle();
     }
@@ -134,6 +133,6 @@ public class ProjectileLauncher implements IUpdatable
     Vector3D accumForcePredicted = new Vector3D(0, 9.81, 0);
     accumForcePredicted = accumForcePredicted.MultiplyByScalar(projectileStatistics.mass);
     
-    physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, direction.Multiply(projectileStatistics.initialVelocityMultiplier), PhysicsUtilities.ComputeAccelerationByForce(projectileStatistics.mass, accumForcePredicted), damping, c, 20.0, 2.0, 0.15, deltaTime);
+    physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, direction.Multiply(projectileStatistics.initialVelocityMultiplier), PhysicsUtilities.ComputeAccelerationByForce(projectileStatistics.mass, accumForcePredicted), c, 20.0, 2.0, 0.15, deltaTime);
   }
 }

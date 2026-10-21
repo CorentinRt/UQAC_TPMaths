@@ -28,47 +28,55 @@ public class ProjectileStatistics
 public class Ball extends Particle
 {
   
-  Ball(Vector3D position, Vector3D direction, float damping){
+  Ball(Vector3D position, Vector3D direction){
     this.position = position;
     this.linearVelocity = direction.Multiply(ballDefaultStats.initialVelocityMultiplier);
     this.mass = ballDefaultStats.mass;
     this.eulerColor = ballDefaultStats.eulerColor;
     this.verletColor = ballDefaultStats.verletColor;
+    this.coefStaticFriction = 0.4;
+    this.coefCineticFriction = 0.3;
   }
 }
 
 public class Boulder extends Particle
 {
   
-  Boulder(Vector3D position, Vector3D direction, float damping){
+  Boulder(Vector3D position, Vector3D direction){
     this.position = position;
     this.linearVelocity = direction.Multiply(boulderDefaultStats.initialVelocityMultiplier);
     this.mass = boulderDefaultStats.mass;
     this.eulerColor = boulderDefaultStats.eulerColor;
     this.verletColor = boulderDefaultStats.verletColor;
+    this.coefStaticFriction = 0.7;
+    this.coefCineticFriction = 0.5;
   }
 }
 
 public class Fireball extends Particle
 {
   
-  Fireball(Vector3D position, Vector3D direction, float damping){
+  Fireball(Vector3D position, Vector3D direction){
     this.position = position;
     this.linearVelocity = direction.Multiply(fireballDefaultStats.initialVelocityMultiplier);
     this.mass = fireballDefaultStats.mass;
     this.eulerColor = fireballDefaultStats.eulerColor;
     this.verletColor = fireballDefaultStats.verletColor;
+    this.coefStaticFriction = 0.3;
+    this.coefCineticFriction = 0.1;
   }
 }
 
 public class Laser extends Particle
 {
   
-  Laser(Vector3D position, Vector3D direction, float damping){
+  Laser(Vector3D position, Vector3D direction){
     this.position = position;
     this.linearVelocity = direction.Multiply(laserDefaultStats.initialVelocityMultiplier);
     this.mass = laserDefaultStats.mass;
     this.eulerColor = laserDefaultStats.eulerColor;
     this.verletColor = laserDefaultStats.verletColor;
+    this.coefStaticFriction = 0;
+    this.coefCineticFriction = 0;
   }
 }
