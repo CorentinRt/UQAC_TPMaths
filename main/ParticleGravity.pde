@@ -1,7 +1,5 @@
 class ParticleGravity implements IParticleForceGenerator
 {
-  Vector3D gravity = new Vector3D(0, 9.81, 0);
-  
   // IParticleForceGenerator
   void UpdateForce(Particle particle, float duration)
   {

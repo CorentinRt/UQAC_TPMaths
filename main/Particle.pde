@@ -13,6 +13,8 @@ class Particle implements IPhysicsEntity, IUpdatable
 
   float mass = 0;
   float radius = 20.0f;
+
+  SphereCollider collider = new SphereCollider(this, radius);
   
   color eulerColor;
   color verletColor;
@@ -36,13 +38,16 @@ class Particle implements IPhysicsEntity, IUpdatable
     this.mass = mass;
     this.position = position;
     this.linearVelocity = new Vector3D(0,0,0);
-    
+
+    collider.UpdatePosition(position);
   }
   
   Particle(float mass, Vector3D position, Vector3D linearVelocity){
     this.mass = mass;
     this.position = position;
     this.linearVelocity = linearVelocity;
+
+    collider.UpdatePosition(position);
     
   }
   
@@ -53,6 +58,18 @@ class Particle implements IPhysicsEntity, IUpdatable
     this.coefStaticFriction = coefStaticFriction;
     this.coefCineticFriction = coefCineticFriction;
   }
+
+  Particle(float mass, Vector3D position, Vector3D linearVelocity, float coefStaticFriction, float coefCineticFriction, float radius){
+    this.mass = mass;
+    this.position = position;
+    this.linearVelocity = linearVelocity;
+    this.coefStaticFriction = coefStaticFriction;
+    this.coefCineticFriction = coefCineticFriction;
+    this.radius = radius;
+
+    this.collider = new SphereCollider(this, radius);
+    collider.UpdatePosition(position);
+  }
   
   Particle(float mass, Vector3D position, Vector3D linearVelocity, float coefStaticFriction, float coefCineticFriction, EIntegrationMethod inIntegrationMethod){
     this.mass = mass;
@@ -60,7 +77,9 @@ class Particle implements IPhysicsEntity, IUpdatable
     this.linearVelocity = linearVelocity;
     this.coefStaticFriction = coefStaticFriction;
     this.coefCineticFriction = coefCineticFriction;
-    
+
+    collider.UpdatePosition(position);
+
     this.integrationMethod = inIntegrationMethod;
   }
   
@@ -68,6 +87,8 @@ class Particle implements IPhysicsEntity, IUpdatable
   void UpdatePhysics(float deltaTime)
   {
     Integrate(deltaTime);
+
+    collider.UpdatePosition(position);
     
     ClearAccum();
   }
@@ -80,6 +101,20 @@ class Particle implements IPhysicsEntity, IUpdatable
   void ClearAccum()
   {
     accumForce = new Vector3D(0, 0, 0);
+  }
+
+  void AddPosition(Vector3D position)
+  {
+    this.position = this.position.Add(position);
+    collider.UpdatePosition(position);
+  }
+
+  Vector3D GetLinearVelocity(){
+    return linearVelocity;
+  }
+
+  float GetMass(){
+    return mass;
   }
   
   // ------------
@@ -110,6 +145,9 @@ class Particle implements IPhysicsEntity, IUpdatable
 
   // ------------
   
+  public void finalize(){
+    collider = null;
+  }
   
   
   void SetIntegrationMethod(EIntegrationMethod inIntegration)

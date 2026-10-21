@@ -1,7 +1,5 @@
 class ParticleCineticFriction implements IParticleForceGenerator
 {
-    Vector3D gravity = new Vector3D(0, 9.81, 0);    
-
     void UpdateForce(Particle particle, float duration)
     {
         if (particle.mass == 0)

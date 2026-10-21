@@ -1,5 +1,7 @@
 Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 
+Vector3D gravity = new Vector3D(0, 9.81, 0);
+
 // UpdateManager 
 UpdateManager updateManager = new UpdateManager();
 
@@ -39,6 +41,10 @@ ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20, new Vec
 ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, new Vector3D(1.5 ,2 ,1), color(255,0,0), color(255,0,0));
 
 ArrayList<Particle> inGameProjectiles = new ArrayList<Particle>();
+
+CollisionManager collisionManager = new CollisionManager();
+
+Particle p = new Particle(0, new Vector3D(0, 0, 0));
 
 //Variables
 float lastFrameUpdate = 0;
@@ -87,11 +93,16 @@ void setup()
   updateManager.Register(deltaTimeDisplay);
   updateManager.Register(integrationSelector);
   updateManager.Register(projectileLauncher);
+  updateManager.Register(collisionManager);
   
   //Setup Targets
   targetManager.AddTarget(new Target(new Vector3D(5, -5, 0), 10, 1));
   targetManager.AddTarget(new Target(new Vector3D(10, -8, 0), 15, 2));
   targetManager.AddTarget(new Target(new Vector3D(15, -3, 0), 5, 3));
+
+  //Particle created for testing purposes, to be removed later
+  physicsEngine.Register(p);
+  updateManager.Register(p);
   
   // GameManager
   gameManager = new GameManager(font);
