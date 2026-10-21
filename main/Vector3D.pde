@@ -94,4 +94,8 @@ static class Vector3D
   Vector3D Copy(){
     return new Vector3D(this.x, this.y, this.z);
   }
+
+  float Distance(Vector3D other){
+    return (float)Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2) + Math.pow(this.z - other.z, 2));
+  }
 }

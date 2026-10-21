@@ -12,7 +12,7 @@ class Particle implements IPhysicsEntity, IUpdatable
   float coefCineticFriction = 0.f;
 
   float mass = 0;
-  float radius = 20.0f;
+  float radius = 1.0f;
 
   SphereCollider collider = new SphereCollider(this, radius);
   
@@ -195,7 +195,7 @@ class Particle implements IPhysicsEntity, IUpdatable
     noStroke();
     fill(c);
     translate(position.x * pixelsPerMeter, position.y * pixelsPerMeter, position.z * pixelsPerMeter);
-    sphere(radius);
+    sphere(radius * pixelsPerMeter);
     popMatrix(); //Reset translation for futur Draws
   }
   
@@ -204,7 +204,7 @@ class Particle implements IPhysicsEntity, IUpdatable
     pushMatrix();
     stroke(c);
     translate(inPosition.x * pixelsPerMeter, inPosition.y * pixelsPerMeter, inPosition.z * pixelsPerMeter);
-    sphere(radius);
+    sphere(radius * pixelsPerMeter);
     popMatrix(); //Reset translation for futur Draws
   }
   

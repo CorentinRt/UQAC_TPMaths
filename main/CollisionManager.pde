@@ -19,12 +19,15 @@ class CollisionManager implements IUpdatable{
                     continue;
                 }
 
-                float distance = dist(colliderA.position.x, colliderA.position.y, colliderA.position.z,
-                                      colliderB.position.x, colliderB.position.y, colliderB.position.z);
+                float distance = colliderA.position.Distance(colliderB.position);
+                
 
                 if(distance <= (colliderA.radius + colliderB.radius)){
 
                     // Handle collision
+
+                    println("Collision detected between " + colliderA.owner.position.GetText() + 
+                    " and " + colliderB.owner.position.GetText() + "distance " + distance + " radiusA " + colliderA.radius + " radiusB " + colliderB.radius);
 
                     Vector3D velocityA = colliderA.owner.GetLinearVelocity();
                     Vector3D velocityB = colliderB.owner.GetLinearVelocity();
