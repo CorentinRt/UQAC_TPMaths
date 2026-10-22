@@ -1,4 +1,7 @@
 class CollisionManager implements IUpdatable{
+
+    float coefRestitution = 0.5;
+
     ArrayList<SphereCollider> particles = new ArrayList<SphereCollider>();
 
     void AddCollider(SphereCollider collider){
@@ -19,23 +22,20 @@ class CollisionManager implements IUpdatable{
                     continue;
                 }
 
-                float distance = colliderA.position.Distance(colliderB.position);
+                float distance = colliderA.owner.position.Distance(colliderB.owner.position);
                 
 
                 if(distance <= (colliderA.radius + colliderB.radius)){
 
                     // Handle collision
 
-                    println("Collision detected between " + colliderA.owner.position.GetText() + 
-                    " and " + colliderB.owner.position.GetText() + "distance " + distance + " radiusA " + colliderA.radius + " radiusB " + colliderB.radius);
-
                     Vector3D velocityA = colliderA.owner.GetLinearVelocity();
                     Vector3D velocityB = colliderB.owner.GetLinearVelocity();
 
-                    if (!velocityA.IsEqualWith(new Vector3D(0,0,0)) && !velocityB.IsEqualWith(new Vector3D(0,0,0))) {
+                    if (!velocityA.IsEqualWith(new Vector3D(0,0,0)) || !velocityB.IsEqualWith(new Vector3D(0,0,0))) {
                                                 
                         Vector3D relativeVelocity = velocityA.Substract(velocityB);
-                        Vector3D collisionNormal = colliderB.position.Substract(colliderA.position).Normalize();
+                        Vector3D collisionNormal = colliderB.owner.position.Substract(colliderA.owner.position).Normalize();
                         
                         float d = abs((colliderA.radius + colliderB.radius) - distance);
                         float massA = colliderA.owner.GetMass();
@@ -43,33 +43,48 @@ class CollisionManager implements IUpdatable{
                         if (massA == 0 && massB == 0) {
                             continue;
                         }
-                        Vector3D deplacementPA = collisionNormal.MultiplyByScalar((massB * d)/(massA + massB));
-                        Vector3D deplacementPB = collisionNormal.MultiplyByScalar((-massA * d)/(massA + massB));
+                        Vector3D deplacementPA = collisionNormal.MultiplyByScalar((massA * d)/(massA + massB));
+                        Vector3D deplacementPB = collisionNormal.MultiplyByScalar((-massB * d)/(massA + massB));
 
                         colliderA.owner.AddPosition(deplacementPA);
                         colliderB.owner.AddPosition(deplacementPB);
 
-                        float magnitude = collisionNormal.ScalarProduct(relativeVelocity);
-                        Vector3D impulseA = collisionNormal.MultiplyByScalar(magnitude);
-                        ParticleImpulse impulseGeneratorA = new ParticleImpulse(impulseA);
-                        ParticleImpulse impulseGeneratorB = new ParticleImpulse(impulseA.MultiplyByScalar(-1));
-                              
+                        float magnitudeNumerator = relativeVelocity.ScalarProduct(collisionNormal);
+                        magnitudeNumerator = magnitudeNumerator * (coefRestitution + 1f);
+
+                        float magnitudeDenominator = (collisionNormal.ScalarProduct(collisionNormal)) * (colliderA.owner.InverseMass() + colliderB.owner.InverseMass());
+
+                        if (magnitudeDenominator == 0)
+                            continue;
+
+                        float magnitude = magnitudeNumerator / magnitudeDenominator;
+
+                        Vector3D impulsion = collisionNormal.MultiplyByScalar(magnitude).MultiplyByScalar(1);
+                        Vector3D impulsionA = impulsion.MultiplyByScalar(colliderA.owner.InverseMass());
+                        Vector3D impulsionB = impulsion.MultiplyByScalar(colliderB.owner.InverseMass());
+
+                        Vector3D newVelocityA = velocityA.Substract(impulsionA);
+                        Vector3D newVelocityB = velocityB.Add(impulsionB);
+
+                        println("Collision appended : A = " + newVelocityA.GetText() + " / B = " + newVelocityB.GetText());
 
                         //Check Object Stationary
                         Vector3D gravityDeltaTime = gravity.MultiplyByScalar(deltaTime);
                         if (gravityDeltaTime.Norm() > velocityA.Norm()){
                             //Object A is stationary, apply impulse to B
-                            particleForceRegistry.Add(colliderB.owner, impulseGeneratorB);
+                            colliderB.owner.linearVelocity = newVelocityB;
+                            println("Object A is stationary");
                             return;
                         }
                         if (gravityDeltaTime.Norm() > velocityB.Norm()){
                             //Object B is stationary, apply impulse to A
-                            particleForceRegistry.Add(colliderA.owner, impulseGeneratorA);
+                            colliderA.owner.linearVelocity = newVelocityA;
+                            println("Object B is stationary");
                             return;
                         }
 
-                        particleForceRegistry.Add(colliderA.owner, impulseGeneratorA);
-                        particleForceRegistry.Add(colliderB.owner, impulseGeneratorB);
+                        colliderA.owner.linearVelocity = newVelocityA;
+                        colliderB.owner.linearVelocity = newVelocityB;
                     }   
                     
                 }
