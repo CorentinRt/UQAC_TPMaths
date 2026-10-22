@@ -35,8 +35,13 @@ class CollisionManager implements IUpdatable{
                     if (!velocityA.IsEqualWith(new Vector3D(0,0,0)) || !velocityB.IsEqualWith(new Vector3D(0,0,0))) {
                                                 
                         Vector3D relativeVelocity = velocityA.Substract(velocityB);
-                        Vector3D collisionNormal = colliderB.owner.position.Substract(colliderA.owner.position).Normalize();
+                        Vector3D collisionNormal = (colliderB.owner.position.Substract(colliderA.owner.position)).Normalize();
                         
+                        float velAlongNormal = relativeVelocity.ScalarProduct(collisionNormal);
+
+                        if (velAlongNormal <= 0)
+                            continue;
+
                         float d = abs((colliderA.radius + colliderB.radius) - distance);
                         float massA = colliderA.owner.GetMass();
                         float massB = colliderB.owner.GetMass();
@@ -66,21 +71,17 @@ class CollisionManager implements IUpdatable{
                         Vector3D newVelocityA = velocityA.Substract(impulsionA);
                         Vector3D newVelocityB = velocityB.Add(impulsionB);
 
-                        println("Collision appended : A = " + newVelocityA.GetText() + " / B = " + newVelocityB.GetText());
-
                         //Check Object Stationary
                         Vector3D gravityDeltaTime = gravity.MultiplyByScalar(deltaTime);
                         if (gravityDeltaTime.Norm() > velocityA.Norm()){
                             //Object A is stationary, apply impulse to B
                             colliderB.owner.linearVelocity = newVelocityB;
-                            println("Object A is stationary");
-                            return;
+                            continue;
                         }
                         if (gravityDeltaTime.Norm() > velocityB.Norm()){
                             //Object B is stationary, apply impulse to A
                             colliderA.owner.linearVelocity = newVelocityA;
-                            println("Object B is stationary");
-                            return;
+                            continue;
                         }
 
                         colliderA.owner.linearVelocity = newVelocityA;
