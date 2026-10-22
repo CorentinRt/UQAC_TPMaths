@@ -54,6 +54,9 @@ float lastFrameUpdate = 0;
 
 boolean isFirstFrame = true;
 
+// Ground
+boolean groundSetup = false;
+
 static 
   {
     System.setProperty("sun.java2d.uiScale", "1.01"); // If this is 1.0 it does NOT work!
@@ -116,6 +119,7 @@ void setup()
   
   // GameManager
   gameManager = new GameManager(font);
+
 }
 
 
@@ -172,6 +176,15 @@ void draw()
     
     //Targets
     targetManager.CheckCollisions(inGameProjectiles);
+
+    // Ground
+    if (!groundSetup)
+    {
+      SetupNewGround();
+    }
+  }
+  else{
+    groundSetup = false;
   }
   /*
   else if (inGameProjectiles.size() > 0){
@@ -233,6 +246,7 @@ void mousePressed()
   if (gameManager.state == GameState.GAME_OVER)
   {
     gameManager.StartGame();
+    // todo : reset ground
     return;
   }
   
@@ -266,3 +280,38 @@ void RemoveOutsideProjectiles()
   }
   */
 }
+
+void SetupNewGround()
+{
+  // Ground with particules
+  float groundSpacing = 50; 
+  float bottomY = (height / 2.0f + 100) / pixelsPerMeter;
+
+  for (float pixelX = -width / 2.0f; pixelX < width / 2.0f; pixelX += groundSpacing)
+  {
+    float x = pixelX / pixelsPerMeter;
+    float radius = random(3, 6); 
+
+    Particle p = new Particle(
+      0,
+      new Vector3D(x, bottomY - radius, 0),
+      new Vector3D(0, 0, 0),
+      0,
+      0,
+      radius
+    );
+
+    p.SetAffectedByGravity(false);
+
+    color c = color(255,255,255);
+    p.SetDrawColors(c, c);
+
+    inGameProjectiles.add(p);
+    physicsEngine.Register(p);
+    updateManager.Register(p);
+  }
+
+  groundSetup = true;
+}
+
+// todo : reset ground (mettre les particules du ground dans une liste pour les retrouver ? )

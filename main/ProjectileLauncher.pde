@@ -6,7 +6,7 @@ public class ProjectileLauncher implements IUpdatable
   EProjectileType[] availableProjectiles = {EProjectileType.BALL, EProjectileType.BOULDER, EProjectileType.FIREBALL, EProjectileType.LASER};
   
   Vector3D direction = new Vector3D(1, 1, 1);
-  Vector3D launchPosition = new Vector3D(-40, 20, 0);
+  Vector3D launchPosition = new Vector3D(-40, 10, 0);
   
   float launchCooldown = 0.5f;
   float launchClock = 0.5f;

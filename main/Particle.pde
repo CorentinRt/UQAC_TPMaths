@@ -18,6 +18,8 @@ class Particle implements IPhysicsEntity, IUpdatable
   
   color eulerColor;
   color verletColor;
+
+  boolean affectedByGravity = true;
   
   Particle(){
     this.mass = 0;
@@ -44,7 +46,6 @@ class Particle implements IPhysicsEntity, IUpdatable
     this.mass = mass;
     this.position = position;
     this.linearVelocity = linearVelocity;
-    
   }
   
   Particle(float mass, Vector3D position, Vector3D linearVelocity, float coefStaticFriction, float coefCineticFriction){
@@ -74,6 +75,11 @@ class Particle implements IPhysicsEntity, IUpdatable
     this.coefCineticFriction = coefCineticFriction;
 
     this.integrationMethod = inIntegrationMethod;
+  }
+
+  void SetAffectedByGravity(boolean newAffectedByGravity)
+  {
+    affectedByGravity = newAffectedByGravity;
   }
   
   // IPhysicsEntity
