@@ -56,6 +56,7 @@ boolean isFirstFrame = true;
 
 // Ground
 boolean groundSetup = false;
+ArrayList<Particle> groundParticles = new ArrayList<Particle>();
 
 static 
   {
@@ -177,14 +178,19 @@ void draw()
     //Targets
     targetManager.CheckCollisions(inGameProjectiles);
 
-    // Ground
+    // Ground - Setup 
     if (!groundSetup)
     {
       SetupNewGround();
     }
   }
-  else{
-    groundSetup = false;
+  else
+  {
+    // Ground - Reset 
+    if (groundSetup)
+    {
+      ResetGround();
+    }
   }
   /*
   else if (inGameProjectiles.size() > 0){
@@ -246,7 +252,6 @@ void mousePressed()
   if (gameManager.state == GameState.GAME_OVER)
   {
     gameManager.StartGame();
-    // todo : reset ground
     return;
   }
   
@@ -306,7 +311,9 @@ void SetupNewGround()
     color c = color(255,255,255);
     p.SetDrawColors(c, c);
 
+    groundParticles.add(p);
     inGameProjectiles.add(p);
+    
     physicsEngine.Register(p);
     updateManager.Register(p);
   }
@@ -314,4 +321,17 @@ void SetupNewGround()
   groundSetup = true;
 }
 
-// todo : reset ground (mettre les particules du ground dans une liste pour les retrouver ? )
+void ResetGround()
+{
+  for (int i = 0; i < groundParticles.size(); i++)
+  {
+    Particle p = groundParticles.get(i);
+
+    inGameProjectiles.remove(p);
+    physicsEngine.Unregister(p);
+    updateManager.Unregister(p);
+  }
+
+  groundParticles.clear();
+  groundSetup = false;
+}
