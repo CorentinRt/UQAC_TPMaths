@@ -49,12 +49,12 @@ CollisionManager collisionManager = new CollisionManager();
 Particle p1 = new Particle(10, new Vector3D(0, 0, 0));
 Particle p2 = new Particle(10, new Vector3D(0, 10, 0));
 
-SpringTwoParticles springp1p2 = new SpringTwoParticles(5, 5, 0.5);
+SpringTwoParticles springp1p2 = new SpringTwoParticles(5, 5, 0.5, true);
 
 
 Particle p3 = new Particle(5, new Vector3D(15, 10, 0));
 
-SpringParticleAnchor springP3Anchor = new SpringParticleAnchor(5, 10, 0.5);
+SpringParticleAnchor springP3Anchor = new SpringParticleAnchor(5, 10, 0.5, true);
 
 
 //Variables

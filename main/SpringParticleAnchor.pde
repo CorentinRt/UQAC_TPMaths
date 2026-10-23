@@ -4,8 +4,8 @@ class SpringParticleAnchor extends Spring
     Vector3D anchor;
     boolean hasRegisteredAnchor = false;
 
-    SpringParticleAnchor(float length, float elasticity, float cDamping){
-        super(length, elasticity, cDamping);
+    SpringParticleAnchor(float length, float elasticity, float cDamping, boolean isBungee){
+        super(length, elasticity, cDamping, isBungee);
     }
 
     void RegisterNewParticle(Particle particle){
@@ -24,7 +24,7 @@ class SpringParticleAnchor extends Spring
         if (particle == null || hasRegisteredAnchor == false)
             return;
 
-        ParticleSpringForceGenerator particleForce = new ParticleSpringForceGenerator(anchor, new Vector3D(0, 0, 0), elasticity, length, cDamping);
+        ParticleSpringForceGenerator particleForce = new ParticleSpringForceGenerator(anchor, new Vector3D(0, 0, 0), isBungee, elasticity, length, cDamping);
 
         particleForceRegistry.Add(particle, particleForce);
     }

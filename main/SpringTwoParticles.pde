@@ -3,8 +3,9 @@ class SpringTwoParticles extends Spring
     Particle firstParticle;
     Particle secondParticle;
 
-    SpringTwoParticles(float length, float elasticity, float cDamping){
-        super(length, elasticity, cDamping);
+
+    SpringTwoParticles(float length, float elasticity, float cDamping, boolean isBungee){
+        super(length, elasticity, cDamping, isBungee);
     }
 
     void RegisterNewParticle(Particle particle){
@@ -25,10 +26,10 @@ class SpringTwoParticles extends Spring
             return;
 
         ParticleSpringForceGenerator firstParticleForce = 
-            new ParticleSpringForceGenerator(secondParticle.position, secondParticle.linearVelocity, elasticity, length, cDamping);
+            new ParticleSpringForceGenerator(secondParticle.position, secondParticle.linearVelocity, isBungee, elasticity, length, cDamping);
 
         ParticleSpringForceGenerator secondParticleForce = 
-            new ParticleSpringForceGenerator(firstParticle.position, firstParticle.linearVelocity, elasticity, length, cDamping);
+            new ParticleSpringForceGenerator(firstParticle.position, firstParticle.linearVelocity, isBungee, elasticity, length, cDamping);
 
         particleForceRegistry.Add(firstParticle, firstParticleForce);
         particleForceRegistry.Add(secondParticle, secondParticleForce);
