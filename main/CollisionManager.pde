@@ -27,9 +27,10 @@ class CollisionManager implements IUpdatable{
                 Vector3D velocityA = colliderA.owner.GetLinearVelocity();
                 Vector3D velocityB = colliderB.owner.GetLinearVelocity();
                 Vector3D relativeVelocity = velocityA.Substract(velocityB);
+                
                 Vector3D collisionNormal = (colliderB.owner.position.Substract(colliderA.owner.position)).Normalize();
 
-                CorrectCollidingPosition(colliderA, colliderB);
+                CorrectCollidingPosition(colliderA, colliderB, collisionNormal);
                     
                 collisionNormal = (colliderB.owner.position.Substract(colliderA.owner.position)).Normalize();
 
@@ -49,11 +50,9 @@ class CollisionManager implements IUpdatable{
         return true;
     }
 
-    void CorrectCollidingPosition(SphereCollider collA, SphereCollider collB){
+    void CorrectCollidingPosition(SphereCollider collA, SphereCollider collB, Vector3D collisionNormal){
 
         float distance = collA.owner.position.Distance(collB.owner.position);
-
-        Vector3D collisionNormal = (collB.owner.position.Substract(collA.owner.position)).Normalize();
 
         float d = abs((collA.radius + collB.radius) - distance);
         float massA = collA.owner.GetMass();
