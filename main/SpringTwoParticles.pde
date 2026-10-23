@@ -24,9 +24,11 @@ class SpringTwoParticles extends Spring
         if (firstParticle == null || secondParticle == null)
             return;
 
-        ParticleSpring firstParticleForce = new ParticleSpring(secondParticle, elasticity, length, cDamping);
+        ParticleSpringForceGenerator firstParticleForce = 
+            new ParticleSpringForceGenerator(secondParticle.position, secondParticle.linearVelocity, elasticity, length, cDamping);
 
-        ParticleSpring secondParticleForce = new ParticleSpring(firstParticle, elasticity, length, cDamping);
+        ParticleSpringForceGenerator secondParticleForce = 
+            new ParticleSpringForceGenerator(firstParticle.position, firstParticle.linearVelocity, elasticity, length, cDamping);
 
         particleForceRegistry.Add(firstParticle, firstParticleForce);
         particleForceRegistry.Add(secondParticle, secondParticleForce);

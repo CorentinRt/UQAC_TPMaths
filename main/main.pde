@@ -46,10 +46,16 @@ ArrayList<Particle> inGameProjectiles = new ArrayList<Particle>();
 
 CollisionManager collisionManager = new CollisionManager();
 
-Particle p1 = new Particle(INFINITE_MASS, new Vector3D(0, 0, 0));
+Particle p1 = new Particle(10, new Vector3D(0, 0, 0));
 Particle p2 = new Particle(10, new Vector3D(0, 10, 0));
 
 SpringTwoParticles springp1p2 = new SpringTwoParticles(5, 5, 0.5);
+
+
+Particle p3 = new Particle(5, new Vector3D(15, 10, 0));
+
+SpringParticleAnchor springP3Anchor = new SpringParticleAnchor(5, 10, 0.5);
+
 
 //Variables
 float lastFrameUpdate = 0;
@@ -77,8 +83,12 @@ void setup()
   springp1p2.RegisterNewParticle(p1);
   springp1p2.RegisterNewParticle(p2);
 
+  springP3Anchor.RegisterNewParticle(p3);
+  springP3Anchor.RegisterAnchor(new Vector3D(15, 0, 0));
+
   inGameProjectiles.add(p1);
   inGameProjectiles.add(p2);
+  inGameProjectiles.add(p3);
 
   // Initialisation deltaTime 1st frame
   lastFrameUpdate = millis();
@@ -119,6 +129,8 @@ void setup()
   updateManager.Register(p1);
   physicsEngine.Register(p2);
   updateManager.Register(p2);
+  physicsEngine.Register(p3);
+  updateManager.Register(p3);
   
   // GameManager
   gameManager = new GameManager(font);
@@ -150,6 +162,7 @@ void draw()
   for (int i = 0; i < inGameProjectiles.size(); ++i)
   {
     springp1p2.ApplySpringForces();
+    springP3Anchor.ApplySpringForces();
 
     particleForceRegistry.Add(inGameProjectiles.get(i), gravityForce);
 
