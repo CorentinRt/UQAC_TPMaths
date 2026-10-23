@@ -169,7 +169,10 @@ class Particle implements IPhysicsEntity, IUpdatable
   float InverseMass() {
     if (mass <= 0)
       return 0;  // Pour éviter un crash et ainsi mettre les objets immobiles sur 0
-      
+
+    if (mass == INFINITE_MASS)
+      return 0;
+
     return 1 / mass;
   }
   

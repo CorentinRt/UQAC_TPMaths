@@ -34,6 +34,8 @@ TextDisplay timerDisplay;
 
 float pixelsPerMeter = 30;
 
+float INFINITE_MASS = 99999f;
+
 //Projectiles Statistics
 ProjectileStatistics ballDefaultStats = new ProjectileStatistics(10, new Vector3D(1 ,1 ,1), color(0,0,255), color(0,0,255));
 ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, new Vector3D(1 ,0.5 ,1), color(67,67,67), color(67,67,67));
@@ -44,7 +46,7 @@ ArrayList<Particle> inGameProjectiles = new ArrayList<Particle>();
 
 CollisionManager collisionManager = new CollisionManager();
 
-Particle p1 = new Particle(0, new Vector3D(0, 0, 0));
+Particle p1 = new Particle(INFINITE_MASS, new Vector3D(0, 0, 0));
 Particle p2 = new Particle(10, new Vector3D(0, 10, 0));
 
 SpringTwoParticles springp1p2 = new SpringTwoParticles(5, 5, 0.5);
@@ -298,7 +300,7 @@ void SetupNewGround()
     float radius = random(3, 6); 
 
     Particle p = new Particle(
-      0,
+      INFINITE_MASS,
       new Vector3D(x, bottomY - radius, 0),
       new Vector3D(0, 0, 0),
       0,

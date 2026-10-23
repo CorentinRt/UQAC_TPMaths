@@ -44,7 +44,10 @@ class CollisionManager implements IUpdatable{
 
         float distance = collA.owner.position.Distance(collB.owner.position);
 
-        if(distance > (collA.radius + collB.radius))
+        if (collA.owner.linearVelocity == new Vector3D(0, 0, 0) && collB.owner.linearVelocity == new Vector3D(0, 0, 0))
+            return false;
+            
+        if(distance > (collA.owner.radius + collB.owner.radius))
             return false;
 
         return true;
@@ -54,26 +57,18 @@ class CollisionManager implements IUpdatable{
 
         float distance = collA.owner.position.Distance(collB.owner.position);
 
-        float d = abs((collA.radius + collB.radius) - distance);
+        float d = abs((collA.owner.radius + collB.owner.radius) - distance);
         float massA = collA.owner.GetMass();
         float massB = collB.owner.GetMass();
 
         if (massA == 0 && massB == 0)
             return;
 
+        if (massA == INFINITE_MASS && massB == INFINITE_MASS)
+            return;
+
         Vector3D deplacementPA = collisionNormal.MultiplyByScalar((-massB * d)/(massA + massB));
         Vector3D deplacementPB = collisionNormal.MultiplyByScalar((massA * d)/(massA + massB));
-
-        if (massA == 0)
-        {
-            deplacementPA = deplacementPA.MultiplyByScalar(0);
-            deplacementPB = collisionNormal.MultiplyByScalar(d);
-        }
-        else if (massB == 0)
-        {
-            deplacementPA = collisionNormal.MultiplyByScalar(-d);
-            deplacementPB = deplacementPB.MultiplyByScalar(0);
-        }
 
         collA.owner.AddPosition(deplacementPA);
         collB.owner.AddPosition(deplacementPB);
