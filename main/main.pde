@@ -162,10 +162,10 @@ void draw()
   }
   
   // Force Registry
+  springsRegistry.ApplyAllSpringsForces();
+  
   for (int i = 0; i < allParticles.size(); ++i)
   {
-    springsRegistry.ApplyAllSpringsForces();
-
     particleForceRegistry.Add(allParticles.get(i), gravityForce);
 
     ParticleStaticFriction staticFriction = new ParticleStaticFriction();

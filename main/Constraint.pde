@@ -9,6 +9,8 @@ class Constraint {
         this.collider2 = collider2;
         this.length = length;
         this.constraintType = constraintType;
+
+        RegisterToManagers();
     }
 
     void RegisterToManagers(){

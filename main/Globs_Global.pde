@@ -14,8 +14,8 @@ class Globs_Global implements IUpdatable{
 
     Glob_Single motherGlob;
 
-    float restLengthBetweenGlobs = 3f;
-    float maxLengthBetweenGlobs = 6f;
+    float restLengthBetweenGlobs = 2f;
+    float maxLengthBetweenGlobs = 4f;
     float elasticity = 10f;
     float cDamping = 0.5f;
     boolean isBungee = true;
@@ -31,7 +31,6 @@ class Globs_Global implements IUpdatable{
         allGlobsInGlobal.add(motherGlob);
         motherGlob.position = motherGlobPosition;
         motherGlob.SetDrawColors(globColor, globColor);
-        motherGlob.linearVelocity = new Vector3D(0, 10, 0);
 
         for (int i = 1; i < defaultNumGlobInGlobal; ++i){
 
@@ -46,6 +45,62 @@ class Globs_Global implements IUpdatable{
 
             globToAdd.SetDrawColors(globColor, globColor);
         }
+    }
+
+    void DestroyGlobsGlobal(){
+        UnregisterFromManagers();
+
+        for (int i = 0; i < allGlobsInGlobal.size(); ++i){
+            Glob_Single glob = allGlobsInGlobal.get(i);
+
+            if (glob == null)
+                continue;
+
+            glob.DestroyParticle();
+        }
+
+        allGlobsInGlobal.clear();
+
+        for (Map.Entry<Spring, Globs_Pair> entry : springsAssociatedGlobs.entrySet()){
+            Spring spring = entry.getKey();
+
+            if (spring != null){
+                spring.DestroySpring();
+            }
+        }
+
+        springsAssociatedGlobs.clear();
+
+        for (Map.Entry<Constraint, Globs_Pair> entry : constraintsAssociatedGlobs.entrySet()){
+            Constraint constraint = entry.getKey();
+
+            if (constraint != null){
+                constraint.DestroyConstraint();
+            }
+        }
+
+        constraintsAssociatedGlobs.clear();
+    }
+
+    void RegisterToManagers(){
+
+        if (updateManager != null){
+                updateManager.Register(this);
+        }
+    }
+
+    void UnregisterFromManagers(){
+
+        if (updateManager != null){
+                updateManager.Unregister(this);
+        }
+    }
+
+    void SetVelocity(Vector3D velocity){
+        if (motherGlob == null)
+            return;
+
+        motherGlob.linearVelocity = velocity;
     }
 
     void Update(float deltaTime){
