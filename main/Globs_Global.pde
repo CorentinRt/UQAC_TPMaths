@@ -185,11 +185,20 @@ class Globs_Global implements IUpdatable{
             
             if (spring == null)
             continue;
+
+            // AJOUT : retirer le ressort de l'autre glob de la paire
+            Globs_Pair pair = springsAssociatedGlobs.get(spring);
+            if (pair != null){
+                Glob_Single other = (pair.firstGlob == glob) ? pair.secondGlob : pair.firstGlob;
+                if (other != null)
+                    other.associatedSprings.remove(spring);
+            }
             
             springsAssociatedGlobs.remove(spring);
             spring.DestroySpring();
         }
 
+        glob.associatedSprings.clear();   // AJOUT
 
         ArrayList<Constraint> constraintsToDestroy = GetConstraintsAssociatedByThisGlob(glob);
 
@@ -230,8 +239,8 @@ class Globs_Global implements IUpdatable{
                 continue;
             }
 
-            if (globsPair.firstGlob != null && globsPair.secondGlob != null)
-                continue;
+            //if (globsPair.firstGlob != null && globsPair.secondGlob != null)
+                //continue;
 
             springsAffected.add(spring);
         }
@@ -262,8 +271,8 @@ class Globs_Global implements IUpdatable{
                 continue;
             }
 
-            if (globsPair.firstGlob != null && globsPair.secondGlob != null)
-                continue;
+            //if (globsPair.firstGlob != null && globsPair.secondGlob != null)
+                //continue;
 
             constraintsAffected.add(constraint);
         }

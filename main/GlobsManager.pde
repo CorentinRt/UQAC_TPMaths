@@ -71,8 +71,7 @@ class GlobsManager implements IUpdatable
         // Detacher le nouveau blob du blob d'origine
         for (Glob_Single g : new_b)
         {
-            Detach(blob, g);
-            blob.allGlobsInGlobal.remove(g);
+            blob.RemoveGlobFromGlobal(g);
         }
 
         // Créer nouveau blob et on détruit sa glob mère
@@ -109,57 +108,6 @@ class GlobsManager implements IUpdatable
          for (Glob_Single g : new_b)
         {
             g.linearVelocity = g.linearVelocity.Add(new Vector3D(g.position.x < center.x ? -splitImpulseForce : splitImpulseForce, 0, 0));
-        }
-    }
-
-    void Detach(Globs_Global blob, Glob_Single g)
-    {
-        println("Detach glob from global");
-
-        // Detacher tous les springs
-        ArrayList<Spring> springs = new ArrayList<Spring>(g.associatedSprings);
-        for (Spring s : springs)
-        {
-            // Check pair & remove from other
-            Globs_Pair p = blob.springsAssociatedGlobs.get(s);
-            if (p != null)
-            {
-                Glob_Single other; 
-                if (p.firstGlob == g)
-                    other = p.secondGlob;
-                else
-                    other = p.firstGlob;
-
-                if (other != null)
-                    other.associatedSprings.remove(s);   
-            }
-
-            // Remove & destroy spring
-            blob.springsAssociatedGlobs.remove(s);
-            s.DestroySpring();
-        }
-
-        // Pareil ici pour les constraints
-        ArrayList<Constraint> constraints = new ArrayList<Constraint>(g.associatedConstraints);
-        for (Constraint c : constraints)
-        {
-            // Check pair & remove from other
-            Globs_Pair p = blob.constraintsAssociatedGlobs.get(c);
-            if (p != null)
-            {
-                Glob_Single other; 
-                if (p.firstGlob == g)
-                    other = p.secondGlob;
-                else
-                    other = p.firstGlob;
-
-                if (other != null)
-                    other.associatedConstraints.remove(c); 
-            }
-
-            // Remove & destroy constraint
-            blob.constraintsAssociatedGlobs.remove(c);
-            c.DestroyConstraint();
         }
     }
     // ----- SPLIT ----- //
