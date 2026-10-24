@@ -8,11 +8,14 @@ class Particle implements IPhysicsEntity, IUpdatable
   
   Vector3D accumForce = new Vector3D();
   
-  float coefStaticFriction = 0.0f;
-  float coefCineticFriction = 0.f;
+  float coefStaticFriction = 0.5f;
+  float coefCineticFriction = 0.3f;
 
   float mass = 0;
   float radius = 1.0f;
+
+  boolean isResting = false;
+  Vector3D contactNormal = new Vector3D();
 
   SphereCollider collider = new SphereCollider(this, radius);
   

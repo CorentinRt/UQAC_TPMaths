@@ -45,6 +45,9 @@ class CollisionManager implements IUpdatable{
                 collisionNormal = (colliderB.owner.position.Substract(colliderA.owner.position)).Normalize();
 
                 ApplyCollisionImpulse(colliderA, colliderB, velocityA, velocityB, relativeVelocity, collisionNormal, deltaTime);
+
+                colliderA.owner.contactNormal = collisionNormal.MultiplyByScalar(-1);
+                colliderB.owner.contactNormal = collisionNormal;
             }
         }
 
@@ -173,13 +176,18 @@ class CollisionManager implements IUpdatable{
         //Check Object Stationary
         Vector3D gravityDeltaTime = gravity.MultiplyByScalar(deltaTime);
 
+        collA.owner.isResting = false;
+        collB.owner.isResting = false;
+
         if (gravityDeltaTime.Norm() > velocityA.Norm()){
             //Object A is stationary, apply impulse to B
+            collA.owner.isResting = true;
             collB.owner.linearVelocity = newVelocityB;
             return;
         }
         if (gravityDeltaTime.Norm() > velocityB.Norm()){
             //Object B is stationary, apply impulse to A
+            collB.owner.isResting = true;
             collA.owner.linearVelocity = newVelocityA;
             return;
         }

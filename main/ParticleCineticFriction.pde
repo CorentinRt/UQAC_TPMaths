@@ -10,15 +10,14 @@ class ParticleCineticFriction implements IParticleForceGenerator
 
         Vector3D gravityByMass = gravity.MultiplyByScalar(particle.mass);  // Fg = 9.81 * Mobj
         
-        Vector3D normalGravityApplied = gravityByMass.MultiplyByScalar(-1);
+        Vector3D gravityAppliedAlongContact = particle.contactNormal.MultiplyByScalar(particle.contactNormal.ScalarProduct(gravityByMass));
 
-        float totalCineticFrictionNorm = normalGravityApplied.Norm() * particle.coefCineticFriction;
+        Vector3D forceAppliedAlongContact = particle.accumForce.Normalize().MultiplyByScalar(gravityAppliedAlongContact.Norm());
 
-        Vector3D currentForceAppliedNormalized = particle.accumForce;
-        currentForceAppliedNormalized = currentForceAppliedNormalized.Normalize();
+        float frictionCineticMagnitude = gravityAppliedAlongContact.MultiplyByScalar(-1).Norm() * particle.coefCineticFriction;
 
-        Vector3D cineticFriction = currentForceAppliedNormalized.MultiplyByScalar(-1 * totalCineticFrictionNorm);
+        Vector3D frictionCinetic = forceAppliedAlongContact.MultiplyByScalar(-1).Normalize().MultiplyByScalar(frictionCineticMagnitude);
 
-        particle.AddForce(cineticFriction);
+        particle.AddForce(frictionCinetic);
     }
 }

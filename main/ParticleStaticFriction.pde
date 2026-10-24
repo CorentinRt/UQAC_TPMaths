@@ -10,14 +10,18 @@ class ParticleStaticFriction implements IParticleForceGenerator
       return;
 
     Vector3D gravityByMass = gravity.MultiplyByScalar(particle.mass);  // Fg = 9.81 * Mobj
-    
-    Vector3D normalGravityApplied = gravityByMass.MultiplyByScalar(-1);
 
-    float total = normalGravityApplied.Norm() * particle.coefStaticFriction;
+    Vector3D gravityAppliedAlongContact = particle.contactNormal.MultiplyByScalar(particle.contactNormal.ScalarProduct(gravityByMass));
 
-    if (particle.accumForce.Norm() < total)
+    Vector3D forceAppliedAlongContact = particle.accumForce.Normalize().MultiplyByScalar(gravityAppliedAlongContact.Norm());
+
+    float maxFrictionStatic = gravityAppliedAlongContact.MultiplyByScalar(-1).Norm() * particle.coefStaticFriction;
+
+    if (forceAppliedAlongContact.Norm() <= maxFrictionStatic)
     {
-        particle.AddForce(particle.accumForce.MultiplyByScalar(-1));
+        Vector3D friction = forceAppliedAlongContact.MultiplyByScalar(-1);
+
+        particle.AddForce(friction);
     }
   }
   // ----------------------
