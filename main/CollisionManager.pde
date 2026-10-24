@@ -57,7 +57,7 @@ class CollisionManager implements IUpdatable{
 
         float distance = collA.owner.position.Distance(collB.owner.position);
 
-        float d = abs((collA.owner.radius + collB.owner.radius) - distance);
+        float d = distance - (collA.owner.radius + collB.owner.radius);
         float massA = collA.owner.GetMass();
         float massB = collB.owner.GetMass();
 
@@ -67,8 +67,8 @@ class CollisionManager implements IUpdatable{
         if (massA == INFINITE_MASS && massB == INFINITE_MASS)
             return;
 
-        Vector3D deplacementPA = collisionNormal.MultiplyByScalar((-massB * d)/(massA + massB));
-        Vector3D deplacementPB = collisionNormal.MultiplyByScalar((massA * d)/(massA + massB));
+        Vector3D deplacementPA = collisionNormal.MultiplyByScalar((massB * d)/(massA + massB));
+        Vector3D deplacementPB = collisionNormal.MultiplyByScalar((-massA * d)/(massA + massB));
 
         collA.owner.AddPosition(deplacementPA);
         collB.owner.AddPosition(deplacementPB);
