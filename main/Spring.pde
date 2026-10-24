@@ -10,6 +10,16 @@ class Spring
         this.elasticity = elasticity;
         this.cDamping = cDamping;
         this.isBungee = isBungee;
+
+        if (springsRegistry != null){
+            springsRegistry.RegisterSpring(this);
+        }
+    }
+
+    void DestroySpring(){
+        if (springsRegistry != null){
+            springsRegistry.UnregisterSpring(this);
+        }
     }
 
     void ApplySpringForces(){

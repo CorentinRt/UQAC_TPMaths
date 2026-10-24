@@ -11,6 +11,25 @@ class Constraint {
         this.constraintType = constraintType;
     }
 
+    void RegisterToManagers(){
+        if (collisionManager != null){
+            collisionManager.AddConstraint(cableConstraint);
+        }
+
+
+    }
+
+    void UnregisterFromManagers(){
+        if (collisionManager != null){
+            collisionManager.RemoveConstraint(cableConstraint);
+        }
+    }
+
+    void DestroyConstraint(){
+
+        UnregisterFromManagers();
+    }
+
     boolean IsValid(){
         return collider1 != null && collider2 != null;
     }

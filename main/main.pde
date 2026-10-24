@@ -1,3 +1,7 @@
+import java.util.Map;
+import java.util.HashMap;
+
+
 Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 
 Vector3D gravity = new Vector3D(0, 9.81, 0);
@@ -42,9 +46,15 @@ ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, new Vec
 ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20, new Vector3D(2 ,1.2 ,1), color(255,150,0), color(255,150,0));
 ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, new Vector3D(1.5 ,2 ,1), color(255,0,0), color(255,0,0));
 
+ArrayList<Particle> allParticles = new ArrayList<Particle>();
+
 ArrayList<Particle> inGameProjectiles = new ArrayList<Particle>();
 
 CollisionManager collisionManager = new CollisionManager();
+SpringsRegistry springsRegistry = new SpringsRegistry();
+
+
+Globs_Global globsGlobal = new Globs_Global(new Vector3D(20, 10, 0), 10);
 
 Particle p1 = new Particle(10, new Vector3D(0, 0, 0));
 Particle p2 = new Particle(10, new Vector3D(0, 10, 0));
@@ -89,14 +99,6 @@ void setup()
   springP3Anchor.RegisterNewParticle(p3);
   springP3Anchor.RegisterAnchor(new Vector3D(15, 0, 0));
 
-  collisionManager.AddConstraint(cableConstraint);
-
-  inGameProjectiles.add(p1);
-  inGameProjectiles.add(p2);
-  inGameProjectiles.add(p3);
-  inGameProjectiles.add(p4);
-  inGameProjectiles.add(p5);
-
   // Initialisation deltaTime 1st frame
   lastFrameUpdate = millis();
   
@@ -132,16 +134,6 @@ void setup()
   targetManager.AddTarget(new Target(new Vector3D(15, -3, 0), 5, 3));
 
   //Particle created for testing purposes, to be removed later
-  physicsEngine.Register(p1);
-  updateManager.Register(p1);
-  physicsEngine.Register(p2);
-  updateManager.Register(p2);
-  physicsEngine.Register(p3);
-  updateManager.Register(p3);
-  physicsEngine.Register(p4);
-  updateManager.Register(p4);
-  physicsEngine.Register(p5);
-  updateManager.Register(p5);
   
   // GameManager
   gameManager = new GameManager(font);
@@ -170,18 +162,17 @@ void draw()
   }
   
   // Force Registry
-  for (int i = 0; i < inGameProjectiles.size(); ++i)
+  for (int i = 0; i < allParticles.size(); ++i)
   {
-    springp1p2.ApplySpringForces();
-    springP3Anchor.ApplySpringForces();
+    springsRegistry.ApplyAllSpringsForces();
 
-    particleForceRegistry.Add(inGameProjectiles.get(i), gravityForce);
+    particleForceRegistry.Add(allParticles.get(i), gravityForce);
 
     ParticleStaticFriction staticFriction = new ParticleStaticFriction();
-    particleForceRegistry.Add(inGameProjectiles.get(i), staticFriction);
+    particleForceRegistry.Add(allParticles.get(i), staticFriction);
 
     ParticleCineticFriction cineticFriction = new ParticleCineticFriction();
-    particleForceRegistry.Add(inGameProjectiles.get(i), cineticFriction);
+    particleForceRegistry.Add(allParticles.get(i), cineticFriction);
   }
   particleForceRegistry.UpdateForces(deltaTime);
   particleForceRegistry.Clear();
@@ -202,7 +193,7 @@ void draw()
     physicsEngine.UpdateAll(deltaTime);
     
     //Targets
-    targetManager.CheckCollisions(inGameProjectiles);
+    targetManager.CheckCollisions(allParticles);
 
     // Ground - Setup 
     if (!groundSetup)
@@ -288,28 +279,29 @@ void mousePressed()
     launchedProjectile.SetIntegrationMethod(integrationSelector.GetIntegrationMethod());
     inGameProjectiles.add(launchedProjectile);
     println("Summoning projectile at position : " + projectileLauncher.launchPosition.GetText());
-    physicsEngine.Register(launchedProjectile);
-    updateManager.Register(launchedProjectile);
   }
 }
 
 void RemoveOutsideProjectiles()
 {
-  return;
-  /*
   int i = 0;
   while (i < inGameProjectiles.size()){; 
     if (inGameProjectiles.get(i).position.x > (width * 2) / pixelsPerMeter || inGameProjectiles.get(i).position.y > (height * 2) / pixelsPerMeter)
     {
       println("Removing projectile : " + inGameProjectiles.get(i).position.GetText());
-      physicsEngine.Unregister(inGameProjectiles.get(i));
-      updateManager.Unregister(inGameProjectiles.get(i));
+      
+      Particle projectile = inGameProjectiles.get(i);
+
+      if (projectile == null)
+        continue;
+
       inGameProjectiles.remove(i);
+      projectile.DestroyParticle();
+
       continue;
     }
     i++;
   }
-  */
 }
 
 void SetupNewGround()
@@ -338,10 +330,6 @@ void SetupNewGround()
     p.SetDrawColors(c, c);
 
     groundParticles.add(p);
-    inGameProjectiles.add(p);
-    
-    physicsEngine.Register(p);
-    updateManager.Register(p);
   }
 
   groundSetup = true;
@@ -353,9 +341,7 @@ void ResetGround()
   {
     Particle p = groundParticles.get(i);
 
-    inGameProjectiles.remove(p);
-    physicsEngine.Unregister(p);
-    updateManager.Unregister(p);
+    p.DestroyParticle();
   }
 
   groundParticles.clear();

@@ -29,6 +29,7 @@ class Particle implements IPhysicsEntity, IUpdatable
     this.position = new Vector3D(0,0,0);
     this.linearVelocity = new Vector3D(0,0,0);
     
+    RegisterToManagers();
   }
 
   Particle(float mass){
@@ -36,19 +37,24 @@ class Particle implements IPhysicsEntity, IUpdatable
     this.position = new Vector3D(0,0,0);
     
     this.linearVelocity = new Vector3D(0,0,0);
-    
+
+    RegisterToManagers();
 }
   
   Particle(float mass, Vector3D position){
     this.mass = mass;
     this.position = position;
     this.linearVelocity = new Vector3D(0,0,0);
+
+    RegisterToManagers();
   }
   
   Particle(float mass, Vector3D position, Vector3D linearVelocity){
     this.mass = mass;
     this.position = position;
     this.linearVelocity = linearVelocity;
+
+    RegisterToManagers();
   }
   
   Particle(float mass, Vector3D position, Vector3D linearVelocity, float coefStaticFriction, float coefCineticFriction){
@@ -57,6 +63,8 @@ class Particle implements IPhysicsEntity, IUpdatable
     this.linearVelocity = linearVelocity;
     this.coefStaticFriction = coefStaticFriction;
     this.coefCineticFriction = coefCineticFriction;
+
+    RegisterToManagers();
   }
 
   Particle(float mass, Vector3D position, Vector3D linearVelocity, float coefStaticFriction, float coefCineticFriction, float radius){
@@ -68,6 +76,8 @@ class Particle implements IPhysicsEntity, IUpdatable
     this.radius = radius;
 
     this.collider = new SphereCollider(this, radius);
+
+    RegisterToManagers();
   }
   
   Particle(float mass, Vector3D position, Vector3D linearVelocity, float coefStaticFriction, float coefCineticFriction, EIntegrationMethod inIntegrationMethod){
@@ -78,6 +88,22 @@ class Particle implements IPhysicsEntity, IUpdatable
     this.coefCineticFriction = coefCineticFriction;
 
     this.integrationMethod = inIntegrationMethod;
+
+    RegisterToManagers();
+  }
+
+  void RegisterToManagers(){
+    physicsEngine.Register(this);
+    updateManager.Register(this);
+
+    allParticles.add(this);
+  }
+
+  void DestroyParticle(){
+    physicsEngine.Unregister(this);
+    updateManager.Unregister(this);
+
+    allParticles.remove(this);
   }
 
   void SetAffectedByGravity(boolean newAffectedByGravity)
