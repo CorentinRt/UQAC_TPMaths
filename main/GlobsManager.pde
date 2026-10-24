@@ -3,6 +3,7 @@ class GlobsManager implements IUpdatable
     // ----- FIELDS ----- //
     ArrayList<Globs_Global> blobs = new ArrayList<Globs_Global>();
     float splitImpulseForce = 10;
+    color newGlobColor = color(0, 0, 0);
     // ----- FIELDS ----- //
 
     // ----- IUPDATABLE ----- //
@@ -15,6 +16,11 @@ class GlobsManager implements IUpdatable
     void Add(Globs_Global b)
     { 
         blobs.add(b); 
+    }
+
+    void GetNewRandomGlobColor()
+    {
+        newGlobColor = color(random(0, 255), random(0, 255), random(0, 255));
     }
 
     // ----- SPLIT ----- //
@@ -74,13 +80,20 @@ class GlobsManager implements IUpdatable
         nb.motherGlob.DestroyParticle();
         nb.allGlobsInGlobal.clear();
 
-        // On remplace sa blob mère par le 1er de la liste + on met les autres aussi dedans
+        // On update la couleur du nouveau blob pas controlé par le joueur
+        GetNewRandomGlobColor();
+        nb.SetGlobColor(newGlobColor);
+
+        // On remplace sa blob mère par le 1er de la liste + on met les autres aussi dedans (+ couleur)
         nb.motherGlob = new_b.get(0);
+        nb.motherGlob.SetDrawColors(newGlobColor, newGlobColor);
         nb.allGlobsInGlobal.add(nb.motherGlob);
+
         if (new_b.size() > 1)
         {
             for (int i = 1; i < new_b.size(); i++)
             {
+                new_b.get(i).SetDrawColors(newGlobColor, newGlobColor);
                 nb.AddGlobToGlobal(new_b.get(i), nb.motherGlob);
             }
         }

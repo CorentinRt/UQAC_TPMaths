@@ -22,6 +22,13 @@ class Globs_Global implements IUpdatable{
 
     color globColor = color(20, 200, 40);
 
+    void SetGlobColor(color newColor)
+    {
+        globColor = newColor;
+        for (Glob_Single g : allGlobsInGlobal)
+            g.SetDrawColors(globColor, globColor);
+    }
+
     Map<Spring, Globs_Pair> springsAssociatedGlobs = new HashMap<Spring, Globs_Pair>();
     Map<Constraint, Globs_Pair> constraintsAssociatedGlobs = new HashMap<Constraint, Globs_Pair>();
 
