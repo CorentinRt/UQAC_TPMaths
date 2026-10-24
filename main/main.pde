@@ -51,10 +51,13 @@ Particle p2 = new Particle(10, new Vector3D(0, 10, 0));
 
 SpringTwoParticles springp1p2 = new SpringTwoParticles(5, 5, 0.5, true);
 
-
 Particle p3 = new Particle(5, new Vector3D(15, 10, 0));
 
 SpringParticleAnchor springP3Anchor = new SpringParticleAnchor(5, 10, 0.5, true);
+
+Particle p4 = new Particle(10, new Vector3D(-20, 0, 0));
+Particle p5 = new Particle(10, new Vector3D(-20, 10, 0));
+Constraint rodConstraint = new Constraint(p4.collider, p5.collider, 10, ConstraintType.ROD);
 
 
 //Variables
@@ -86,9 +89,13 @@ void setup()
   springP3Anchor.RegisterNewParticle(p3);
   springP3Anchor.RegisterAnchor(new Vector3D(15, 0, 0));
 
+  collisionManager.AddConstraint(rodConstraint);
+
   inGameProjectiles.add(p1);
   inGameProjectiles.add(p2);
   inGameProjectiles.add(p3);
+  inGameProjectiles.add(p4);
+  inGameProjectiles.add(p5);
 
   // Initialisation deltaTime 1st frame
   lastFrameUpdate = millis();
@@ -131,6 +138,10 @@ void setup()
   updateManager.Register(p2);
   physicsEngine.Register(p3);
   updateManager.Register(p3);
+  physicsEngine.Register(p4);
+  updateManager.Register(p4);
+  physicsEngine.Register(p5);
+  updateManager.Register(p5);
   
   // GameManager
   gameManager = new GameManager(font);

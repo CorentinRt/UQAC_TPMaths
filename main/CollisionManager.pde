@@ -4,12 +4,22 @@ class CollisionManager implements IUpdatable{
 
     ArrayList<SphereCollider> particles = new ArrayList<SphereCollider>();
 
+    ArrayList<Constraint> constraints = new ArrayList<Constraint>();
+
     void AddCollider(SphereCollider collider){
         particles.add(collider);
     }
 
     void RemoveCollider(SphereCollider collider){
         particles.remove(collider);
+    }
+
+    void AddConstraint(Constraint constraint){
+        constraints.add(constraint);
+    }
+
+    void RemoveConstraint(Constraint constraint){
+        constraints.remove(constraint);
     }
 
     void Update(float deltaTime){
@@ -30,11 +40,42 @@ class CollisionManager implements IUpdatable{
                 
                 Vector3D collisionNormal = (colliderB.owner.position.Substract(colliderA.owner.position)).Normalize();
 
-                CorrectCollidingPosition(colliderA, colliderB, collisionNormal);
+                CorrectCollidingPosition(colliderA, colliderB, collisionNormal, 0);
                     
                 collisionNormal = (colliderB.owner.position.Substract(colliderA.owner.position)).Normalize();
 
                 ApplyCollisionImpulse(colliderA, colliderB, velocityA, velocityB, relativeVelocity, collisionNormal, deltaTime);
+            }
+        }
+
+        SolveConstraints();
+    }
+
+    void SolveConstraints()
+    {
+        for(int i = 0; i < constraints.size(); i++)
+        {
+            Constraint constraint = constraints.get(i);
+            if (constraint == null) continue;
+            if (!constraint.IsValid()) continue;
+
+            float stretchAmount = constraint.GetStretchAmount();
+
+            switch (constraint.constraintType)
+            {
+                case ROD:
+                    if (abs(stretchAmount - constraint.length) > 0.2){
+                        Vector3D collisionNormal = constraint.GetCollisionNormal();
+
+                        CorrectCollidingPosition(constraint.collider1, constraint.collider2, collisionNormal, constraint.length);
+                    }
+
+                    break;
+                case CABLE:
+                    
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -53,11 +94,11 @@ class CollisionManager implements IUpdatable{
         return true;
     }
 
-    void CorrectCollidingPosition(SphereCollider collA, SphereCollider collB, Vector3D collisionNormal){
+    void CorrectCollidingPosition(SphereCollider collA, SphereCollider collB, Vector3D collisionNormal, float constraintLength){
 
         float distance = collA.owner.position.Distance(collB.owner.position);
 
-        float d = distance - (collA.owner.radius + collB.owner.radius);
+        float d = (distance - constraintLength) - (collA.owner.radius + collB.owner.radius);
         float massA = collA.owner.GetMass();
         float massB = collB.owner.GetMass();
 
@@ -131,4 +172,5 @@ class CollisionManager implements IUpdatable{
 
         return magnitude;
     }
+
 }
