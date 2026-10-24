@@ -40,7 +40,7 @@ class CollisionManager implements IUpdatable{
                 
                 Vector3D collisionNormal = (colliderB.owner.position.Substract(colliderA.owner.position)).Normalize();
 
-                CorrectCollidingPosition(colliderA, colliderB, collisionNormal, 0);
+                CorrectCollidingPosition(colliderA, colliderB, collisionNormal);
                     
                 collisionNormal = (colliderB.owner.position.Substract(colliderA.owner.position)).Normalize();
 
@@ -67,25 +67,21 @@ class CollisionManager implements IUpdatable{
                     if (abs(stretchAmount - constraint.length) > 0){
                         Vector3D collisionNormal = constraint.GetCollisionNormal();
 
-                        CorrectCollidingPosition(constraint.collider1, constraint.collider2, collisionNormal, constraint.length);
+                        CorrectConstraintPosition(constraint.collider1, constraint.collider2, collisionNormal, constraint.length);
                     }
 
                     break;
                 case CABLE:
-                    if (stretchAmount > constraint.length){
-                        println("appappa" + (constraint.length - stretchAmount));
-                        Vector3D collisionNormal = constraint.GetCollisionNormal().MultiplyByScalar(1);
+                    if (stretchAmount - constraint.length > 0){
+                        Vector3D collisionNormal = constraint.GetCollisionNormal();
 
-                        CorrectCollidingPosition(constraint.collider1, constraint.collider2, collisionNormal, constraint.length);
+                        CorrectConstraintPosition(constraint.collider1, constraint.collider2, collisionNormal, constraint.length);
                         
                         Vector3D velocity1 = constraint.collider1.owner.GetLinearVelocity();
                         Vector3D velocity2 = constraint.collider2.owner.GetLinearVelocity();
                         Vector3D relativeVelocity = velocity1.Substract(velocity2);
 
                         ApplyCollisionImpulse(constraint.collider1, constraint.collider2, constraint.collider1.owner.GetLinearVelocity(), constraint.collider2.owner.GetLinearVelocity(), relativeVelocity, collisionNormal, deltaTime);
-                    }
-                    else{
-                        //println("Not applying it");
                     }
                     break;
                 default:
@@ -99,7 +95,7 @@ class CollisionManager implements IUpdatable{
 
         float distance = collA.owner.position.Distance(collB.owner.position);
 
-        if (collA.owner.linearVelocity == new Vector3D(0, 0, 0) && collB.owner.linearVelocity == new Vector3D(0, 0, 0))
+        if (collA.owner.linearVelocity.IsEqualWith(new Vector3D(0, 0, 0)) && collB.owner.linearVelocity.IsEqualWith(new Vector3D(0, 0, 0)))
             return false;
             
         if(distance > (collA.owner.radius + collB.owner.radius))
@@ -108,11 +104,31 @@ class CollisionManager implements IUpdatable{
         return true;
     }
 
-    void CorrectCollidingPosition(SphereCollider collA, SphereCollider collB, Vector3D collisionNormal, float constraintLength){
+    void CorrectCollidingPosition(SphereCollider collA, SphereCollider collB, Vector3D collisionNormal){
 
         float distance = collA.owner.position.Distance(collB.owner.position);
 
-        float d = (distance - constraintLength) - (collA.owner.radius + collB.owner.radius);
+        float d = distance - (collA.owner.radius + collB.owner.radius);
+        float massA = collA.owner.GetMass();
+        float massB = collB.owner.GetMass();
+
+        if (massA == 0 && massB == 0)
+            return;
+
+        if (massA == INFINITE_MASS && massB == INFINITE_MASS)
+            return;
+
+        Vector3D deplacementPA = collisionNormal.MultiplyByScalar((massB * d)/(massA + massB));
+        Vector3D deplacementPB = collisionNormal.MultiplyByScalar((-massA * d)/(massA + massB));
+
+        collA.owner.AddPosition(deplacementPA);
+        collB.owner.AddPosition(deplacementPB);
+    }
+
+    void CorrectConstraintPosition(SphereCollider collA, SphereCollider collB, Vector3D collisionNormal, float constraintLength){
+        float distance = collA.owner.position.Distance(collB.owner.position);
+
+        float d = (distance - constraintLength);
         float massA = collA.owner.GetMass();
         float massB = collB.owner.GetMass();
 

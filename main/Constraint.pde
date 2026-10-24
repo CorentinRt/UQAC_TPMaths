@@ -16,7 +16,7 @@ class Constraint {
     }
 
     float GetStretchAmount(){
-        return collider1.owner.position.Distance(collider2.owner.position) + (collider1.owner.radius + collider2.owner.radius);
+        return collider1.owner.position.Distance(collider2.owner.position);
     }
 
     Vector3D GetCollisionNormal(){
