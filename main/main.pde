@@ -57,7 +57,7 @@ SpringParticleAnchor springP3Anchor = new SpringParticleAnchor(5, 10, 0.5, true)
 
 Particle p4 = new Particle(10, new Vector3D(-20, 0, 0));
 Particle p5 = new Particle(10, new Vector3D(-20, 10, 0));
-Constraint rodConstraint = new Constraint(p4.collider, p5.collider, 10, ConstraintType.ROD);
+Constraint cableConstraint = new Constraint(p4.collider, p5.collider, 10, ConstraintType.CABLE);
 
 
 //Variables
@@ -89,7 +89,7 @@ void setup()
   springP3Anchor.RegisterNewParticle(p3);
   springP3Anchor.RegisterAnchor(new Vector3D(15, 0, 0));
 
-  collisionManager.AddConstraint(rodConstraint);
+  collisionManager.AddConstraint(cableConstraint);
 
   inGameProjectiles.add(p1);
   inGameProjectiles.add(p2);

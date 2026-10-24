@@ -48,10 +48,10 @@ class CollisionManager implements IUpdatable{
             }
         }
 
-        SolveConstraints();
+        SolveConstraints(deltaTime);
     }
 
-    void SolveConstraints()
+    void SolveConstraints(float deltaTime)
     {
         for(int i = 0; i < constraints.size(); i++)
         {
@@ -64,7 +64,7 @@ class CollisionManager implements IUpdatable{
             switch (constraint.constraintType)
             {
                 case ROD:
-                    if (abs(stretchAmount - constraint.length) > 0.2){
+                    if (abs(stretchAmount - constraint.length) > 0){
                         Vector3D collisionNormal = constraint.GetCollisionNormal();
 
                         CorrectCollidingPosition(constraint.collider1, constraint.collider2, collisionNormal, constraint.length);
@@ -72,7 +72,21 @@ class CollisionManager implements IUpdatable{
 
                     break;
                 case CABLE:
-                    
+                    if (stretchAmount > constraint.length){
+                        println("appappa" + (constraint.length - stretchAmount));
+                        Vector3D collisionNormal = constraint.GetCollisionNormal().MultiplyByScalar(1);
+
+                        CorrectCollidingPosition(constraint.collider1, constraint.collider2, collisionNormal, constraint.length);
+                        
+                        Vector3D velocity1 = constraint.collider1.owner.GetLinearVelocity();
+                        Vector3D velocity2 = constraint.collider2.owner.GetLinearVelocity();
+                        Vector3D relativeVelocity = velocity1.Substract(velocity2);
+
+                        ApplyCollisionImpulse(constraint.collider1, constraint.collider2, constraint.collider1.owner.GetLinearVelocity(), constraint.collider2.owner.GetLinearVelocity(), relativeVelocity, collisionNormal, deltaTime);
+                    }
+                    else{
+                        //println("Not applying it");
+                    }
                     break;
                 default:
                     break;
