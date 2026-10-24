@@ -54,7 +54,7 @@ CollisionManager collisionManager = new CollisionManager();
 SpringsRegistry springsRegistry = new SpringsRegistry();
 
 
-Globs_Global globsGlobal = new Globs_Global(new Vector3D(20, 10, 0), 10);
+Globs_Global globsGlobal = new Globs_Global(new Vector3D(10, 10, 0), 10);
 
 Particle p1 = new Particle(10, new Vector3D(0, 0, 0));
 Particle p2 = new Particle(10, new Vector3D(0, 10, 0));
@@ -69,6 +69,8 @@ Particle p4 = new Particle(10, new Vector3D(-20, 0, 0));
 Particle p5 = new Particle(10, new Vector3D(-20, 10, 0));
 Constraint cableConstraint = new Constraint(p4.collider, p5.collider, 10, ConstraintType.CABLE);
 
+// Globs Manager
+GlobsManager globsManager = new GlobsManager();
 
 //Variables
 float lastFrameUpdate = 0;
@@ -138,6 +140,9 @@ void setup()
   // GameManager
   gameManager = new GameManager(font);
 
+  // Globs Manager
+  globsManager.Add(globsGlobal);
+  updateManager.Register(globsManager);
 }
 
 
@@ -254,6 +259,14 @@ void keyPressed()
     }
   }
   
+  // Split glob
+  if (key == 's') 
+    {
+      println("Split glob input");
+
+      if (globsManager.blobs.size() > 0)
+        globsManager.Split(globsManager.blobs.get(0));
+    }
 }
 
 void mousePressed()

@@ -2,6 +2,7 @@ class GlobsManager implements IUpdatable
 {
     // ----- FIELDS ----- //
     ArrayList<Globs_Global> blobs = new ArrayList<Globs_Global>();
+    float splitImpulseForce = 10;
     // ----- FIELDS ----- //
 
     // ----- IUPDATABLE ----- //
@@ -19,7 +20,9 @@ class GlobsManager implements IUpdatable
     // ----- SPLIT ----- //
     void Split(Globs_Global blob)
     {
-        if (blob.motherGlob == null || blob.GetTotalOfGlobInGlobal() < 4) // 4 minimum pour avoir 2 globs de 2 avec mother gauche/droite
+        print("Split global glob");
+
+        if (blob.motherGlob == null || blob.GetTotalOfGlobInGlobal() < 2) // 4 minimum pour avoir 2 globs de 2 avec mother gauche/droite
             return;
 
         // Moyenne des positions des glob pour un centre a peu près ok
@@ -56,7 +59,7 @@ class GlobsManager implements IUpdatable
             origin_b = right;
         }
         
-        if (new_b.size() < 2 || origin_b.size() < 2) 
+        if (new_b.size() < 1 || origin_b.size() < 1) 
             return;
 
         // Detacher le nouveau blob du blob d'origine
@@ -74,28 +77,77 @@ class GlobsManager implements IUpdatable
         // On remplace sa blob mère par le 1er de la liste + on met les autres aussi dedans
         nb.motherGlob = new_b.get(0);
         nb.allGlobsInGlobal.add(nb.motherGlob);
-        for (int i = 1; i < new_b.size(); i++)
+        if (new_b.size() > 1)
         {
-            nb.AddGlobToGlobal(new_b.get(i), nb.motherGlob);
+            for (int i = 1; i < new_b.size(); i++)
+            {
+                nb.AddGlobToGlobal(new_b.get(i), nb.motherGlob);
+            }
         }
-
+        
         // On ajoute le nouveau blob a la liste avec tous
         blobs.add(nb);
 
         // Impulsion vers gauche ou droite pour les écarter
         for (Glob_Single g : origin_b)
         {
-            g.linearVelocity = g.linearVelocity.Add(new Vector3D(g.position.x < center.x ? -3 : 3, 0, 0));
+            g.linearVelocity = g.linearVelocity.Add(new Vector3D(g.position.x < center.x ? -splitImpulseForce : splitImpulseForce, 0, 0));
         }
          for (Glob_Single g : new_b)
         {
-            g.linearVelocity = g.linearVelocity.Add(new Vector3D(g.position.x < center.x ? -3 : 3, 0, 0));
+            g.linearVelocity = g.linearVelocity.Add(new Vector3D(g.position.x < center.x ? -splitImpulseForce : splitImpulseForce, 0, 0));
         }
     }
 
     void Detach(Globs_Global blob, Glob_Single g)
     {
-        // to do : detach springs avec les autres globs + pareil pour constraints
+        println("Detach glob from global");
+
+        // Detacher tous les springs
+        ArrayList<Spring> springs = new ArrayList<Spring>(g.associatedSprings);
+        for (Spring s : springs)
+        {
+            // Check pair & remove from other
+            Globs_Pair p = blob.springsAssociatedGlobs.get(s);
+            if (p != null)
+            {
+                Glob_Single other; 
+                if (p.firstGlob == g)
+                    other = p.secondGlob;
+                else
+                    other = p.firstGlob;
+
+                if (other != null)
+                    other.associatedSprings.remove(s);   
+            }
+
+            // Remove & destroy spring
+            blob.springsAssociatedGlobs.remove(s);
+            s.DestroySpring();
+        }
+
+        // Pareil ici pour les constraints
+        ArrayList<Constraint> constraints = new ArrayList<Constraint>(g.associatedConstraints);
+        for (Constraint c : constraints)
+        {
+            // Check pair & remove from other
+            Globs_Pair p = blob.constraintsAssociatedGlobs.get(c);
+            if (p != null)
+            {
+                Glob_Single other; 
+                if (p.firstGlob == g)
+                    other = p.secondGlob;
+                else
+                    other = p.firstGlob;
+
+                if (other != null)
+                    other.associatedConstraints.remove(c); 
+            }
+
+            // Remove & destroy constraint
+            blob.constraintsAssociatedGlobs.remove(c);
+            c.DestroyConstraint();
+        }
     }
     // ----- SPLIT ----- //
 }
