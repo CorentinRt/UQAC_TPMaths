@@ -102,7 +102,7 @@ class CollisionManager implements IUpdatable{
 
         float distance = collA.owner.position.Distance(collB.owner.position);
 
-        if (collA.owner.linearVelocity.IsEqualWith(new Vector3D(0, 0, 0)) && collB.owner.linearVelocity.IsEqualWith(new Vector3D(0, 0, 0)))
+        if (collA.owner.InverseMass() == 0 && collB.owner.InverseMass() == 0)
             return false;
             
         if(distance > (collA.owner.radius + collB.owner.radius))
