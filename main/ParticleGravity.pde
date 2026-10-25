@@ -3,7 +3,7 @@ class ParticleGravity implements IParticleForceGenerator
   // IParticleForceGenerator
   void UpdateForce(Particle particle, float duration)
   {
-    if (particle.mass == 0)
+    if (particle.mass <= 0)
       return;
 
     if (!particle.affectedByGravity)

@@ -26,10 +26,18 @@ class SpringTwoParticles extends Spring
             return;
 
         ParticleSpringForceGenerator firstParticleForce = 
-            new ParticleSpringForceGenerator(secondParticle.position, secondParticle.linearVelocity, isBungee, elasticity, length, cDamping);
+            new ParticleSpringForceGenerator(
+                secondParticle.position, 
+                secondParticle.linearVelocity, 
+                isBungee, elasticity, length, cDamping
+            );
 
         ParticleSpringForceGenerator secondParticleForce = 
-            new ParticleSpringForceGenerator(firstParticle.position, firstParticle.linearVelocity, isBungee, elasticity, length, cDamping);
+            new ParticleSpringForceGenerator(
+                firstParticle.position, 
+                firstParticle.linearVelocity, 
+                isBungee, elasticity, length, cDamping
+            );
 
         particleForceRegistry.Add(firstParticle, firstParticleForce);
         particleForceRegistry.Add(secondParticle, secondParticleForce);

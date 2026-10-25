@@ -60,6 +60,6 @@ static class PhysicsUtilities
   {
     float inverseMass = InverseMass(inMass);
     
-    return accumForces.MultiplyByScalar(inverseMass);  // si seulement gravité : Accg = Fg * (1/m) = 9.81 (retour case départ) car F = a * m donc a = F * (1 / m)
+    return accumForces.MultiplyByScalar(inverseMass); // si seulement gravité : Accg = Fg * (1/m) = 9.81 (retour case départ) car F = a * m donc a = F * (1 / m)
   }
 }

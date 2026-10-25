@@ -2,7 +2,7 @@ class ParticleCineticFriction implements IParticleForceGenerator
 {
     void UpdateForce(Particle particle, float duration)
     {
-        if (particle.mass == 0)
+        if (particle.mass <= 0)
             return;
 
         if (particle.linearVelocity.Norm() <= 0.2f)
