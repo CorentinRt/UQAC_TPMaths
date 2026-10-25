@@ -34,6 +34,10 @@ class CollisionManager implements IUpdatable{
                 if(!IsColliding(colliderA, colliderB))
                     continue;
 
+                // Merge blobs
+                if (globsManager != null)
+                    globsManager.OnParticlesColliding(colliderA.owner, colliderB.owner);
+
                 Vector3D velocityA = colliderA.owner.GetLinearVelocity();
                 Vector3D velocityB = colliderB.owner.GetLinearVelocity();
                 Vector3D relativeVelocity = velocityA.Substract(velocityB);
