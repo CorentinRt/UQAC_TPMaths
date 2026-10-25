@@ -81,7 +81,7 @@ boolean isFirstFrame = true;
 
 // Ground
 boolean groundSetup = false;
-ArrayList<Particle> groundParticles = new ArrayList<Particle>();
+ArrayList<Platform> platforms = new ArrayList<Platform>();
 
 static 
   {
@@ -184,13 +184,12 @@ void draw()
   
   for (int i = 0; i < allParticles.size(); ++i)
   {
-    particleForceRegistry.Add(allParticles.get(i), gravityForce);
-
-    ParticleStaticFriction staticFriction = new ParticleStaticFriction();
-    particleForceRegistry.Add(allParticles.get(i), staticFriction);
-
-    ParticleCineticFriction cineticFriction = new ParticleCineticFriction();
-    particleForceRegistry.Add(allParticles.get(i), cineticFriction);
+    Particle particle = allParticles.get(i);
+    if (particle.InverseMass() == 0)
+      continue;
+    particleForceRegistry.Add(particle, gravityForce);
+    particleForceRegistry.Add(particle, new ParticleStaticFriction());
+    particleForceRegistry.Add(particle, new ParticleCineticFriction());
   }
   particleForceRegistry.UpdateForces(deltaTime);
   particleForceRegistry.Clear();
@@ -357,44 +356,30 @@ void RemoveOutsideProjectiles()
 
 void SetupNewGround()
 {
-  // Ground with particules
-  float groundSpacing = 50; 
-  float bottomY = (height / 2.0f + 100) / pixelsPerMeter;
+  float halfW = (width / 2.0f) / pixelsPerMeter * 1.1f;    // ~47 m
+  float bottomY = (height / 2.0f) / pixelsPerMeter * 1.1f; // ~26 m
+  float r = 0.5f;
 
-  for (float pixelX = -width / 2.0f; pixelX < width / 2.0f; pixelX += groundSpacing)
-  {
-    float x = pixelX / pixelsPerMeter;
-    float radius = random(3, 6); 
+  //Sol
+  platforms.add(new Platform(new Vector3D(-halfW, bottomY - 1, 0), new Vector3D(halfW, bottomY - 1, 0), r));
 
-    Particle p = new Particle(
-      INFINITE_MASS,
-      new Vector3D(x, bottomY - radius, 0),
-      new Vector3D(0, 0, 0),
-      0,
-      0,
-      radius
-    );
+  //Plateformes dans la moitié basse
+  platforms.add(new Platform(new Vector3D(-30, 20, 0), new Vector3D(-15, 20, 0), r));   // gauche, basse
+  platforms.add(new Platform(new Vector3D(-5, 17, 0),  new Vector3D(10, 21, 0),  r));   // inclinée vers le bas
+  platforms.add(new Platform(new Vector3D(20, 18, 0),  new Vector3D(35, 18, 0),  r));   // droite
+  platforms.add(new Platform(new Vector3D(-20, 12, 0), new Vector3D(-8, 12, 0),  r));   // étage supérieur
 
-    p.SetAffectedByGravity(false);
-
-    color c = color(255,255,255);
-    p.SetDrawColors(c, c);
-
-    groundParticles.add(p);
-  }
+  for (Platform p : platforms)
+    p.Build();
 
   groundSetup = true;
 }
 
 void ResetGround()
 {
-  for (int i = 0; i < groundParticles.size(); i++)
-  {
-    Particle p = groundParticles.get(i);
+  for (Platform p : platforms)
+    p.Destroy();
 
-    p.DestroyParticle();
-  }
-
-  groundParticles.clear();
+  platforms.clear();
   groundSetup = false;
 }
