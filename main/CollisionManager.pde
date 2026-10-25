@@ -116,6 +116,8 @@ class CollisionManager implements IUpdatable{
         float distance = collA.owner.position.Distance(collB.owner.position);
 
         float d = distance - (collA.owner.radius + collB.owner.radius);
+
+        /*
         float massA = collA.owner.GetMass();
         float massB = collB.owner.GetMass();
 
@@ -130,6 +132,16 @@ class CollisionManager implements IUpdatable{
 
         collA.owner.AddPosition(deplacementPA);
         collB.owner.AddPosition(deplacementPB);
+        */
+
+        //Test avec invert mass
+        float invA = collA.owner.InverseMass();
+        float invB = collB.owner.InverseMass();
+        float totalInv = invA + invB;
+        if (totalInv == 0) return;
+
+        collA.owner.AddPosition(collisionNormal.MultiplyByScalar(d * invA / totalInv));
+        collB.owner.AddPosition(collisionNormal.MultiplyByScalar(-d * invB / totalInv));
     }
 
     void CorrectConstraintPosition(SphereCollider collA, SphereCollider collB, Vector3D collisionNormal, float constraintLength){
