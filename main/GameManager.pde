@@ -16,6 +16,9 @@ class GameManager
   
   TextDisplay menuDisplayNames;
   TextDisplay menuGameName;
+
+  //Win
+  boolean hasWon = false;
   
   GameManager(PFont font)
   {
@@ -53,7 +56,9 @@ class GameManager
   
   void StartGame()
   {
+    ResetBlob();
     state = GameState.PLAYING;
+    hasWon = false; //Garder les textes
     scoreManager.Reset();
     gameTimer.Start();
   }
@@ -61,9 +66,22 @@ class GameManager
   void EndGame()
   {
     state = GameState.GAME_OVER;
+    hasWon = false; //Garder les textes
     gameTimer.Stop();
     
     gameOverDisplayScore.SetText("Partie terminée ! Score final : " + scoreManager.GetScore());
+  }
+
+  void WinGame()
+  {
+    hasWon = true;
+    state = GameState.GAME_OVER;
+
+    int timeBonus = ceil(gameTimer.GetRemainingTime()) * 10;
+    scoreManager.AddScore(timeBonus);
+    gameTimer.Stop();
+
+    gameOverDisplayScore.SetText("Niveau terminé ! Score final : " + scoreManager.GetScore());
   }
 
   boolean CheckEndCondition()
