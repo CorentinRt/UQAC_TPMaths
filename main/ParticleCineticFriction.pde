@@ -2,7 +2,7 @@ class ParticleCineticFriction implements IParticleForceGenerator
 {
     void UpdateForce(Particle particle, float duration)
     {
-        if (particle.InverseMass() == 0)
+        if (particle.InverseMass() <= 0)
             return;
 
         if (particle.contactNormal.Norm() == 0)
