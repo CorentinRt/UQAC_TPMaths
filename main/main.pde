@@ -346,18 +346,18 @@ void RemoveOutsideProjectiles()
 
 void SetupNewGround()
 {
-  float halfW = (width / 2.0f) / pixelsPerMeter * 1.1f;    // ~47 m
-  float bottomY = (height / 2.0f) / pixelsPerMeter * 1.1f; // ~26 m
+  float halfW = (width / 2.0f) / pixelsPerMeter * 1.1f;
+  float bottomY = (height / 2.0f) / pixelsPerMeter * 1.0f;
   float r = 0.5f;
 
   //Sol
   platforms.add(new Platform(new Vector3D(-halfW, bottomY - 1, 0), new Vector3D(halfW, bottomY - 1, 0), r));
 
-  //Plateformes dans la moitié basse
-  platforms.add(new Platform(new Vector3D(-30, 20, 0), new Vector3D(-15, 20, 0), r));   // gauche, basse
-  platforms.add(new Platform(new Vector3D(-5, 17, 0),  new Vector3D(10, 21, 0),  r));   // inclinée vers le bas
-  platforms.add(new Platform(new Vector3D(20, 18, 0),  new Vector3D(35, 18, 0),  r));   // droite
-  platforms.add(new Platform(new Vector3D(-20, 12, 0), new Vector3D(-8, 12, 0),  r));   // étage supérieur
+  //Plateformes
+  platforms.add(new Platform(new Vector3D(-30, 20, 0), new Vector3D(-15, 20, 0), r)); 
+  platforms.add(new Platform(new Vector3D(-5, 17, 0),  new Vector3D(10, 21, 0),  r));
+  platforms.add(new Platform(new Vector3D(20, 18, 0),  new Vector3D(35, 18, 0),  r));
+  platforms.add(new Platform(new Vector3D(-20, 12, 0), new Vector3D(-8, 12, 0),  r)); 
 
   for (Platform p : platforms)
     p.Build();
