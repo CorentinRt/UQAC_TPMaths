@@ -4,12 +4,30 @@ class GlobsManager implements IUpdatable
     ArrayList<Globs_Global> blobs = new ArrayList<Globs_Global>();
     float splitImpulseForce = 10;
     color newGlobColor = color(0, 0, 0);
+
+    float mergeCooldown = 0; // Evite re-fusion juste apres split
+
+    Globs_Global pendingMergeA = null;
+    Globs_Global pendingMergeB = null;
     // ----- FIELDS ----- //
 
     // ----- IUPDATABLE ----- //
     void Update(float deltaTime)
     {
-        // Si contact -> merge
+        // Check merge cooldown
+        if (mergeCooldown > 0)
+        {
+            mergeCooldown -= deltaTime;
+            return;
+        }
+
+        // Contact envoyé par collision manager -> merge
+        if (pendingMergeA != null)
+        {
+            Merge(pendingMergeA, pendingMergeB);
+            pendingMergeA = null;
+            pendingMergeB = null;
+        }
     }
     // ----- IUPDATABLE ----- //
 
@@ -105,10 +123,101 @@ class GlobsManager implements IUpdatable
         {
             g.linearVelocity = g.linearVelocity.Add(new Vector3D(g.position.x < center.x ? -splitImpulseForce : splitImpulseForce, 0, 0));
         }
-         for (Glob_Single g : new_b)
+        for (Glob_Single g : new_b)
         {
             g.linearVelocity = g.linearVelocity.Add(new Vector3D(g.position.x < center.x ? -splitImpulseForce : splitImpulseForce, 0, 0));
         }
+
+        mergeCooldown = 1.0f; // Pas re-fusionner direct
     }
     // ----- SPLIT ----- //
+
+    // ----- MERGE ----- //
+    void Merge(Globs_Global A, Globs_Global B) // B va dans A
+    {
+        println("Merge globs");
+
+        // On enlève B de la liste globale vu qu'il va être mis dans A
+        blobs.remove(B);
+
+        // Copie de B
+        ArrayList<Glob_Single> globsToMoveToA = new ArrayList<Glob_Single>(B.allGlobsInGlobal);
+
+        // On détache chaque glob de B
+        for (Glob_Single g : globsToMoveToA)
+        {
+            B.RemoveGlobFromGlobal(g);
+        }
+
+        // Reset B 
+        B.motherGlob = null;
+        B.UnregisterFromManagers();
+
+        // On rattache ceux de B à A
+        for (Glob_Single g : globsToMoveToA)
+        {
+            g.SetDrawColors(A.globColor, A.globColor);
+            A.AddGlobToGlobal(g, Nearest(A, g)); // accroché au + proche pour que ce soit + smooth sans tp si au dessus de length par rapport à la mere
+        }
+    }
+
+    void OnParticlesColliding(Particle p1, Particle p2) // Called from collision manager
+    {
+        // Check cooldown & si pas déjà un merge en cours
+        if (mergeCooldown > 0 || pendingMergeA != null)
+            return;
+
+        // Check si c'est bien des globs
+        if (!(p1 instanceof Glob_Single) || !(p2 instanceof Glob_Single))
+            return; 
+
+        Globs_Global a = GetBlobOf((Glob_Single) p1);
+        Globs_Global b = GetBlobOf((Glob_Single) p2);
+
+        if (a == null || b == null || a == b)
+            return; // deux globs du même blob : on ignore
+
+        // Le blob le plus ancien dans la liste survit (= celui du joueur qui est en 1er)
+        if (blobs.indexOf(a) > blobs.indexOf(b))
+        {
+            Globs_Global tmp = a;
+            a = b;
+            b = tmp;
+        }
+
+        pendingMergeA = a;
+        pendingMergeB = b;
+    }
+
+    // Get le blob global d'un glob single
+    Globs_Global GetBlobOf(Glob_Single glob)
+    {
+        for (Globs_Global blob : blobs)
+        {
+            if (blob.IsGlobInGlobal(glob))
+                return blob;
+        }
+            
+        return null;
+    }
+
+    // Get nearest glob in global
+    Glob_Single Nearest(Globs_Global blob, Glob_Single from) 
+    {
+        Glob_Single best = null;
+        float bestD = Float.MAX_VALUE;
+
+        for (Glob_Single g : blob.allGlobsInGlobal)
+        {
+            float d = g.position.Distance(from.position);
+            if (d < bestD)
+            {
+                bestD = d;
+                best = g;
+            }
+        }
+
+        return best;
+    }
+    // ----- MERGE ----- //
 }
