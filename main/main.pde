@@ -59,7 +59,7 @@ CollisionManager collisionManager = new CollisionManager();
 SpringsRegistry springsRegistry = new SpringsRegistry();
 
 
-Globs_Global globsGlobal = new Globs_Global(new Vector3D(10, 10, 0), 10);
+Globs_Global globsGlobal = new Globs_Global(new Vector3D(-38, -20, 0), 10);
 
 Particle p1 = new Particle(10, new Vector3D(0, 0, 0));
 Particle p2 = new Particle(10, new Vector3D(0, 10, 0));
@@ -77,7 +77,7 @@ Constraint cableConstraint = new Constraint(p4.collider, p5.collider, 10, Constr
 // Globs Manager
 GlobsManager globsManager = new GlobsManager();
 
-//Variables
+// Variables
 float lastFrameUpdate = 0;
 
 boolean isFirstFrame = true;
@@ -85,6 +85,12 @@ boolean isFirstFrame = true;
 // Ground
 boolean groundSetup = false;
 ArrayList<Platform> platforms = new ArrayList<Platform>();
+
+// Level : Start & FInish
+Vector3D levelStart = new Vector3D(-38, -20, 0);
+Vector3D goalCenter = new Vector3D(36, 23, 0);
+float goalHalfW = 8;
+float goalHalfH = 2.5f;
 
 static 
   {
@@ -218,6 +224,11 @@ void draw()
     //Targets
     targetManager.CheckCollisions(allParticles);
 
+    if (IsBlobInGoal())
+    {
+      gameManager.WinGame();
+    }
+
     // Ground - Setup 
     if (!groundSetup)
     {
@@ -254,6 +265,9 @@ void draw()
 
   //Targets DrawCall
   targetManager.DrawAll();
+
+  //Goal Draw
+  DrawGoal();
 
   popMatrix();
   camera();
@@ -349,18 +363,24 @@ void RemoveOutsideProjectiles()
 
 void SetupNewGround()
 {
-  float halfW = (width / 2.0f) / pixelsPerMeter * 1.1f;
-  float bottomY = (height / 2.0f) / pixelsPerMeter * 1.0f;
+  float halfW = (width / 2.0f) / pixelsPerMeter * 1.1f;    // ~47
+  float halfH = (height / 2.0f) / pixelsPerMeter * 1.1f;   // ~26
   float r = 0.5f;
+  float sp = 1.6f;   // espacement plus large pour les bords
 
-  //Sol
-  platforms.add(new Platform(new Vector3D(-halfW, bottomY - 1, 0), new Vector3D(halfW, bottomY - 1, 0), r));
+  // WALLS
+  platforms.add(new Platform(new Vector3D(-halfW, halfH - 1, 0), new Vector3D(halfW, halfH - 1, 0), r, sp)); // sol
+  platforms.add(new Platform(new Vector3D(-halfW, -halfH + 1, 0), new Vector3D(halfW, -halfH + 1, 0), r, sp)); // plafond
+  platforms.add(new Platform(new Vector3D(-halfW + 0.5f, -halfH, 0), new Vector3D(-halfW + 0.5f, halfH, 0), r, sp)); // mur gauche
+  platforms.add(new Platform(new Vector3D( halfW - 0.5f, -halfH, 0), new Vector3D( halfW - 0.5f, halfH, 0), r, sp)); // mur droit
 
-  //Plateformes
-  platforms.add(new Platform(new Vector3D(-30, 20, 0), new Vector3D(-15, 20, 0), r)); 
-  platforms.add(new Platform(new Vector3D(-5, 17, 0),  new Vector3D(10, 21, 0),  r));
-  platforms.add(new Platform(new Vector3D(20, 18, 0),  new Vector3D(35, 18, 0),  r));
-  platforms.add(new Platform(new Vector3D(-20, 12, 0), new Vector3D(-8, 12, 0),  r)); 
+  platforms.add(new Platform(new Vector3D(-45, -15, 0), new Vector3D(20, -12, 0), r));
+
+  platforms.add(new Platform(new Vector3D(45, -3, 0), new Vector3D(-20, 1, 0), r));
+
+  platforms.add(new Platform(new Vector3D(-45, 10, 0), new Vector3D(22, 15, 0), r));
+
+  platforms.add(new Platform(new Vector3D(26, 25, 0), new Vector3D(26, 19, 0), r));
 
   for (Platform p : platforms)
     p.Build();
@@ -375,4 +395,40 @@ void ResetGround()
 
   platforms.clear();
   groundSetup = false;
+}
+
+void DrawGoal()
+{
+  pushMatrix();
+  noStroke();
+  fill(color(255, 215, 0, 120));
+  translate(goalCenter.x * pixelsPerMeter, goalCenter.y * pixelsPerMeter, -5);
+  box(goalHalfW * 2 * pixelsPerMeter, goalHalfH * 2 * pixelsPerMeter, 10);
+  popMatrix();
+}
+
+boolean IsBlobInGoal()
+{
+  for (Globs_Global g : globsManager.blobs)
+  {
+    for (Glob_Single glob : g.allGlobsInGlobal)
+    {
+      if (abs(glob.position.x - goalCenter.x) < goalHalfW && abs(glob.position.y - goalCenter.y) < goalHalfH)
+        return true;
+    }
+  }
+  return false;
+}
+
+void ResetBlob()
+{
+  //Destruct current blob
+  ArrayList<Globs_Global> toDestroy = new ArrayList<Globs_Global>(globsManager.blobs);
+  for (Globs_Global g : toDestroy)
+    g.DestroyGlobsGlobal();
+  globsManager.blobs.clear();
+
+  //New bob
+  globsGlobal = new Globs_Global(new Vector3D(levelStart.x, levelStart.y, 0), 10);
+  globsManager.Add(globsGlobal);
 }
