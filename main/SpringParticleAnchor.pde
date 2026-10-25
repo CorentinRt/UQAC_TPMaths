@@ -24,7 +24,12 @@ class SpringParticleAnchor extends Spring
         if (particle == null || hasRegisteredAnchor == false)
             return;
 
-        ParticleSpringForceGenerator particleForce = new ParticleSpringForceGenerator(anchor, new Vector3D(0, 0, 0), isBungee, elasticity, length, cDamping);
+        ParticleSpringForceGenerator particleForce = 
+            new ParticleSpringForceGenerator(
+                anchor, 
+                new Vector3D(0, 0, 0), 
+                isBungee, elasticity, length, cDamping
+            );
 
         particleForceRegistry.Add(particle, particleForce);
     }

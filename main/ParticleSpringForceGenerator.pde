@@ -30,15 +30,15 @@ class ParticleSpringForceGenerator implements IParticleForceGenerator
         if (l == 0)
             return;
 
-        float stretchAmount = l - restLength;
+        float stretchAmount = restLength - l;
 
         d = d.Normalize();
 
-        particle.AddForce(d.MultiplyByScalar((k * stretchAmount)));
+        particle.AddForce(d.MultiplyByScalar((-k * stretchAmount)));
 
         Vector3D relVelocity = otherVelocity.Substract(particle.linearVelocity);
 
-        particle.AddForce(relVelocity.MultiplyByScalar(c)); // Ajout friction
+        particle.AddForce(relVelocity.MultiplyByScalar(-c)); // Ajout friction
     }
 
 }
