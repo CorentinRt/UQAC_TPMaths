@@ -22,6 +22,9 @@ ParticleGravity gravityForce = new ParticleGravity();
 // PhysicsIntegrationSelector
 PhysicsIntegrationSelector integrationSelector;
 
+// Physics Debug Predictor
+  PhysicsDebugPredictor physicsDebugPredictor = new PhysicsDebugPredictor();
+
 //Projectile Launcher
 ProjectileLauncher projectileLauncher = new ProjectileLauncher();
 
@@ -124,12 +127,12 @@ void setup()
   // Init PhysicsIntegrationSelector
   integrationSelector = new PhysicsIntegrationSelector(width - 10, 70, font);
   
-  projectileLauncher.CreateTexts(5, 70.f, font);
+  //projectileLauncher.CreateTexts(5, 70.f, font);
   
   // UpdateManager
   updateManager.Register(deltaTimeDisplay);
   updateManager.Register(integrationSelector);
-  updateManager.Register(projectileLauncher);
+  //updateManager.Register(projectileLauncher);
   updateManager.Register(collisionManager);
   
   //Setup Targets
@@ -240,27 +243,14 @@ void draw()
   RemoveOutsideProjectiles();
   
   //Affichage
-  projectileLauncher.DrawTrajectory(deltaTime);
-    
-  //Targets DrawCall
-  targetManager.DrawAll();
+  //projectileLauncher.DrawTrajectory(deltaTime);
 
-  /* Testing Selection of Glob
   Vector3D mousePosition = new Vector3D((mouseX - width/2)/pixelsPerMeter, (mouseY - height/2)/pixelsPerMeter, 0);
   mousePosition = mousePosition.MultiplyByScalar(1.1);
-  pushMatrix();
-  noStroke();
-  fill(color(255,0,0));
-  translate(mousePosition.x * pixelsPerMeter, mousePosition.y * pixelsPerMeter, mousePosition.z * pixelsPerMeter);
-  sphere(1 * pixelsPerMeter);
-  popMatrix(); //Reset translation for futur Draws
-  for (Globs_Global globs : globsManager.blobs)
-  {
-    boolean b = globs.isPositionInContact(mousePosition, 2);
-    if (b) box(100,100,100);
-    println("glob position : " + globs.motherGlob.position.GetText());
-    println("mouse Position : " + mousePosition.GetText());
-  }*/
+  globController.DrawDebug(deltaTime, mousePosition);
+
+  //Targets DrawCall
+  targetManager.DrawAll();
 
   popMatrix();
   camera();

@@ -38,6 +38,7 @@ class Globs_Global implements IUpdatable{
         allGlobsInGlobal.add(motherGlob);
         motherGlob.position = motherGlobPosition;
         motherGlob.SetDrawColors(globColor, globColor);
+        motherGlob.mass *= 5;
 
         for (int i = 1; i < defaultNumGlobInGlobal; ++i){
 
