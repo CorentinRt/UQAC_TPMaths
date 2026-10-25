@@ -279,4 +279,17 @@ class Globs_Global implements IUpdatable{
 
         return constraintsAffected;
     }
+
+    boolean isPositionInContact(Vector3D position, float threshold)
+    {
+        for (Glob_Single glob : allGlobsInGlobal)
+        {
+            if (glob.isPositionInContact(position, threshold))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

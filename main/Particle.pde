@@ -269,6 +269,10 @@ class Particle implements IPhysicsEntity, IUpdatable
     PhysicsUtilities.SimulateVerletIntegrate(position, linearVelocity, ComputeAccelerationByForce(), deltaTime);
   }
   
+  boolean isPositionInContact(Vector3D otherPosition, float threshold)
+  {
+      return otherPosition.Distance(position) < radius + threshold;
+  }
   
   
 }

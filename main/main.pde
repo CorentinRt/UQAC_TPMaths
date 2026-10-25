@@ -25,6 +25,8 @@ PhysicsIntegrationSelector integrationSelector;
 //Projectile Launcher
 ProjectileLauncher projectileLauncher = new ProjectileLauncher();
 
+GlobController globController = new GlobController(); 
+
 //Target Manager
 TargetManager targetManager = new TargetManager();
 
@@ -165,6 +167,17 @@ void draw()
     isFirstFrame = false;
     return;
   }
+
+
+  //Gameplay
+
+  //Blob Stretcher
+  if (globController.isStretching && !mousePressed){
+    Vector3D mousePosition = new Vector3D((mouseX - width/2)/pixelsPerMeter, (mouseY - height/2)/pixelsPerMeter, 0);
+    mousePosition = mousePosition.MultiplyByScalar(1.1);
+    globController.StopStretch(mousePosition);
+  }
+
   
   // Force Registry
   springsRegistry.ApplyAllSpringsForces();
@@ -232,10 +245,27 @@ void draw()
     
   //Targets DrawCall
   targetManager.DrawAll();
-  
+
+  /* Testing Selection of Glob
+  Vector3D mousePosition = new Vector3D((mouseX - width/2)/pixelsPerMeter, (mouseY - height/2)/pixelsPerMeter, 0);
+  mousePosition = mousePosition.MultiplyByScalar(1.1);
+  pushMatrix();
+  noStroke();
+  fill(color(255,0,0));
+  translate(mousePosition.x * pixelsPerMeter, mousePosition.y * pixelsPerMeter, mousePosition.z * pixelsPerMeter);
+  sphere(1 * pixelsPerMeter);
+  popMatrix(); //Reset translation for futur Draws
+  for (Globs_Global globs : globsManager.blobs)
+  {
+    boolean b = globs.isPositionInContact(mousePosition, 2);
+    if (b) box(100,100,100);
+    println("glob position : " + globs.motherGlob.position.GetText());
+    println("mouse Position : " + mousePosition.GetText());
+  }*/
+
   popMatrix();
   camera();
-  
+
   // GameManager (en dernier pour avoir la box background des menus au dessus de tout)
   gameManager.Update(deltaTime);
 }
@@ -285,6 +315,7 @@ void mousePressed()
     return;
   }
   
+  /*
   if (projectileLauncher.CanLaunchProjectile())
   {
     //Launching Projectile
@@ -292,6 +323,13 @@ void mousePressed()
     launchedProjectile.SetIntegrationMethod(integrationSelector.GetIntegrationMethod());
     inGameProjectiles.add(launchedProjectile);
     println("Summoning projectile at position : " + projectileLauncher.launchPosition.GetText());
+  }
+  */
+
+  if (!globController.isStretching){
+    Vector3D mousePosition = new Vector3D((mouseX - width/2)/pixelsPerMeter, (mouseY - height/2)/pixelsPerMeter, 0);
+    mousePosition = mousePosition.MultiplyByScalar(1.1);
+    globController.StartStretching(mousePosition);
   }
 }
 
