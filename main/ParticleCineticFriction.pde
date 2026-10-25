@@ -21,9 +21,9 @@ class ParticleCineticFriction implements IParticleForceGenerator
         Vector3D slidingVelocityDir = slidingVelocity.Normalize();
 
         Vector3D g = gravity.MultiplyByScalar(particle.mass);
-        Vector3D gk = particle.contactNormal.MultiplyByScalar(g.ScalarProduct(particle.contactNormal));
+        Vector3D gn = particle.contactNormal.MultiplyByScalar(g.ScalarProduct(particle.contactNormal));
 
-        Vector3D n = gk.MultiplyByScalar(-1);
+        Vector3D n = gn.MultiplyByScalar(-1);
 
         if (slidingVelocityDir.Norm() <= 0.00001f)
             return;

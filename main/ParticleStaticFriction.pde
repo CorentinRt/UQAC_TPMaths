@@ -13,9 +13,9 @@ class ParticleStaticFriction implements IParticleForceGenerator
         return;
 
     Vector3D g = gravity.MultiplyByScalar(particle.mass);
-    Vector3D gk = particle.contactNormal.MultiplyByScalar(g.ScalarProduct(particle.contactNormal));
+    Vector3D gn = particle.contactNormal.MultiplyByScalar(g.ScalarProduct(particle.contactNormal));
 
-    Vector3D n = gk.MultiplyByScalar(-1);
+    Vector3D n = gn.MultiplyByScalar(-1);
 
     Vector3D currentTotaForce = particle.accumForce;
     Vector3D forceAppliedOnContact = particle.contactNormal.MultiplyByScalar(currentTotaForce.ScalarProduct(particle.contactNormal));
