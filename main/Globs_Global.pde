@@ -14,10 +14,10 @@ class Globs_Global implements IUpdatable{
 
     Glob_Single motherGlob;
 
-    float restLengthBetweenGlobs = 2f;
-    float maxLengthBetweenGlobs = 4f;
-    float elasticity = 10f;
-    float cDamping = 0.5f;
+    float restLengthBetweenGlobs = 1f;
+    float maxLengthBetweenGlobs = 2f;
+    float elasticity = 20f;
+    float cDamping = 0.8f;
     boolean isBungee = true;
 
     color globColor = color(20, 200, 40);
@@ -38,7 +38,7 @@ class Globs_Global implements IUpdatable{
         allGlobsInGlobal.add(motherGlob);
         motherGlob.position = motherGlobPosition;
         motherGlob.SetDrawColors(globColor, globColor);
-        motherGlob.mass *= 5;
+        motherGlob.mass *= 10;
 
         for (int i = 1; i < defaultNumGlobInGlobal; ++i){
 
