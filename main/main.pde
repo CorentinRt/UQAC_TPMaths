@@ -195,6 +195,9 @@ void draw()
     particleForceRegistry.Add(particle, new ParticleCineticFriction());
   }
   particleForceRegistry.UpdateForces(deltaTime);
+  //TODO : Remettre le contact force a 0 ?
+  for (int i = 0; i < allParticles.size(); ++i)
+    allParticles.get(i).contactNormal = new Vector3D(0, 0, 0);
   particleForceRegistry.Clear();
   
   
