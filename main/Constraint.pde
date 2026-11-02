@@ -15,7 +15,7 @@ class Constraint {
 
     void RegisterToManagers(){
         if (collisionManager != null){
-            collisionManager.AddConstraint(cableConstraint);
+            collisionManager.AddConstraint(this);
         }
 
 
@@ -23,7 +23,7 @@ class Constraint {
 
     void UnregisterFromManagers(){
         if (collisionManager != null){
-            collisionManager.RemoveConstraint(cableConstraint);
+            collisionManager.RemoveConstraint(this);
         }
     }
 
