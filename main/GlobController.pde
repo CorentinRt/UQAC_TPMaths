@@ -10,6 +10,7 @@ class GlobController
         startPosition = mousePos;
         selectedGlob = null;
 
+        /*
         for (Globs_Global globs : globsManager.blobs)
         {
             if (globs.isPositionInContact(mousePos, 2)){
@@ -19,6 +20,7 @@ class GlobController
                 return true;
             }
         }
+        */
         return false;
     }
 

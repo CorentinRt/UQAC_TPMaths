@@ -56,7 +56,6 @@ class GameManager
   
   void StartGame()
   {
-    ResetBlob();
     state = GameState.PLAYING;
     hasWon = false; //Garder les textes
     scoreManager.Reset();
