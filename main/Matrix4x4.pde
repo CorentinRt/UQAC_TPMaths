@@ -84,26 +84,77 @@ static class Matrix4x4{
         {
             for (int k = 0; k < 4; k++)
             {
-                result.SetValue(i, j, result.GetValue(i,j) + matrix.GetValue(i, k) * other.GetValue(k, j));
+                result.SetValue(j, i, result.GetValue(j, i) + matrix.GetValue(k, i) * other.GetValue(j, k));
             }
         }
     }
     return result;
   }
 
-  float Determinant(){
-    return 0;
+  Matrix3x3 SubMatrix(int col, int line){
+    Matrix3x3 result = new Matrix3x3();
+    for (int i = 0; i < 4; i++)
+    {
+        if (i == line) continue;
+        for (int j = 0; j < 4; j++)
+        {
+            if (j == col) continue;
+            result.SetValue(j - (col<j? 1 : 0), i - (line<i? 1 : 0), GetValue(j, i));
+        }
+    }
+    return result;
   }
 
-  void Invert(){
+  float Determinant(){
+    float result = 0;
+    result += GetValue(0,0) * SubMatrix(0, 0).Determinant();
+    result -= GetValue(1,0) * SubMatrix(1, 0).Determinant();
+    result += GetValue(2,0) * SubMatrix(2, 0).Determinant();
+    result -= GetValue(3,0) * SubMatrix(3, 0).Determinant();
+    return result;
+  }
 
+  void Transpose(){
+    Matrix4x4 copy = new Matrix4x4(this);
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            SetValue(i, j, copy.GetValue(j, i));
+        }
+    }
+  }
+
+  static Matrix4x4 Transpose(Matrix4x4 m){
+    Matrix4x4 copy = new Matrix4x4(m);
+
+    copy.Transpose();
+
+    return copy;
+  }
+
+  static Matrix4x4 Adjugate(Matrix4x4 m){
+    Matrix4x4 c = new Matrix4x4();
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            float k = m.SubMatrix(j, i).Determinant();
+            c.SetValue(i, j,  pow(-1, i + j) * k);
+        }
+    }
+    c.Transpose();
+    return c;
   }
 
   static Matrix4x4 Invert(Matrix4x4 m){
-    Matrix4x4 copy = new Matrix4x4(m);
+    Matrix4x4 result = Adjugate(m);
+    float det = m.Determinant();
 
-    copy.Invert();
+    if (det == 0) return null;
 
-    return copy;
+    result.MultiplyByScalar(1/det);
+
+    return result;
   }
 }
