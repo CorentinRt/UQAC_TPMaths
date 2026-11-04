@@ -125,4 +125,51 @@ static class Matrix3x3{
 
     return newMatrix;
   }
+
+  float Determinant(){
+    // NEGATIVE
+    float firstNegative = this.GetValue(0, 2) * this.GetValue(1, 1) * this.GetValue(2, 0);
+    
+    float secondNegative = this.GetValue(0, 0) * this.GetValue(1, 2) * this.GetValue(2, 1);
+    
+    float thirdNegative = this.GetValue(0, 1) * this.GetValue(1, 0) * this.GetValue(2, 2);
+    
+    // POSITIVE
+    float firstPositive = this.GetValue(0, 0) * this.GetValue(1, 1) * this.GetValue(2, 2);
+    
+    float secondPositive = this.GetValue(0, 1) * this.GetValue(1, 2) * this.GetValue(2, 0);
+    
+    float thirdPositive = this.GetValue(0, 2) * this.GetValue(1, 0) * this.GetValue(2, 1);
+    
+    return - firstNegative - secondNegative - thirdNegative + firstPositive + secondPositive + thirdPositive;
+  }
+
+  static float Determinant(Matrix3x3 m){
+    return m.Determinant();
+  }
+
+  void Adjugate(){
+    
+
+  }
+
+  Matrix3x3 Adjugate(Matrix3x3 m){
+    Matrix3x3 newMatrix = new Matrix3x3(m);
+
+    newMatrix.Adjugate();
+
+    return newMatrix;
+  }
+
+  void Invert(){
+
+  }
+
+  Matrix3x3 Invert(Matrix3x3 m){
+    Matrix3x3 newMatrix = new Matrix3x3(m);
+
+    newMatrix.Invert();
+
+    return newMatrix;
+  }
 }
