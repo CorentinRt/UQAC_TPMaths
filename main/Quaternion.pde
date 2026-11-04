@@ -111,4 +111,23 @@ static class Quaternion
         return q.MultiplyByQ(this.Conjugate());
     } 
 
+    float ScalarProduct(Quaternion q){
+        return (this.w * q.w + this.x * q.x + this.y * q.y + this.z * q.z);
+    }
+
+    Quaternion Expo(float t){
+        float a = acos(this.w);
+        float ta = t * a;
+        
+        float result_x = (sin(ta) / sin(a)) * this.x;
+        float result_y = (sin(ta) / sin(a)) * this.y;
+        float result_z = (sin(ta) / sin(a)) * this.z;
+
+        return new Quaternion(cos(ta), result_x, result_y, result_z);
+    }
+
+    Quaternion Slerp(Quaternion q0, Quaternion q1, float t){
+        return (q1.MultiplyByQ(q0.Invert())).Expo(t).MultiplyByQ(q0); //((q1 * q0^-1)^t)*q0
+    }
+
 }
