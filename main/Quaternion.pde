@@ -90,9 +90,25 @@ static class Quaternion
         return sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
-
     Quaternion Invert(){
         return this.Conjugate().MultiplyByF(1 / this.Norm());
     }
+
+    boolean IsEqual(Quaternion q){
+        return this.w == q.w && this.x == q.x && this.y == q.y && this.z == q.z;
+    }
+    
+    boolean IsIdentity(){
+        Quaternion id1 = new Quaternion();
+        Quaternion id2 = new Quaternion();
+        id2.w = -1;
+
+        return this.IsEqual(id1) || this.IsEqual(id2);
+    }
+
+    Quaternion Difference(Quaternion q){
+        // TODO : check si on doit verifier que la norme = 1 de q1
+        return q.MultiplyByQ(this.Conjugate());
+    } 
 
 }
