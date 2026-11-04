@@ -17,11 +17,11 @@ static class Matrix3x3{
       println("Your matrix is too large");
       return;
     }
-    this.data = newMatrix;
+    this.data = newMatrix.clone();
   }
 
   Matrix3x3(Matrix3x3 m){
-    this.data = m.data;
+    this.data = m.data.clone();
   }
   
   void Add(Matrix3x3 matrixToAdd){
@@ -31,7 +31,7 @@ static class Matrix3x3{
     return;
   }
 
-  Matrix3x3 Add(Matrix3x3 m, Matrix3x3 matrixToAdd){
+  static Matrix3x3 Add(Matrix3x3 m, Matrix3x3 matrixToAdd){
     Matrix3x3 newMatrix = new Matrix3x3(m);
 
     newMatrix.Add(matrixToAdd);
@@ -58,12 +58,15 @@ static class Matrix3x3{
   }
 
   boolean IsIdentity(){
-    for (int i = 0; i < data.length; ++i){
-      if (i % 3 != 0)
-        continue;
+    for (int i = 0; i < 3; ++i){
+      for (int j = 0; j < 3; ++j){
 
-      if (data[i] != 1)
-        return false;
+        if (i != j && this.GetValue(i, j) != 0)
+          return false;
+
+        if (i == j && this.GetValue(i, j) != 1f)
+          return false;
+      }
     }
 
     return true;
@@ -87,35 +90,39 @@ static class Matrix3x3{
   }
 
   void Multiply(Matrix3x3 matrixToMultiply){
-    this.SetValue(0, 0, 
+    Matrix3x3 tempResult = new Matrix3x3();
+
+    tempResult.SetValue(0, 0, 
       this.GetValue(0, 0) * matrixToMultiply.GetValue(0, 0) + this.GetValue(1, 0) * matrixToMultiply.GetValue(0, 1) + this.GetValue(2, 0) * matrixToMultiply.GetValue(0, 2)
     );
-    this.SetValue(1, 0, 
-    this.GetValue(0, 0) * matrixToMultiply.GetValue(1, 0) + this.GetValue(1, 0) * matrixToMultiply.GetValue(1, 1) + this.GetValue(2, 0) * matrixToMultiply.GetValue(1, 2)
+    tempResult.SetValue(1, 0, 
+      this.GetValue(0, 0) * matrixToMultiply.GetValue(1, 0) + this.GetValue(1, 0) * matrixToMultiply.GetValue(1, 1) + this.GetValue(2, 0) * matrixToMultiply.GetValue(1, 2)
     );
-    this.SetValue(2, 0, 
-    this.GetValue(0, 0) * matrixToMultiply.GetValue(2, 0) + this.GetValue(1, 0) * matrixToMultiply.GetValue(2, 1) + this.GetValue(2, 0) * matrixToMultiply.GetValue(2, 2)
-    );
-
-    this.SetValue(0, 1, 
-    this.GetValue(0, 1) * matrixToMultiply.GetValue(0, 0) + this.GetValue(1, 1) * matrixToMultiply.GetValue(0, 1) + this.GetValue(2, 1) * matrixToMultiply.GetValue(0, 2)
-    );
-    this.SetValue(1, 1, 
-    this.GetValue(0, 1) * matrixToMultiply.GetValue(1, 0) + this.GetValue(1, 1) * matrixToMultiply.GetValue(1, 1) + this.GetValue(2, 1) * matrixToMultiply.GetValue(1, 2)
-    );
-    this.SetValue(2, 1, 
-    this.GetValue(0, 1) * matrixToMultiply.GetValue(2, 0) + this.GetValue(1, 1) * matrixToMultiply.GetValue(2, 1) + this.GetValue(2, 1) * matrixToMultiply.GetValue(2, 2)
+    tempResult.SetValue(2, 0, 
+      this.GetValue(0, 0) * matrixToMultiply.GetValue(2, 0) + this.GetValue(1, 0) * matrixToMultiply.GetValue(2, 1) + this.GetValue(2, 0) * matrixToMultiply.GetValue(2, 2)
     );
 
-    this.SetValue(0, 2,
-    this.GetValue(0, 2) * matrixToMultiply.GetValue(0, 0) + this.GetValue(1, 2) * matrixToMultiply.GetValue(0, 1) + this.GetValue(2, 2) * matrixToMultiply.GetValue(0, 2)
+    tempResult.SetValue(0, 1, 
+      this.GetValue(0, 1) * matrixToMultiply.GetValue(0, 0) + this.GetValue(1, 1) * matrixToMultiply.GetValue(0, 1) + this.GetValue(2, 1) * matrixToMultiply.GetValue(0, 2)
     );
-    this.SetValue(1, 2, 
-    this.GetValue(0, 2) * matrixToMultiply.GetValue(1, 0) + this.GetValue(1, 2) * matrixToMultiply.GetValue(1, 1) + this.GetValue(2, 2) * matrixToMultiply.GetValue(1, 2)
+    tempResult.SetValue(1, 1, 
+      this.GetValue(0, 1) * matrixToMultiply.GetValue(1, 0) + this.GetValue(1, 1) * matrixToMultiply.GetValue(1, 1) + this.GetValue(2, 1) * matrixToMultiply.GetValue(1, 2)
     );
-    this.SetValue(2, 2, 
-    this.GetValue(0, 2) * matrixToMultiply.GetValue(2, 0) + this.GetValue(1, 2) * matrixToMultiply.GetValue(2, 1) + this.GetValue(2, 2) * matrixToMultiply.GetValue(2, 2)
+    tempResult.SetValue(2, 1, 
+      this.GetValue(0, 1) * matrixToMultiply.GetValue(2, 0) + this.GetValue(1, 1) * matrixToMultiply.GetValue(2, 1) + this.GetValue(2, 1) * matrixToMultiply.GetValue(2, 2)
     );
+
+    tempResult.SetValue(0, 2,
+      this.GetValue(0, 2) * matrixToMultiply.GetValue(0, 0) + this.GetValue(1, 2) * matrixToMultiply.GetValue(0, 1) + this.GetValue(2, 2) * matrixToMultiply.GetValue(0, 2)
+    );
+    tempResult.SetValue(1, 2, 
+      this.GetValue(0, 2) * matrixToMultiply.GetValue(1, 0) + this.GetValue(1, 2) * matrixToMultiply.GetValue(1, 1) + this.GetValue(2, 2) * matrixToMultiply.GetValue(1, 2)
+    );
+    tempResult.SetValue(2, 2, 
+      this.GetValue(0, 2) * matrixToMultiply.GetValue(2, 0) + this.GetValue(1, 2) * matrixToMultiply.GetValue(2, 1) + this.GetValue(2, 2) * matrixToMultiply.GetValue(2, 2)
+    );
+
+    this.data = tempResult.data.clone();
   }
 
   static Matrix3x3 Multiply(Matrix3x3 m, Matrix3x3 matrixToMultiply){
@@ -148,12 +155,59 @@ static class Matrix3x3{
     return m.Determinant();
   }
 
-  void Adjugate(){
-    
+  void Transpose(){
+    Matrix3x3 tempMatrix = new Matrix3x3(this);
 
+    for (int i = 0; i < 3; ++i){
+      for (int j = 0; j < 3; ++j){
+
+        this.SetValue(j, i, tempMatrix.GetValue(i, j));
+      }
+    }
   }
 
-  Matrix3x3 Adjugate(Matrix3x3 m){
+  static Matrix3x3 Transpose(Matrix3x3 m){
+    Matrix3x3 newMatrix = new Matrix3x3(m);
+
+    newMatrix.Transpose();
+
+    return newMatrix;
+  }
+
+  void Adjugate(){
+    
+    Matrix3x3 tempMatrix = new Matrix3x3();
+
+    float a11 = this.GetValue(0, 0);
+    float a21 = this.GetValue(1, 0);
+    float a31 = this.GetValue(2, 0);
+
+    float a12 = this.GetValue(0, 1);
+    float a22 = this.GetValue(1, 1);
+    float a32 = this.GetValue(2, 1);
+
+    float a13 = this.GetValue(0, 2);
+    float a23 = this.GetValue(1, 2);
+    float a33 = this.GetValue(2, 2);
+
+    tempMatrix.SetValue(0, 0, (a22 * a33) - (a23 * a32));
+    tempMatrix.SetValue(1, 0, -((a12 * a33) - (a13 * a32)));
+    tempMatrix.SetValue(2, 0, (a12 * a23) - (a13 * a22));
+
+    tempMatrix.SetValue(0, 1, -((a21 * a33) - (a23 * a31)));
+    tempMatrix.SetValue(1, 1, (a11 * a33) - (a13 * a31));
+    tempMatrix.SetValue(2, 1, -((a11 * a23) - (a13 * a21)));
+
+    tempMatrix.SetValue(0, 2, (a21 * a32) - (a22 * a31));
+    tempMatrix.SetValue(1, 2, -((a11 * a32) - (a12 * a31)));
+    tempMatrix.SetValue(2, 2, (a11 * a22) - (a12 * a21));
+
+    tempMatrix.Transpose();
+
+    this.data = tempMatrix.data.clone();
+  }
+
+  static Matrix3x3 Adjugate(Matrix3x3 m){
     Matrix3x3 newMatrix = new Matrix3x3(m);
 
     newMatrix.Adjugate();
@@ -163,13 +217,57 @@ static class Matrix3x3{
 
   void Invert(){
 
+    float det = this.Determinant();
+
+    if (det == 0f){
+
+      return;
+    }
+
+    float invertDet = 1f / det;
+
+    Matrix3x3 adjugate = new Matrix3x3(this);
+    adjugate.Adjugate();
+
+    adjugate.MultiplyByScalar(invertDet);
+
+    this.data = adjugate.data.clone();
   }
 
-  Matrix3x3 Invert(Matrix3x3 m){
+  static Matrix3x3 Invert(Matrix3x3 m){
     Matrix3x3 newMatrix = new Matrix3x3(m);
 
     newMatrix.Invert();
 
     return newMatrix;
+  }
+
+  String GetText(){
+    String text = "";
+
+    for (int i = 0; i < 3; ++i){
+      for (int j = 0; j < 3; ++j){
+        if (j == 0 && i != 0){
+          text += "\n";
+        }
+
+        text += this.GetValue(j, i);
+
+        text += "   ";
+      }
+    }
+
+    return text;
+  }
+
+  boolean Equals(Matrix3x3 other){
+
+    for (int i = 0; i < 9; ++i){
+
+      if (other.data[i] != this.data[i])
+        return false;
+    }
+
+    return true;
   }
 }
