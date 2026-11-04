@@ -148,9 +148,54 @@ static class Matrix3x3{
     return m.Determinant();
   }
 
+  void Transpose(){
+    Matrix3x3 tempMatrix = new Matrix3x3(this);
+
+    for (int i = 0; i < 3; ++i){
+      for (int j = 0; j < 3; ++j){
+
+        this.SetValue(j, i, tempMatrix.GetValue(i, j));
+      }
+    }
+  }
+
+  static Matrix3x3 Transpose(Matrix3x3 m){
+    Matrix3x3 newMatrix = new Matrix3x3(m);
+
+    newMatrix.Transpose();
+
+    return newMatrix;
+  }
+
   void Adjugate(){
     
+    Matrix3x3 tempMatrix = new Matrix3x3();
 
+    float a11 = this.GetValue(0, 0);
+    float a21 = this.GetValue(1, 0);
+    float a31 = this.GetValue(2, 0);
+
+    float a12 = this.GetValue(0, 1);
+    float a22 = this.GetValue(1, 1);
+    float a32 = this.GetValue(2, 1);
+
+    float a13 = this.GetValue(0, 2);
+    float a23 = this.GetValue(1, 2);
+    float a33 = this.GetValue(2, 2);
+
+    tempMatrix.SetValue(0, 0, (a22 * a33) - (a23 * a32));
+    tempMatrix.SetValue(1, 0, (a12 * a33) - (a13 * a32));
+    tempMatrix.SetValue(2, 0, (a12 * a23) - (a13 * a22));
+
+    tempMatrix.SetValue(0, 1, (a21 * a33) - (a23 * a31));
+    tempMatrix.SetValue(1, 1, (a11 * a33) - (a13 * a31));
+    tempMatrix.SetValue(2, 1, (a11 * a23) - (a13 * a21));
+
+    tempMatrix.SetValue(0, 2, (a21 * a32) - (a22 * a31));
+    tempMatrix.SetValue(1, 2, (a11 * a32) - (a12 * a31));
+    tempMatrix.SetValue(2, 2, (a11 * a22) - (a12 * a21));
+
+    this.data = tempMatrix.data;
   }
 
   Matrix3x3 Adjugate(Matrix3x3 m){
@@ -163,6 +208,21 @@ static class Matrix3x3{
 
   void Invert(){
 
+    float det = this.Determinant();
+
+    if (det == 0f){
+
+      return;
+    }
+
+    float invertDet = 1f / det;
+
+    Matrix3x3 adjugate = new Matrix3x3(this);
+    adjugate.Adjugate();
+
+    adjugate.MultiplyByScalar(invertDet);
+
+    this.data = adjugate.data;
   }
 
   Matrix3x3 Invert(Matrix3x3 m){
