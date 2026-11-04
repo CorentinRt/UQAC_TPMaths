@@ -27,18 +27,11 @@ static class Matrix4x4{
       println("Your matrix is too large");
       return;
     }
-    arrayCopy(this.data, toCopy);
-  }
-
-  boolean IsIdentity(){
-    float[] identityMatrix = {
-      1.0, 0.0, 0.0, 0.0,
-      0.0, 1.0, 0.0, 0.0,
-      0.0, 0.0, 1.0, 0.0,
-      0.0, 0.0, 0.0, 1.0
-    };
-
-    return data == identityMatrix;
+    for (int i = 0; i < 4; i++){
+      for (int j = 0; j < 4; j++){
+        SetValue(i, j, toCopy.GetValue(i,j));
+      }
+    }
   }
 
   float GetValue(int col, int line){
@@ -48,16 +41,66 @@ static class Matrix4x4{
   void SetValue(int col, int line, float value){
     this.data[line * 4 + col] = value;
   }
+
+  boolean IsEqual(Matrix4x4 other){
+    for (int i = 0; i < 4; i++){
+      for (int j = 0; j < 4; j++){
+        if (GetValue(i, j) != other.GetValue(i, j)) return false;
+      }
+    }
+    return true;
+  }
+
+  String GetText(){
+    String result = "";
+    for (int i = 0; i < 4; i++){
+      for (int j = 0; j < 4; j++){
+        result += "" + GetValue(j, i);
+        if (i != 3 || j != 3){
+          result += ", ";
+        }
+      }
+      result += "\n";
+    }
+    return result;
+  }
+
+  boolean IsIdentity(){
+    for (int i = 0; i < 4; i++){
+      for (int j = 0; j < 4; j++){
+        float value = i==j ? 1 : 0;
+        if (GetValue(i, j) != value) return false;
+      }
+    }
+    return true;
+  }
+
+  static Matrix4x4 Identity(){
+    return new Matrix4x4(new float[]{
+      1.0, 0.0, 0.0, 0.0,
+      0.0, 1.0, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0,
+      0.0, 0.0, 0.0, 1.0
+    });
+  }
   
   void Add(Matrix4x4 matrixToAdd){
-    for (int i = 0; i < this.data.length; i = i +1){
+    for (int i = 0; i < this.data.length; i++){
       data[i] = data[i] + matrixToAdd.data[i];
     }
     return;
   }
 
+  static Matrix4x4 Add(Matrix4x4 m1, Matrix4x4 m2){
+    Matrix4x4 copy = new Matrix4x4(m1);
+
+    copy.Add(m2);
+
+    return copy;
+  }
+
   void MultiplyByScalar(float k){
-    for (int i = 0; i < this.data.length; i = i +1){
+    for (int i = 0; i < this.data.length; i++){
       data[i] = data[i] * k;
     }
     return;
