@@ -8,6 +8,8 @@ float INFINITE_MASS = 99999f;
 
 // ----- Unit tests ----- //
 Vector3DUnitTests VectorTests = new Vector3DUnitTests();
+Matrix3x3UnitTest Matrix3x3Tests = new Matrix3x3UnitTest();
+
 
 // ----- Update ----- //
 UpdateManager updateManager = new UpdateManager();
@@ -60,9 +62,10 @@ void setup()
 {
   fullScreen(P3D);
   background(100);
-  
-  // Vector unit tests
+
+  // Unit tests
   VectorTests.TestAll();
+  Matrix3x3Tests.TestAll();
   
   // Init deltaTime 1st frame
   lastFrameUpdate = millis();
