@@ -55,4 +55,44 @@ static class Quaternion
         -this.z
         );
     }
+
+    Quaternion MultiplyByQ(Quaternion quaternionToMultiply){
+
+        Vector3D v1 = new Vector3D(this.x, this.y, this.z);
+        Vector3D v2 = new Vector3D(quaternionToMultiply.x, quaternionToMultiply.y, quaternionToMultiply.z);
+
+        Vector3D vectorProduct = v1.VectorProduct(v2);
+
+        float w = this.w * quaternionToMultiply.w - v1.ScalarProduct(v2);
+        float x = this.w * quaternionToMultiply.x + quaternionToMultiply.w * this.x + vectorProduct.x;
+        float y = this.w * quaternionToMultiply.y + quaternionToMultiply.w * this.y + vectorProduct.y;
+        float z = this.w * quaternionToMultiply.z + quaternionToMultiply.w * this.z + vectorProduct.z;
+
+        //kms
+
+        return new Quaternion(w, x , y , z);
+    }
+
+    Quaternion MultiplyByF(float value){
+        return new Quaternion(w * value, x * value , y * value , z * value);
+    }
+
+    Quaternion Conjugate(){
+        return new Quaternion(
+            this.w,
+            -this.x,
+            -this.y,
+            -this.z
+        );
+    }
+    
+    float Norm(){
+        return sqrt(this.w * this.w + this.x * this.x + this.y * this.y + this.z * this.z);
+    }
+
+
+    Quaternion Invert(){
+        return this.Conjugate().MultiplyByF(1 / this.Norm());
+    }
+
 }
