@@ -127,7 +127,9 @@ class Matrix4x4UnitTests
 
         boolean success = m3.IsEqual(result);
 
-        PrintTestResult("MULTIPLY", success, "");
+        String failReason = "Product of \n" + m1.GetText() + " and \n" + m2.GetText() + " should be equal to \n" + result.GetText() + " but is equal to \n" + m3.GetText();
+        
+        PrintTestResult("MULTIPLY", success, failReason);
     }
 
     void TestDeterminant(){
@@ -208,8 +210,10 @@ class Matrix4x4UnitTests
 
         Matrix4x4 result = Matrix4x4.Invert(m1);
 
-        boolean success = result.IsEqual(expected);
+        boolean success = result.IsNearlyEqual(expected, 0.001f);
 
-        PrintTestResult("INVERT", success, "");
+        String failReason = "Matrix : \n" + m1.GetText() + " Invert should be : \n " + expected.GetText() + " but is : \n" + result.GetText();
+
+        PrintTestResult("INVERT", success, failReason);
     }
 }

@@ -51,6 +51,16 @@ static class Matrix4x4{
     return true;
   }
 
+  boolean IsNearlyEqual(Matrix4x4 other, float threshold){
+    for (int i = 0; i < 4; i++){
+      for (int j = 0; j < 4; j++){
+        float diff = GetValue(i, j) - other.GetValue(i, j);
+        if (abs(diff) > threshold) return false;
+      }
+    }
+    return true;
+  }
+
   String GetText(){
     String result = "";
     for (int i = 0; i < 4; i++){
@@ -120,7 +130,7 @@ static class Matrix4x4{
   }
 
   static Matrix4x4 Multiply(Matrix4x4 matrix, Matrix4x4 other){
-    Matrix4x4 result = new Matrix4x4(); 
+    Matrix4x4 result = new Matrix4x4(new float[16]); 
     for (int i = 0; i < 4; i++)
     {
         for (int j = 0; j < 4; j++)
@@ -183,7 +193,7 @@ static class Matrix4x4{
         for (int j = 0; j < 4; j++)
         {
             float k = m.SubMatrix(j, i).Determinant();
-            c.SetValue(i, j,  pow(-1, i + j) * k);
+            c.SetValue(j, i,  pow(-1, i + j) * k);
         }
     }
     c.Transpose();
