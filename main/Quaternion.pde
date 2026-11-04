@@ -12,6 +12,13 @@ static class Quaternion
         this.y = 0;
         this.z = 0;
     }
+
+    Quaternion(float w, float x, float y, float z){
+        this.w = w;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
     
     Quaternion(Vector3D axis, float angle)
     {
@@ -22,18 +29,30 @@ static class Quaternion
         this.z = sin(angle_divided_by_2) * axis.z;
     }
 
-    void Add(Quaternion quaternionToAdd){
-        this.w += quaternionToAdd.w;
-        this.x += quaternionToAdd.x;
-        this.y += quaternionToAdd.y;
-        this.z += quaternionToAdd.z;
+    Quaternion Add(Quaternion quaternionToAdd){
+        return new Quaternion(
+        this.w + quaternionToAdd.w,
+        this.x + quaternionToAdd.x,
+        this.y + quaternionToAdd.y,
+        this.z + quaternionToAdd.z
+        );
     }
 
-    void Subtract(Quaternion quaternionToRemove){
-        this.w -= quaternionToRemove.w;
-        this.x -= quaternionToRemove.x;
-        this.y -= quaternionToRemove.y;
-        this.z -= quaternionToRemove.z;
+    Quaternion Subtract(Quaternion quaternionToRemove){
+        return new Quaternion(
+        this.w - quaternionToRemove.w,
+        this.x - quaternionToRemove.x,
+        this.y - quaternionToRemove.y,
+        this.z - quaternionToRemove.z
+        );
     }
 
+    Quaternion Negate(){
+        return new Quaternion(
+        -this.w,
+        -this.x,
+        -this.y,
+        -this.z
+        );
+    }
 }
