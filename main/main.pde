@@ -48,6 +48,9 @@ ArrayList<Particle> inGameProjectiles = new ArrayList<Particle>();
 CollisionManager collisionManager = new CollisionManager();
 SpringsRegistry springsRegistry = new SpringsRegistry();
 
+// ----- Rigidbody ----- //
+RigidBody ridigBody1 = new RigidBody(INFINITE_MASS, new Vector3D(0,0,0), new Vector3D(0, 0, 0), new Quaternion(), new Vector3D(0, 2, 2));
+
 // ----- Frame ----- //
 float lastFrameUpdate = 0;
 boolean isFirstFrame = true;

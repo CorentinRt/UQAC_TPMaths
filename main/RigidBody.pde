@@ -1,4 +1,4 @@
-class RigidBody
+class RigidBody implements IPhysicsEntity, IUpdatable
 {
     Quaternion rotation = new Quaternion();
     Matrix3x3 rotationMatrix = new Matrix3x3();
@@ -9,6 +9,7 @@ class RigidBody
     RigidBody(float mass, Vector3D position){
         massCenter = new Particle(mass, position);
         massCenter.radius = radius/5;
+        RegisterToManagers();
     }
 
     RigidBody(float mass, Vector3D position, Vector3D linearVelocity){
@@ -32,6 +33,11 @@ class RigidBody
         massCenter.coefStaticFriction = coefStaticFriction;
     }
 
+    void RegisterToManagers(){
+        physicsEngine.Register(this);
+        updateManager.Register(this);
+    }
+
     void SetRotation(Quaternion newRotation){
         rotation = newRotation;
         rotationMatrix = ComputeRotationMatrix();
@@ -51,14 +57,51 @@ class RigidBody
             });
     }
 
-    void Draw(color c, float radius){
+    void Draw(color c){
         pushMatrix();
         noStroke();
         fill(c);
-        translate(position.x * pixelsPerMeter, position.y * pixelsPerMeter, position.z * pixelsPerMeter);
+        translate(massCenter.position.x * pixelsPerMeter, massCenter.position.y * pixelsPerMeter, massCenter.position.z * pixelsPerMeter);
         sphere(radius * pixelsPerMeter);
         popMatrix(); //Reset translation for futur Draws
+    }
 
-        massCenter.Draw();
+    Vector3D ComputeAngularAcceleration(){
+        return new Vector3D(1, 1, 1);
+    }
+
+    void Update(float deltaTime){
+        Draw(color(255, 0, 0));
+    }
+
+    void UpdatePhysics(float deltaTime){
+        //angularVelocity = angularVelocity.Add(ComputeAngularAcceleration().MultiplyByScalar(deltaTime));
+
+        Quaternion wQuaternion = new Quaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z);
+
+        SetRotation(rotation.Add(rotation.MultiplyByQ(wQuaternion).MultiplyByF(deltaTime * 0.5)));
+
+        println("Quaternion : (x:" + rotation.x + "y:" + rotation.y + "z:" + rotation.z + "w:" + rotation.w + ")");
+        println(rotation.EulerAngles().GetText());
+    }
+
+    void AddForce(Vector3D force){
+        massCenter.AddForce(force);
+    }
+
+    void ClearAccum(){
+        massCenter.ClearAccum();
+    }
+
+    void AddPosition(Vector3D position){
+        massCenter.AddPosition(position);
+    }
+
+    Vector3D GetLinearVelocity(){
+        return massCenter.GetLinearVelocity();
+    }
+
+    float GetMass(){
+        return massCenter.GetMass();
     }
 }

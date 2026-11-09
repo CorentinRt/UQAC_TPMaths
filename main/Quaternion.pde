@@ -130,4 +130,12 @@ static class Quaternion
         return (q1.MultiplyByQ(q0.Invert())).Expo(t).MultiplyByQ(q0); //((q1 * q0^-1)^t)*q0
     }
 
+    Vector3D EulerAngles(){
+        return new Vector3D(
+            atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)),
+            asin(2 * (w * y - z * x)),
+            atan2(2 * (w * z + x * y), 1 - 2 * (z * z + y * y))
+        ).MultiplyByScalar(180 / PI);
+    }
+
 }
