@@ -218,6 +218,28 @@ class Particle implements IPhysicsEntity, IUpdatable
     return PhysicsUtilities.ComputeAccelerationByForce(mass, accumForce);
   }
   
+  void Draw(){
+    color c = color(255, 0, 0);
+    
+    switch (integrationMethod)
+    {
+      case EULER:
+        c = eulerColor;
+        break;
+        
+      case VERLET:
+        c = verletColor;
+        break;
+        
+      default:
+        c = color(100, 50, 200);
+        break;
+      
+    }
+    
+    this.Draw(c, radius);
+  }
+
   void Draw(color c, float radius){
     pushMatrix();
     noStroke();
