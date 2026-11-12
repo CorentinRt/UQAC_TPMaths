@@ -84,7 +84,8 @@ class RigidBody implements IPhysicsEntity, IUpdatable
 
         Quaternion wQuaternion = new Quaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z);
 
-        SetRotation(rotation.Add(rotation.MultiplyByQ(wQuaternion).MultiplyByF(deltaTime * 0.5)));
+        Quaternion dq = wQuaternion.MultiplyByQ(rotation).MultiplyByF(deltaTime * 0.5);
+        SetRotation(rotation.Add(dq));
 
         println("Quaternion : (x: " + rotation.x + "y: " + rotation.y + "z: " + rotation.z + "w: " + rotation.w + ")");
         println(rotation.EulerAngles().GetText());
