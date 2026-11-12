@@ -51,7 +51,7 @@ class RigidBody implements IPhysicsEntity, IUpdatable
 
         return new Matrix3x3(
             new float[] {
-                1 - 2 * (Y * Y + Z + Z), 2 * (X * Y + Z * W ), 2 * (X * Z - X * W),
+                1 - 2 * (Y * Y + Z * Z), 2 * (X * Y + Z * W ), 2 * (X * Z - X * W),
                 2 * (X * Y - Z * W), 1 - 2 * (X * X + Z * Z), 2 * (Y * Z + X * W),
                 2 * (X * Z + Y * W), 2 * (Y * Z - X * W), 1 - 2 * (X * X + Y * Y)
             });
