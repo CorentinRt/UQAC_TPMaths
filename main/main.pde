@@ -10,6 +10,7 @@ float INFINITE_MASS = 99999f;
 Vector3DUnitTests VectorTests = new Vector3DUnitTests();
 Matrix3x3UnitTest Matrix3x3Tests = new Matrix3x3UnitTest();
 Matrix4x4UnitTests Matrix4x4Tests = new Matrix4x4UnitTests();
+QuaternionUnitTests QuaternionTests = new QuaternionUnitTests();
 
 
 // ----- Update ----- //
@@ -71,6 +72,7 @@ void setup()
   VectorTests.TestAll();
   Matrix3x3Tests.TestAll();
   Matrix4x4Tests.TestAll();
+  QuaternionTests.TestAll();
   
   // Init deltaTime 1st frame
   lastFrameUpdate = millis();
