@@ -131,11 +131,23 @@ static class Quaternion
     }
 
     Vector3D EulerAngles(){
+        Quaternion normalized = this.Normalize();
+        float w = normalized.w;
+        float x = normalized.x;
+        float y = normalized.y;
+        float z = normalized.z;
+
         return new Vector3D(
             atan2(2 * (w * x + y * z), 1 - 2 * (x * x + y * y)),
             asin(2 * (w * y - z * x)),
             atan2(2 * (w * z + x * y), 1 - 2 * (z * z + y * y))
         ).MultiplyByScalar(180 / PI);
+    }
+
+    Quaternion Normalize(){
+        float norm = this.Norm();
+
+        return(new Quaternion(this.w / norm, this.x / norm, this.y / norm, this.z / norm));
     }
 
 }
