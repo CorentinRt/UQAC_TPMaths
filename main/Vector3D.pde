@@ -17,6 +17,12 @@ static class Vector3D
     this.y = y;
     this.z = z;
   }
+
+  Vector3D(Vector3D v){
+    this.x = v.x;
+    this.y = v.y;
+    this.z = v.z;
+  }
   
   boolean IsEqualWith(Vector3D v2) {
     float epsilon = 0.0001f; 
@@ -97,5 +103,25 @@ static class Vector3D
 
   float Distance(Vector3D other){
     return (float)Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2) + Math.pow(this.z - other.z, 2));
+  }
+
+  Vector3D MultiplyByMatrix(Matrix3x3 m, Vector3D v){
+    Vector3D result = new Vector3D(v);
+
+    result.MultiplyByMatrix(m);
+
+    return result;
+  }
+
+  void MultiplyByMatrix(Matrix3x3 m){
+    Vector3D result = new Vector3D();
+
+    result.x = m.GetValue(0, 0) * this.x + m.GetValue(1, 0) * this.y + m.GetValue(2, 0) * this.z;
+    result.y = m.GetValue(0, 1) * this.x + m.GetValue(1, 1) * this.y + m.GetValue(2, 1) * this.z;
+    result.z = m.GetValue(0, 2) * this.x + m.GetValue(1, 2) * this.y + m.GetValue(2, 2) * this.z;
+
+    this.x = result.x;
+    this.y = result.y;
+    this.z = result.z;
   }
 }
