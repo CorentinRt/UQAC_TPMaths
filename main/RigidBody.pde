@@ -58,17 +58,32 @@ class RigidBody implements IPhysicsEntity, IUpdatable
     }
 
     void Draw(color c){
+        /*
         pushMatrix();
         stroke(4);
         noFill();
         color(c);
+        translate(massCenter.position.x * pixelsPerMeter, massCenter.position.y * pixelsPerMeter, massCenter.position.z * pixelsPerMeter);
         Vector3D angles = rotation.EulerAngles();
         rotateX(radians(angles.x));
         rotateY(radians(angles.y));
         rotateZ(radians(angles.z));
-        translate(massCenter.position.x * pixelsPerMeter, massCenter.position.y * pixelsPerMeter, massCenter.position.z * pixelsPerMeter);
         sphere(radius * pixelsPerMeter);
         popMatrix(); //Reset translation for futur Draws
+        */
+        pushMatrix();
+        stroke(4);
+        noFill();
+        translate(massCenter.position.x * pixelsPerMeter,
+                massCenter.position.y * pixelsPerMeter,
+                massCenter.position.z * pixelsPerMeter);
+
+        float angle = 2 * acos(constrain(rotation.w, -1, 1));
+        float s = sqrt(1 - rotation.w * rotation.w);
+        if (s > 0.0001) rotate(angle, rotation.x / s, rotation.y / s, rotation.z / s);
+
+        box(radius * pixelsPerMeter);
+        popMatrix();
     }
 
     Vector3D ComputeAngularAcceleration(){
@@ -85,7 +100,7 @@ class RigidBody implements IPhysicsEntity, IUpdatable
         Quaternion wQuaternion = new Quaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z);
 
         Quaternion qw = rotation.MultiplyByQ(wQuaternion).MultiplyByF(deltaTime * 0.5);
-        SetRotation(rotation.Add(qw));
+        SetRotation(rotation.Add(qw).Normalize());
 
         println("Quaternion : (x: " + rotation.x + "y: " + rotation.y + "z: " + rotation.z + "w: " + rotation.w + ")");
         println(rotation.EulerAngles().GetText());
