@@ -77,6 +77,27 @@ class RigidBody implements IPhysicsEntity, IUpdatable
 
     void Update(float deltaTime){
         Draw(color(255, 0, 0));
+
+        DrawOffsetPoint(color(0, 255, 0));
+    }
+
+    void DrawOffsetPoint(color c){
+        pushMatrix();
+        stroke(4);
+        noFill();
+        color(c);
+
+        Vector3D offset = new Vector3D(0, 1, 0);
+
+        offset = Vector3D.MultiplyByMatrix(rotationMatrix, offset);
+
+        offset = offset.MultiplyByScalar(12f);
+
+        translate((massCenter.position.x + offset.x) * pixelsPerMeter, 
+            (massCenter.position.y - offset.y) * pixelsPerMeter, 
+            (massCenter.position.z + offset.z) * pixelsPerMeter);
+        sphere(radius * 0.1f * pixelsPerMeter);
+        popMatrix(); //Reset translation for futur Draws
     }
 
     void UpdatePhysics(float deltaTime){

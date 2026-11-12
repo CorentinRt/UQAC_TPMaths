@@ -105,7 +105,7 @@ static class Vector3D
     return (float)Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2) + Math.pow(this.z - other.z, 2));
   }
 
-  Vector3D MultiplyByMatrix(Matrix3x3 m, Vector3D v){
+  static Vector3D MultiplyByMatrix(Matrix3x3 m, Vector3D v){
     Vector3D result = new Vector3D(v);
 
     result.MultiplyByMatrix(m);
