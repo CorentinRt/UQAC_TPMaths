@@ -59,8 +59,13 @@ class RigidBody implements IPhysicsEntity, IUpdatable
 
     void Draw(color c){
         pushMatrix();
-        noStroke();
-        fill(c);
+        stroke(4);
+        noFill();
+        color(c);
+        Vector3D angles = rotation.EulerAngles();
+        rotateX(radians(angles.x));
+        rotateY(radians(angles.y));
+        rotateZ(radians(angles.z));
         translate(massCenter.position.x * pixelsPerMeter, massCenter.position.y * pixelsPerMeter, massCenter.position.z * pixelsPerMeter);
         sphere(radius * pixelsPerMeter);
         popMatrix(); //Reset translation for futur Draws
@@ -81,8 +86,9 @@ class RigidBody implements IPhysicsEntity, IUpdatable
 
         SetRotation(rotation.Add(rotation.MultiplyByQ(wQuaternion).MultiplyByF(deltaTime * 0.5)));
 
-        println("Quaternion : (x:" + rotation.x + "y:" + rotation.y + "z:" + rotation.z + "w:" + rotation.w + ")");
+        println("Quaternion : (x: " + rotation.x + "y: " + rotation.y + "z: " + rotation.z + "w: " + rotation.w + ")");
         println(rotation.EulerAngles().GetText());
+        println(rotationMatrix.GetText());
     }
 
     void AddForce(Vector3D force){
