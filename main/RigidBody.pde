@@ -4,11 +4,14 @@ class RigidBody implements IPhysicsEntity, IUpdatable
     Matrix3x3 rotationMatrix = new Matrix3x3();
     Particle massCenter;
     Vector3D angularVelocity = new Vector3D();
-    float radius = 20;
+    
+    float width = 0f;
+    float height = 0f;
+    float depth = 0f;
 
     RigidBody(float mass, Vector3D position){
         massCenter = new Particle(mass, position);
-        massCenter.radius = radius/5;
+        massCenter.radius = width/5;
         RegisterToManagers();
     }
 
@@ -31,6 +34,13 @@ class RigidBody implements IPhysicsEntity, IUpdatable
         this(mass, position, linearVelocity, rotation, angularVelocity);
         massCenter.coefCineticFriction = coefCineticFriction;
         massCenter.coefStaticFriction = coefStaticFriction;
+    }
+
+    void SetBox(float width, float height, float depth){
+
+        this.width = width;
+        this.height = height;
+        this.depth = depth;
     }
 
     void RegisterToManagers(){
@@ -82,50 +92,45 @@ class RigidBody implements IPhysicsEntity, IUpdatable
         float s = sqrt(1 - rotation.w * rotation.w);
         if (s > 0.0001) rotate(angle, rotation.x / s, rotation.y / s, rotation.z / s);
 
-        box(radius * pixelsPerMeter);
+        box(width * pixelsPerMeter, height * pixelsPerMeter, depth * pixelsPerMeter);
         popMatrix();
     }
 
     Vector3D ComputeAngularAcceleration(){
-        return new Vector3D(1, 1, 1);
+
+        Matrix3x3 inertiaTensor = ComputeInertiaTensor();
+
+        println(inertiaTensor.GetText());
+        
+        Matrix3x3 invertInertiaTensor = Matrix3x3.Invert(inertiaTensor);
+
+        Vector3D acceleration = Vector3D.MultiplyByMatrix(invertInertiaTensor, ComputeTorque());
+
+        println("Test : " + acceleration.GetText());
+
+        return acceleration;
+    }
+
+    Vector3D ComputeTorque(){
+
+        return new Vector3D(1000f, 1000f, 10f);
     }
 
     void Update(float deltaTime){
         Draw(color(255, 0, 0));
-
-        DrawOffsetPoint(color(0, 255, 0));
-    }
-
-    void DrawOffsetPoint(color c){
-        pushMatrix();
-        stroke(4);
-        noFill();
-        color(c);
-
-        Vector3D offset = new Vector3D(0, 1, 0);
-
-        offset = Vector3D.MultiplyByMatrix(rotationMatrix, offset);
-
-        offset = offset.MultiplyByScalar(12f);
-
-        translate((massCenter.position.x + offset.x) * pixelsPerMeter, 
-            (massCenter.position.y - offset.y) * pixelsPerMeter, 
-            (massCenter.position.z + offset.z) * pixelsPerMeter);
-        sphere(radius * 0.1f * pixelsPerMeter);
-        popMatrix(); //Reset translation for futur Draws
     }
 
     void UpdatePhysics(float deltaTime){
-        //angularVelocity = angularVelocity.Add(ComputeAngularAcceleration().MultiplyByScalar(deltaTime));
+        angularVelocity = angularVelocity.Add(ComputeAngularAcceleration().MultiplyByScalar(deltaTime));
 
         Quaternion wQuaternion = new Quaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z);
 
         Quaternion qw = rotation.MultiplyByQ(wQuaternion).MultiplyByF(deltaTime * 0.5);
         SetRotation(rotation.Add(qw).Normalize());
 
-        println("Quaternion : (x: " + rotation.x + "y: " + rotation.y + "z: " + rotation.z + "w: " + rotation.w + ")");
-        println(rotation.EulerAngles().GetText());
-        println(rotationMatrix.GetText());
+        //println("Quaternion : (x: " + rotation.x + "y: " + rotation.y + "z: " + rotation.z + "w: " + rotation.w + ")");
+        //println(rotation.EulerAngles().GetText());
+        //println(rotationMatrix.GetText());
     }
 
     void AddForce(Vector3D force){
@@ -146,5 +151,23 @@ class RigidBody implements IPhysicsEntity, IUpdatable
 
     float GetMass(){
         return massCenter.GetMass();
+    }
+
+    Matrix3x3 ComputeInertiaTensor(){
+        Matrix3x3 result = ComputeInertiaTensorPrimitive();
+
+        // TODO : Apply on offset mass center
+
+        return result;
+    }
+
+    Matrix3x3 ComputeInertiaTensorPrimitive(){
+        Matrix3x3 result = new Matrix3x3();
+
+        float inertiaMultiplier = (1f/12f) * massCenter.mass * (width * width + depth * depth);
+
+        result.MultiplyByScalar(inertiaMultiplier);
+
+        return result;
     }
 }

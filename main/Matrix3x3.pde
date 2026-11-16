@@ -80,7 +80,7 @@ static class Matrix3x3{
     }
   }
 
-  static Matrix3x3 MulitplyByScalar(Matrix3x3 m, float k){
+  static Matrix3x3 MultiplyByScalar(Matrix3x3 m, float k){
 
     Matrix3x3 newMatrix = new Matrix3x3(m);
 

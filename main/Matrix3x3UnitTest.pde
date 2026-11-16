@@ -109,7 +109,7 @@ class Matrix3x3UnitTest{
         Matrix3x3 m1 = new Matrix3x3(dm1);
         Matrix3x3 m2 = new Matrix3x3(dm2);
 
-        boolean success = Matrix3x3.MulitplyByScalar(m1, scalar).Equals(m2);
+        boolean success = Matrix3x3.MultiplyByScalar(m1, scalar).Equals(m2);
 
         PrintTestResult("MULTIPLY_BY_SCALAR", success);
     }
