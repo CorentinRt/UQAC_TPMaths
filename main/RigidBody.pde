@@ -1,8 +1,7 @@
-class RigidBody implements IPhysicsEntity, IUpdatable
+class RigidBody extends Particle
 {
     Quaternion rotation = new Quaternion();
     Matrix3x3 rotationMatrix = new Matrix3x3();
-    Particle massCenter;
     Vector3D angularVelocity = new Vector3D();
     
     float width = 0f;
@@ -14,11 +13,12 @@ class RigidBody implements IPhysicsEntity, IUpdatable
     RigidBody(float mass, Vector3D position){
         massCenter = new Particle(mass, position);
         RegisterToManagers();
+        super(mass, position);
+        this.radius = width/5;
     }
 
     RigidBody(float mass, Vector3D position, Vector3D linearVelocity){
-        this(mass, position);
-        massCenter.linearVelocity = linearVelocity;
+        super(mass, position, linearVelocity);
     }
 
     RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation){
@@ -38,8 +38,8 @@ class RigidBody implements IPhysicsEntity, IUpdatable
     
     RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, float coefCineticFriction, float coefStaticFriction){
         this(mass, position, linearVelocity, rotation, angularVelocity);
-        massCenter.coefCineticFriction = coefCineticFriction;
-        massCenter.coefStaticFriction = coefStaticFriction;
+        this.coefCineticFriction = coefCineticFriction;
+        this.coefStaticFriction = coefStaticFriction;
     }
 
     void SetBox(float width, float height, float depth){
@@ -49,11 +49,6 @@ class RigidBody implements IPhysicsEntity, IUpdatable
         this.depth = depth;
 
         this.massCenter.radius = width/5;
-    }
-
-    void RegisterToManagers(){
-        physicsEngine.Register(this);
-        updateManager.Register(this);
     }
 
     void SetRotation(Quaternion newRotation){
@@ -95,6 +90,11 @@ class RigidBody implements IPhysicsEntity, IUpdatable
         translate(massCenter.position.x - massOffset.x * pixelsPerMeter,
                 massCenter.position.y - massOffset.y * pixelsPerMeter,
                 massCenter.position.z - massOffset.z * pixelsPerMeter);
+        translate(
+            position.x * pixelsPerMeter,
+            position.y * pixelsPerMeter,
+            position.z * pixelsPerMeter
+        );
 
         float angle = 2 * acos(constrain(rotation.w, -1, 1));
         float s = sqrt(1 - rotation.w * rotation.w);
@@ -141,26 +141,6 @@ class RigidBody implements IPhysicsEntity, IUpdatable
         //println(rotationMatrix.GetText());
     }
 
-    void AddForce(Vector3D force){
-        massCenter.AddForce(force);
-    }
-
-    void ClearAccum(){
-        massCenter.ClearAccum();
-    }
-
-    void AddPosition(Vector3D position){
-        massCenter.AddPosition(position);
-    }
-
-    Vector3D GetLinearVelocity(){
-        return massCenter.GetLinearVelocity();
-    }
-
-    float GetMass(){
-        return massCenter.GetMass();
-    }
-
     Matrix3x3 ComputeInertiaTensor(){
         Matrix3x3 result = ComputeInertiaTensorPrimitive();
 
@@ -172,7 +152,7 @@ class RigidBody implements IPhysicsEntity, IUpdatable
     Matrix3x3 ComputeInertiaTensorPrimitive(){
         Matrix3x3 result = new Matrix3x3();
 
-        float inertiaMultiplier = (1f/12f) * massCenter.mass * (width * width + depth * depth);
+        float inertiaMultiplier = (1f/12f) * mass * (width * width + depth * depth);
 
         result.MultiplyByScalar(inertiaMultiplier);
 
