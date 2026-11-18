@@ -49,8 +49,6 @@ class RigidBody extends Particle
         this.depth = depth;
 
         this.radius = width/10;
-
-        SetAffectedByGravity(false); // temp test
     }
 
     void SetRotation(Quaternion newRotation){
@@ -108,9 +106,7 @@ class RigidBody extends Particle
         return acceleration;
     }
 
-    Vector3D ComputeTorque(Vector3D forceApplied){
-
-        Vector3D l = new Vector3D();
+    Vector3D ComputeTorque(Vector3D forceApplied, Vector3D l){
         torqueAccum = torqueAccum.Add(forceApplied.VectorProduct(l));
 
         return torqueAccum;
@@ -121,9 +117,9 @@ class RigidBody extends Particle
     }
 
     void UpdatePhysics(float deltaTime){
-        super.UpdatePhysics(deltaTime);
-
         IntegrateAngular(deltaTime);
+
+        super.UpdatePhysics(deltaTime);
 
         println("Torque : " + torqueAccum.GetText());
 
@@ -141,11 +137,20 @@ class RigidBody extends Particle
         SetRotation(rotation.Add(qw).Normalize());
     }
 
+    void AddForceAtPosition(Vector3D force, Vector3D position){
+        // this.position represents axe of rotation, not necessary the mass center (in our case it is)
+        Vector3D l = position.Substract(this.position);
 
-    void AddForce(Vector3D force){
-        super.AddForce(force);
         //CurrentForce not Accumulated Force
-        ComputeTorque(force);
+        ComputeTorque(force, l);
+
+        AddForce(force);
+    }
+
+    void ClearAccum(){
+        super.ClearAccum();
+
+        torqueAccum = new Vector3D(0, 0, 0);
     }
 
     Matrix3x3 ComputeInertiaTensor(){

@@ -101,6 +101,8 @@ void setup()
 
   // Init RigidBodies
   ridigBody1.SetBox(30f, 50f, 20f);
+
+  ridigBody1.AddForceAtPosition(new Vector3D(0, 50, 10), ridigBody1.position.Add(new Vector3D(10, 15, 0)));
 }
 
 // ----- Draw ----- //
