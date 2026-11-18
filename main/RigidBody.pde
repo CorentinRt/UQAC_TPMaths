@@ -4,6 +4,8 @@ class RigidBody extends Particle
     Matrix3x3 rotationMatrix = new Matrix3x3();
     Vector3D angularVelocity = new Vector3D();
     
+    Vector3D torqueAccum = new Vector3D();
+
     float width = 0f;
     float height = 0f;
     float depth = 0f;
@@ -98,16 +100,19 @@ class RigidBody extends Particle
         
         Matrix3x3 invertInertiaTensor = Matrix3x3.Invert(inertiaTensor);
 
-        Vector3D acceleration = Vector3D.MultiplyByMatrix(invertInertiaTensor, ComputeTorque());
+        Vector3D acceleration = Vector3D.MultiplyByMatrix(invertInertiaTensor, torqueAccum);
 
         println("Test : " + acceleration.GetText());
 
         return acceleration;
     }
 
-    Vector3D ComputeTorque(){
+    Vector3D ComputeTorque(Vector3D forceApplied){
 
-        return new Vector3D(1000f, 1000f, 10f);
+        Vector3D l = new Vector3D();
+        torqueAccum = torqueAccum.Add(forceApplied.VectorProduct(l));
+
+        return torqueAccum;
     }
 
     void Update(float deltaTime){
@@ -118,6 +123,8 @@ class RigidBody extends Particle
         super.UpdatePhysics(deltaTime);
 
         IntegrateAngular(deltaTime);
+
+        println("Torque : " + torqueAccum.GetText());
 
         //println("Quaternion : (x: " + rotation.x + "y: " + rotation.y + "z: " + rotation.z + "w: " + rotation.w + ")");
         //println(rotation.EulerAngles().GetText());
@@ -131,6 +138,13 @@ class RigidBody extends Particle
 
         Quaternion qw = rotation.MultiplyByQ(wQuaternion).MultiplyByF(deltaTime * 0.5);
         SetRotation(rotation.Add(qw).Normalize());
+    }
+
+
+    void AddForce(Vector3D force){
+        super.AddForce(force);
+        //CurrentForce not Accumulated Force
+        ComputeTorque(force);
     }
 
     Matrix3x3 ComputeInertiaTensor(){
