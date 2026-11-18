@@ -115,6 +115,8 @@ class RigidBody extends Particle
     }
 
     void UpdatePhysics(float deltaTime){
+        super.UpdatePhysics(deltaTime);
+        
         angularVelocity = angularVelocity.Add(ComputeAngularAcceleration().MultiplyByScalar(deltaTime));
 
         Quaternion wQuaternion = new Quaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z);
