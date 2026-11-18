@@ -116,17 +116,21 @@ class RigidBody extends Particle
 
     void UpdatePhysics(float deltaTime){
         super.UpdatePhysics(deltaTime);
-        
+
+        IntegrateAngular(deltaTime);
+
+        //println("Quaternion : (x: " + rotation.x + "y: " + rotation.y + "z: " + rotation.z + "w: " + rotation.w + ")");
+        //println(rotation.EulerAngles().GetText());
+        //println(rotationMatrix.GetText());
+    }
+
+    void IntegrateAngular(float deltaTime){
         angularVelocity = angularVelocity.Add(ComputeAngularAcceleration().MultiplyByScalar(deltaTime));
 
         Quaternion wQuaternion = new Quaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z);
 
         Quaternion qw = rotation.MultiplyByQ(wQuaternion).MultiplyByF(deltaTime * 0.5);
         SetRotation(rotation.Add(qw).Normalize());
-
-        //println("Quaternion : (x: " + rotation.x + "y: " + rotation.y + "z: " + rotation.z + "w: " + rotation.w + ")");
-        //println(rotation.EulerAngles().GetText());
-        //println(rotationMatrix.GetText());
     }
 
     Matrix3x3 ComputeInertiaTensor(){
