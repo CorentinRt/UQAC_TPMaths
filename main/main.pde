@@ -50,7 +50,7 @@ CollisionManager collisionManager = new CollisionManager();
 SpringsRegistry springsRegistry = new SpringsRegistry();
 
 // ----- Rigidbody ----- //
-RigidBody ridigBody1 = new RigidBody(1f, new Vector3D(0,0,0), new Vector3D(0, 0, 0), new Quaternion(new Vector3D(0, 0, 1), radians(45)), new Vector3D(2, 0, 0));
+RigidBody ridigBody1 = new RigidBody(1f, new Vector3D(0,0,0), new Vector3D(0, 0, 0), new Quaternion(new Vector3D(0, 0, 0), radians(45)), new Vector3D(0, 0, 0), new Vector3D(0,0,0));
 
 // ----- Frame ----- //
 float lastFrameUpdate = 0;

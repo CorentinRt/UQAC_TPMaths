@@ -8,10 +8,11 @@ class RigidBody implements IPhysicsEntity, IUpdatable
     float width = 0f;
     float height = 0f;
     float depth = 0f;
+    
+    Vector3D massOffset = new Vector3D();
 
     RigidBody(float mass, Vector3D position){
         massCenter = new Particle(mass, position);
-        massCenter.radius = width/5;
         RegisterToManagers();
     }
 
@@ -29,6 +30,11 @@ class RigidBody implements IPhysicsEntity, IUpdatable
         this(mass, position, linearVelocity, rotation);
         this.angularVelocity = angularVelocity;
     }
+
+    RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, Vector3D massOffset){
+        this(mass, position, linearVelocity, rotation, angularVelocity);
+        this.massOffset = massOffset;
+    }
     
     RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, float coefCineticFriction, float coefStaticFriction){
         this(mass, position, linearVelocity, rotation, angularVelocity);
@@ -41,6 +47,8 @@ class RigidBody implements IPhysicsEntity, IUpdatable
         this.width = width;
         this.height = height;
         this.depth = depth;
+
+        this.massCenter.radius = width/5;
     }
 
     void RegisterToManagers(){
@@ -84,9 +92,9 @@ class RigidBody implements IPhysicsEntity, IUpdatable
         pushMatrix();
         stroke(4);
         noFill();
-        translate(massCenter.position.x * pixelsPerMeter,
-                massCenter.position.y * pixelsPerMeter,
-                massCenter.position.z * pixelsPerMeter);
+        translate(massCenter.position.x - massOffset.x * pixelsPerMeter,
+                massCenter.position.y - massOffset.y * pixelsPerMeter,
+                massCenter.position.z - massOffset.z * pixelsPerMeter);
 
         float angle = 2 * acos(constrain(rotation.w, -1, 1));
         float s = sqrt(1 - rotation.w * rotation.w);
