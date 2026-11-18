@@ -9,10 +9,12 @@ class RigidBody extends Particle
     float width = 0f;
     float height = 0f;
     float depth = 0f;
+    
+    Vector3D massOffset = new Vector3D();
 
     RigidBody(float mass, Vector3D position){
         super(mass, position);
-        this.radius = width/5;
+        RegisterToManagers();
     }
 
     RigidBody(float mass, Vector3D position, Vector3D linearVelocity){
@@ -28,6 +30,11 @@ class RigidBody extends Particle
         this(mass, position, linearVelocity, rotation);
         this.angularVelocity = angularVelocity;
     }
+
+    RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, Vector3D massOffset){
+        this(mass, position, linearVelocity, rotation, angularVelocity);
+        this.massOffset = massOffset;
+    }
     
     RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, float coefCineticFriction, float coefStaticFriction){
         this(mass, position, linearVelocity, rotation, angularVelocity);
@@ -40,6 +47,10 @@ class RigidBody extends Particle
         this.width = width;
         this.height = height;
         this.depth = depth;
+
+        this.radius = width/10;
+
+        SetAffectedByGravity(false); // temp test
     }
 
     void SetRotation(Quaternion newRotation){
@@ -62,33 +73,23 @@ class RigidBody extends Particle
     }
 
     void Draw(color c){
-        /*
+
+        super.Draw(c, this.radius);
+
         pushMatrix();
         stroke(4);
         noFill();
-        color(c);
-        translate(massCenter.position.x * pixelsPerMeter, massCenter.position.y * pixelsPerMeter, massCenter.position.z * pixelsPerMeter);
-        Vector3D angles = rotation.EulerAngles();
-        rotateX(radians(angles.x));
-        rotateY(radians(angles.y));
-        rotateZ(radians(angles.z));
-        sphere(radius * pixelsPerMeter);
-        popMatrix(); //Reset translation for futur Draws
-        */
-        pushMatrix();
-        stroke(4);
-        noFill();
-        translate(
-            position.x * pixelsPerMeter,
-            position.y * pixelsPerMeter,
-            position.z * pixelsPerMeter
-        );
 
         float angle = 2 * acos(constrain(rotation.w, -1, 1));
         float s = sqrt(1 - rotation.w * rotation.w);
         if (s > 0.0001) rotate(angle, rotation.x / s, rotation.y / s, rotation.z / s);
 
+        translate((this.position.x - massOffset.x) * pixelsPerMeter,
+                (this.position.y - massOffset.y) * pixelsPerMeter,
+                (this.position.z - massOffset.z) * pixelsPerMeter);
+
         box(width * pixelsPerMeter, height * pixelsPerMeter, depth * pixelsPerMeter);
+
         popMatrix();
     }
 
@@ -150,7 +151,19 @@ class RigidBody extends Particle
     Matrix3x3 ComputeInertiaTensor(){
         Matrix3x3 result = ComputeInertiaTensorPrimitive();
 
-        // TODO : Apply on offset mass center
+        float x = this.position.x;
+        float y = this.position.y;
+        float z = this.position.z;
+
+        Matrix3x3 translation = new Matrix3x3(new float[] {
+            y * y + z * z, -x * y, -x * z,
+            -x * y, x * x + z * z, -y * z,
+            -x * z, -y * z, x * x + y * y
+        });
+
+        translation.MultiplyByScalar(this.mass);
+
+        result.Add(translation);        
 
         return result;
     }
