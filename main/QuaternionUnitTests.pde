@@ -28,20 +28,14 @@ class QuaternionUnitTests
         return Near(a.w, b.w) && Near(a.x, b.x) && Near(a.y, b.y) && Near(a.z, b.z);
     }
 
-    // q et -q représentent la même rotation
     boolean NearlyEqualRotation(Quaternion a, Quaternion b){
         return NearlyEqual(a, b) || NearlyEqual(a, b.Negate());
     }
 
-    String Text(Quaternion q){
-        return "(w: " + q.w + ", x: " + q.x + ", y: " + q.y + ", z: " + q.z + ")";
-    }
-
     String Expected(Quaternion expected, Quaternion actual){
-        return "Expected " + Text(expected) + " but got " + Text(actual);
+        return "Expected " + expected.EulerAngles().GetText() + " but got " + actual.EulerAngles().GetText();
     }
 
-    // Rotation de 'deg' degrés autour de l'axe Z
     Quaternion RotZ(float deg){
         return new Quaternion(new Vector3D(0, 0, 1), radians(deg));
     }
@@ -96,11 +90,10 @@ class QuaternionUnitTests
     void TestConstructorWXYZ(){
         Quaternion q = new Quaternion(1, 2, 3, 4);
         boolean success = q.w == 1 && q.x == 2 && q.y == 3 && q.z == 4;
-        PrintTestResult("CONSTRUCTOR W X Y Z", success, "Expected (1, 2, 3, 4) but got " + Text(q));
+        PrintTestResult("CONSTRUCTOR W X Y Z", success, "Expected (1, 2, 3, 4) but got " + q.GetText());
     }
 
     void TestConstructorAxisAngle(){
-        // 90 degrés autour de Z : w = cos(45), z = sin(45)
         Quaternion q = new Quaternion(new Vector3D(0, 0, 1), HALF_PI);
         float s = sqrt(2) / 2;
         Quaternion expected = new Quaternion(s, 0, 0, s);
@@ -109,7 +102,7 @@ class QuaternionUnitTests
     }
 
     void TestConstructorAxisAngleNonUnitAxis(){
-        // Un axe (0, 0, 2) doit donner le même quaternion que (0, 0, 1) : le résultat doit être unitaire
+
         Quaternion q = new Quaternion(new Vector3D(0, 0, 2), HALF_PI);
         boolean success = Near(q.Norm(), 1);
         PrintTestResult("CONSTRUCTOR AXIS ANGLE (non-unit axis is normalized)", success,
@@ -142,7 +135,6 @@ class QuaternionUnitTests
     }
 
     void TestMultiplyByQ(){
-        // (1 + 2i + 3j + 4k)(5 + 6i + 7j + 8k) = -60 + 12i + 30j + 24k
         Quaternion a = new Quaternion(1, 2, 3, 4);
         Quaternion b = new Quaternion(5, 6, 7, 8);
         Quaternion expected = new Quaternion(-60, 12, 30, 24);
@@ -158,7 +150,6 @@ class QuaternionUnitTests
     }
 
     void TestMultiplyByQNonCommutative(){
-        // i * j = k   et   j * i = -k
         Quaternion i = new Quaternion(0, 1, 0, 0);
         Quaternion j = new Quaternion(0, 0, 1, 0);
         Quaternion k = new Quaternion(0, 0, 0, 1);
@@ -167,7 +158,7 @@ class QuaternionUnitTests
         Quaternion ji = j.MultiplyByQ(i);
 
         boolean success = NearlyEqual(ij, k) && NearlyEqual(ji, k.Negate());
-        String failReason = "i*j should be " + Text(k) + " but is " + Text(ij) + " ; j*i should be " + Text(k.Negate()) + " but is " + Text(ji);
+        String failReason = "i*j should be " + k.GetText() + " but is " + ij.GetText() + " ; j*i should be " + k.Negate().GetText() + " but is " + ij.GetText();
         PrintTestResult("MULTIPLY BY Q (non commutative)", success, failReason);
     }
 
@@ -194,7 +185,6 @@ class QuaternionUnitTests
     }
 
     void TestInvertUnit(){
-        // Pour un quaternion unitaire, inverse = conjugué, et q * q^-1 = identité
         Quaternion q = RotZ(60);
         Quaternion result = q.MultiplyByQ(q.Invert());
         Quaternion expected = new Quaternion();
@@ -202,7 +192,6 @@ class QuaternionUnitTests
     }
 
     void TestInvertNonUnit(){
-        // L'inverse est q* / ||q||^2 : q * q^-1 doit donner l'identité même si ||q|| != 1
         Quaternion q = new Quaternion(1, 2, 3, 4);
         Quaternion result = q.MultiplyByQ(q.Invert());
         Quaternion expected = new Quaternion();
@@ -233,7 +222,6 @@ class QuaternionUnitTests
     // ---------- Rotation : différence, produit scalaire, expo, slerp ----------
 
     void TestDifference(){
-        // Rotation de 30 deg -> rotation de 90 deg : la différence est une rotation de 60 deg, et d * q1 = q2
         Quaternion q1 = RotZ(30);
         Quaternion q2 = RotZ(90);
 
@@ -242,13 +230,12 @@ class QuaternionUnitTests
         Quaternion recomposed = d.MultiplyByQ(q1);
 
         boolean success = NearlyEqualRotation(d, expectedD) && NearlyEqualRotation(recomposed, q2);
-        String failReason = "d should be " + Text(expectedD) + " but is " + Text(d)
-            + " ; d * q1 should be " + Text(q2) + " but is " + Text(recomposed);
+        String failReason = "d should be " + expectedD.GetText() + " but is " + d.GetText()
+            + " ; d * q1 should be " + q2.GetText() + " but is " + recomposed.GetText();
         PrintTestResult("DIFFERENCE", success, failReason);
     }
 
     void TestScalarProduct(){
-        // 1*5 + 2*6 + 3*7 + 4*8 = 70
         Quaternion a = new Quaternion(1, 2, 3, 4);
         Quaternion b = new Quaternion(5, 6, 7, 8);
         float result = a.ScalarProduct(b);
@@ -258,34 +245,33 @@ class QuaternionUnitTests
     void TestExpo(){
         Quaternion q = RotZ(90);
 
-        Quaternion half = q.Expo(0.5);     // 45 deg
-        Quaternion twice = q.Expo(2);      // 180 deg
-        Quaternion zero = q.Expo(0);       // identité
-        Quaternion one = q.Expo(1);        // inchangé
+        Quaternion half = q.Expo(0.5);     
+        Quaternion twice = q.Expo(2);      
+        Quaternion zero = q.Expo(0);       
+        Quaternion one = q.Expo(1);        
 
         boolean success = NearlyEqual(half, RotZ(45))
             && NearlyEqual(twice, RotZ(180))
             && NearlyEqual(zero, new Quaternion())
             && NearlyEqual(one, q);
 
-        String failReason = "q^0.5 should be " + Text(RotZ(45)) + " but is " + Text(half)
-            + " ; q^2 should be " + Text(RotZ(180)) + " but is " + Text(twice)
-            + " ; q^0 should be identity but is " + Text(zero)
-            + " ; q^1 should be " + Text(q) + " but is " + Text(one);
+        String failReason = "q^0.5 should be " + RotZ(45).GetText() + " but is " + half.GetText()
+            + " ; q^2 should be " + RotZ(180).GetText() + " but is " + twice.GetText()
+            + " ; q^0 should be identity but is " + zero.GetText()
+            + " ; q^1 should be " + q.GetText() + " but is " + one.GetText();
         PrintTestResult("EXPO", success, failReason);
     }
 
     void TestExpoIdentity(){
-        // sin(alpha) = 0 : la formule divise par zéro et ne doit pas produire de NaN
         Quaternion result = new Quaternion().Expo(0.5);
         boolean success = !Float.isNaN(result.w) && !Float.isNaN(result.x)
             && !Float.isNaN(result.y) && !Float.isNaN(result.z)
             && NearlyEqual(result, new Quaternion());
-        PrintTestResult("EXPO (identity, no NaN)", success, "identity^0.5 should be identity but is " + Text(result));
+        PrintTestResult("EXPO (identity, no NaN)", success, "identity^0.5 should be identity but is " + result.GetText());
     }
 
     void TestSlerp(){
-        // Signature actuelle : Slerp(q0, q1, t)
+
         Quaternion q0 = RotZ(30);
         Quaternion q1 = RotZ(90);
 
@@ -297,14 +283,13 @@ class QuaternionUnitTests
             && NearlyEqualRotation(atEnd, q1)
             && NearlyEqualRotation(atMiddle, RotZ(60));
 
-        String failReason = "t=0 should be " + Text(q0) + " but is " + Text(atStart)
-            + " ; t=1 should be " + Text(q1) + " but is " + Text(atEnd)
-            + " ; t=0.5 should be " + Text(RotZ(60)) + " but is " + Text(atMiddle);
+        String failReason = "t=0 should be " + q0.GetText() + " but is " + atStart.GetText()
+            + " ; t=1 should be " + q1.GetText() + " but is " + atEnd.GetText()
+            + " ; t=0.5 should be " + RotZ(60).GetText() + " but is " + atMiddle.GetText();
         PrintTestResult("SLERP", success, failReason);
     }
 
     void TestSlerpShortestPath(){
-        // -q1 représente la même rotation que q1 : le résultat doit rester le chemin le plus court (45 deg)
         Quaternion q0 = new Quaternion();
         Quaternion q1 = RotZ(90).Negate();
 
@@ -318,7 +303,6 @@ class QuaternionUnitTests
     // ---------- Conversions ----------
 
     void TestEulerAngles(){
-        // Résultat en degrés : (x, y, z)
         Vector3D aroundZ = RotZ(90).EulerAngles();
         Vector3D aroundX = new Quaternion(new Vector3D(1, 0, 0), HALF_PI).EulerAngles();
         Vector3D none = new Quaternion().EulerAngles();
@@ -333,7 +317,7 @@ class QuaternionUnitTests
     }
 
     void TestNormalize(){
-        Quaternion q = new Quaternion(0, 0, 3, 4);       // norme = 5
+        Quaternion q = new Quaternion(0, 0, 3, 4);       
         Quaternion expected = new Quaternion(0, 0, 0.6f, 0.8f);
         Quaternion result = q.Normalize();
         boolean success = NearlyEqual(result, expected) && Near(result.Norm(), 1);

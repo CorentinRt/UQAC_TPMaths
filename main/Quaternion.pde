@@ -23,6 +23,9 @@ static class Quaternion
     Quaternion(Vector3D axis, float angle)
     {
         float angle_divided_by_2 = angle/2;
+
+        axis = axis.Normalize();
+
         this.w = cos(angle_divided_by_2);
         this.x = sin(angle_divided_by_2) * axis.x;
         this.y = sin(angle_divided_by_2) * axis.y;
@@ -91,7 +94,7 @@ static class Quaternion
     }
 
     Quaternion Invert(){
-        return this.Conjugate().MultiplyByF(1 / this.Norm());
+        return this.Conjugate().MultiplyByF(1 / (this.Norm() * this.Norm()));
     }
 
     boolean IsEqual(Quaternion q){
@@ -107,7 +110,6 @@ static class Quaternion
     }
 
     Quaternion Difference(Quaternion q){
-        // TODO : check si on doit verifier que la norme = 1 de q1
         return q.MultiplyByQ(this.Conjugate());
     } 
 
@@ -118,6 +120,9 @@ static class Quaternion
     Quaternion Expo(float t){
         float a = acos(this.w);
         float ta = t * a;
+
+        if (sin(a) == 0) // Eviter la division par 0
+            return new Quaternion();
         
         float result_x = (sin(ta) / sin(a)) * this.x;
         float result_y = (sin(ta) / sin(a)) * this.y;
@@ -127,6 +132,11 @@ static class Quaternion
     }
 
     Quaternion Slerp(Quaternion q0, Quaternion q1, float t){
+        // Shortest path
+        if (q0.ScalarProduct(q1) < 0.0f) {
+            q1 = q1.Negate();
+        }
+
         return (q1.MultiplyByQ(q0.Invert())).Expo(t).MultiplyByQ(q0); //((q1 * q0^-1)^t)*q0
     }
 
@@ -150,4 +160,7 @@ static class Quaternion
         return(new Quaternion(this.w / norm, this.x / norm, this.y / norm, this.z / norm));
     }
 
+    String GetText(){
+        return "(w: " + this.w + ", x: " + this.x + ", y: " + this.y + ", z: " + this.z + ")";
+    }
 }
