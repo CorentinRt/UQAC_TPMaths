@@ -9,6 +9,8 @@ class RigidBody extends Particle
     float width = 10f;
     float height = 10f;
     float depth = 10f;
+
+    color rigidBodyColor = color(255, 0, 0);
     
     Vector3D massOffset = new Vector3D();
 
@@ -36,7 +38,7 @@ class RigidBody extends Particle
         this.massOffset = massOffset;
     }
     
-    RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, Vector3D massOffset, float coefCineticFriction, float coefStaticFriction){
+    RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, Vector3D massOffset, float coefStaticFriction, float coefCineticFriction){
         this(mass, position, linearVelocity, rotation, angularVelocity, massOffset);
         this.coefCineticFriction = coefCineticFriction;
         this.coefStaticFriction = coefStaticFriction;
@@ -70,21 +72,31 @@ class RigidBody extends Particle
             });
     }
 
-    void Draw(color c){
+    void Draw(){
+        super.Draw();
 
-        super.Draw(c, this.radius);
+        this.Draw(position, rigidBodyColor, true);
+    }
+    
+    void Draw(Vector3D positionToDraw, color c, boolean fill){
 
         pushMatrix();
         stroke(4);
-        noFill();
+
+        if (fill){
+            fill(c);
+        }
+        else{
+            noFill();
+        }
+
+        translate((positionToDraw.x - massOffset.x) * pixelsPerMeter,
+                (positionToDraw.y - massOffset.y) * pixelsPerMeter,
+                (positionToDraw.z - massOffset.z) * pixelsPerMeter);
 
         float angle = 2 * acos(constrain(rotation.w, -1, 1));
         float s = sqrt(1 - rotation.w * rotation.w);
         if (s > 0.0001) rotate(angle, rotation.x / s, rotation.y / s, rotation.z / s);
-
-        translate((this.position.x - massOffset.x) * pixelsPerMeter,
-                (this.position.y - massOffset.y) * pixelsPerMeter,
-                (this.position.z - massOffset.z) * pixelsPerMeter);
 
         box(width * pixelsPerMeter, height * pixelsPerMeter, depth * pixelsPerMeter);
 
@@ -113,7 +125,7 @@ class RigidBody extends Particle
     }
 
     void Update(float deltaTime){
-        Draw(color(255, 0, 0));
+        Draw();
     }
 
     void UpdatePhysics(float deltaTime){
