@@ -75,10 +75,10 @@ class RigidBody extends Particle
     void Draw(){
         super.Draw();
 
-        this.Draw(position, rigidBodyColor, true);
+        this.Draw(position, rotation, rigidBodyColor, true);
     }
     
-    void Draw(Vector3D positionToDraw, color c, boolean fill){
+    void Draw(Vector3D positionToDraw, Quaternion rotationToDraw, color c, boolean fill){
 
         pushMatrix();
         stroke(4);
@@ -94,9 +94,9 @@ class RigidBody extends Particle
                 (positionToDraw.y - massOffset.y) * pixelsPerMeter,
                 (positionToDraw.z - massOffset.z) * pixelsPerMeter);
 
-        float angle = 2 * acos(constrain(rotation.w, -1, 1));
-        float s = sqrt(1 - rotation.w * rotation.w);
-        if (s > 0.0001) rotate(angle, rotation.x / s, rotation.y / s, rotation.z / s);
+        float angle = 2 * acos(constrain(rotationToDraw.w, -1, 1));
+        float s = sqrt(1 - rotationToDraw.w * rotationToDraw.w);
+        if (s > 0.0001) rotate(angle, rotationToDraw.x / s, rotationToDraw.y / s, rotationToDraw.z / s);
 
         box(width * pixelsPerMeter, height * pixelsPerMeter, depth * pixelsPerMeter);
 

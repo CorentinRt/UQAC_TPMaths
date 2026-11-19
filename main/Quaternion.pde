@@ -32,6 +32,10 @@ static class Quaternion
         this.z = sin(angle_divided_by_2) * axis.z;
     }
 
+    Quaternion Copy(){
+        return new Quaternion(this.w, this.x, this.y, this.z);
+    }
+
     Quaternion Add(Quaternion quaternionToAdd){
         return new Quaternion(
         this.w + quaternionToAdd.w,

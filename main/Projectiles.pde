@@ -42,7 +42,17 @@ public class ProjectileStatistics
 
 public class Projectile extends RigidBody
 {
-  ArrayList<Vector3D> lastPositions = new ArrayList<Vector3D>();
+  class PositionRotationPair{
+    Vector3D position = new Vector3D();
+    Quaternion rotation = new Quaternion();
+
+    PositionRotationPair(Vector3D position, Quaternion rotation){
+        this.position = position;
+        this.rotation = rotation;
+    }
+  }
+
+  ArrayList<PositionRotationPair> lastPositions = new ArrayList<PositionRotationPair>();
   color drawOldPositionColor = color(0, 255, 0);
 
   float timeBetweenEachOldPosition = 0.25f;
@@ -65,12 +75,13 @@ public class Projectile extends RigidBody
     UpdateLastPositions(deltaTime);
 
     for (int i = 0; i < lastPositions.size(); ++i){
-      Vector3D positionToDraw = lastPositions.get(i);
+      Vector3D positionToDraw = lastPositions.get(i).position;
+      Quaternion rotationToDraw = lastPositions.get(i).rotation;
 
       if (positionToDraw == null)
         continue;
       
-      Draw(positionToDraw, drawOldPositionColor, false);
+      Draw(positionToDraw, rotationToDraw, drawOldPositionColor, false);
     }
   }
 
@@ -83,13 +94,13 @@ public class Projectile extends RigidBody
 
     currentDurationBeforeDrawNewOldPosition = timeBetweenEachOldPosition;
 
-    lastPositions.add(this.position.Copy());
+    lastPositions.add(new PositionRotationPair(this.position.Copy(), this.rotation.Copy()));
 
     if (lastPositions.size() >= 5){
-      Vector3D firstPosition = lastPositions.get(0);
+      PositionRotationPair firstPair = lastPositions.get(0);
 
       if (lastPositions != null){
-        lastPositions.remove(firstPosition);
+        lastPositions.remove(firstPair);
       }
     }
   }

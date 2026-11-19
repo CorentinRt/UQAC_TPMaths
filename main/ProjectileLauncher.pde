@@ -12,7 +12,7 @@ public class ProjectileLauncher implements IUpdatable
   float launchClock = 0.5f;
 
   Vector3D currentMassOffsetToApply = new Vector3D();
-  Vector3D currentInitialAngularVelocityToApply = new Vector3D();
+  Vector3D currentInitialAngularVelocityToApply = new Vector3D(10, 0, 0);
   
   // Physics Debug Predictor
   PhysicsDebugPredictor physicsDebugPredictor = new PhysicsDebugPredictor();
