@@ -37,10 +37,10 @@ PFont font;
 // ----- Projectiles ----- //
 ProjectileLauncher projectileLauncher = new ProjectileLauncher();
 
-ProjectileStatistics ballDefaultStats = new ProjectileStatistics(10, new Vector3D(1 ,1 ,1), color(0,0,255), color(0,0,255));
-ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, new Vector3D(1 ,0.5 ,1), color(67,67,67), color(67,67,67));
-ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20, new Vector3D(2 ,1.2 ,1), color(255,150,0), color(255,150,0));
-ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, new Vector3D(1.5 ,2 ,1), color(255,0,0), color(255,0,0));
+ProjectileStatistics ballDefaultStats = new ProjectileStatistics(10, 30, color(0,0,255), color(0,0,255), 2, 4, 3);
+ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, 30, color(67,67,67), color(67,67,67), 8, 8, 23);
+ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20,50, color(255,150,0), color(255,150,0), 10, 13, 15);
+ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, 60, color(255,0,0), color(255,0,0), 10, 5, 5);
 
 ArrayList<Particle> allParticles = new ArrayList<Particle>();
 ArrayList<Particle> inGameProjectiles = new ArrayList<Particle>();
@@ -50,7 +50,7 @@ CollisionManager collisionManager = new CollisionManager();
 SpringsRegistry springsRegistry = new SpringsRegistry();
 
 // ----- Rigidbody ----- //
-RigidBody ridigBody1 = new RigidBody(1f, new Vector3D(0,0,0), new Vector3D(0, 0, 0), new Quaternion(new Vector3D(0, 0, 0), radians(45)), new Vector3D(0, 0, 0), new Vector3D(10,10,10));
+
 
 // ----- Frame ----- //
 float lastFrameUpdate = 0;
@@ -98,11 +98,6 @@ void setup()
   
   // GameManager
   gameManager = new GameManager(font);
-
-  // Init RigidBodies
-  ridigBody1.SetBox(30f, 50f, 20f);
-
-  ridigBody1.AddForceAtPosition(new Vector3D(0, 50, 10), ridigBody1.position.Add(new Vector3D(10, 15, 0)));
 }
 
 // ----- Draw ----- //
@@ -198,6 +193,8 @@ void mousePressed()
     return; 
   }
   
+  projectileLauncher.LaunchProjectile();
+
   // Restart game ? 
   if (gameManager.state == GameState.GAME_OVER)
   {

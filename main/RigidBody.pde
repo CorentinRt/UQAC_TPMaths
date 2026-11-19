@@ -6,9 +6,9 @@ class RigidBody extends Particle
     
     Vector3D torqueAccum = new Vector3D();
 
-    float width = 0f;
-    float height = 0f;
-    float depth = 0f;
+    float width = 10f;
+    float height = 10f;
+    float depth = 10f;
     
     Vector3D massOffset = new Vector3D();
 
@@ -95,13 +95,13 @@ class RigidBody extends Particle
 
         Matrix3x3 inertiaTensor = ComputeInertiaTensor();
 
-        println(inertiaTensor.GetText());
+        //println(inertiaTensor.GetText());
         
         Matrix3x3 invertInertiaTensor = Matrix3x3.Invert(inertiaTensor);
 
         Vector3D acceleration = Vector3D.MultiplyByMatrix(invertInertiaTensor, torqueAccum);
 
-        println("Test : " + acceleration.GetText());
+        //println("Test : " + acceleration.GetText());
 
         return acceleration;
     }
@@ -121,7 +121,7 @@ class RigidBody extends Particle
 
         super.UpdatePhysics(deltaTime);
 
-        println("Torque : " + torqueAccum.GetText());
+        //println("Torque : " + torqueAccum.GetText());
 
         //println("Quaternion : (x: " + rotation.x + "y: " + rotation.y + "z: " + rotation.z + "w: " + rotation.w + ")");
         //println(rotation.EulerAngles().GetText());

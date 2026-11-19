@@ -10,6 +10,8 @@ public class ProjectileLauncher implements IUpdatable
   
   float launchCooldown = 0.5f;
   float launchClock = 0.5f;
+
+  Vector3D currentMassOffsetToApply = new Vector3D();
   
   // Physics Debug Predictor
   PhysicsDebugPredictor physicsDebugPredictor = new PhysicsDebugPredictor();
@@ -28,7 +30,7 @@ public class ProjectileLauncher implements IUpdatable
     textDisplaySelectedProjectile = new TextDisplay(prefixText + availableProjectiles[selectedProjectile], x, y, font);
     
     ProjectileStatistics stats = GetSelectedProjectileStatistics();
-    textDisplayProjectileStatistics = new TextDisplay(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocityMultiplier.GetText() + " ", x, y + 35.0, font);
+    textDisplayProjectileStatistics = new TextDisplay(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocityMultiplier + " ", x, y + 35.0, font);
     textDisplayInputs = new TextDisplay("UP or DOWN arrows to switch selected projectile", x, y + 70.0, font);
     
     textDisplaySelectedProjectile.SetAlignment(LEFT);
@@ -47,7 +49,7 @@ public class ProjectileLauncher implements IUpdatable
     
     textDisplaySelectedProjectile.SetText(prefixText + availableProjectiles[selectedProjectile]);
     ProjectileStatistics stats = GetSelectedProjectileStatistics();
-    textDisplayProjectileStatistics.SetText(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocityMultiplier.GetText() + " ");
+    textDisplayProjectileStatistics.SetText(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocityMultiplier + " ");
   }
   
   public void DecrementSelectedProjectile()
@@ -57,7 +59,7 @@ public class ProjectileLauncher implements IUpdatable
     
     textDisplaySelectedProjectile.SetText(prefixText + availableProjectiles[selectedProjectile]);
     ProjectileStatistics stats = GetSelectedProjectileStatistics();
-    textDisplayProjectileStatistics.SetText(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocityMultiplier.GetText() + " ");
+    textDisplayProjectileStatistics.SetText(prefixMassText + stats.mass + prefixVelocityText + stats.initialVelocityMultiplier + " ");
   }
   
   public EProjectileType GetSelectedProjectileType()
@@ -77,7 +79,7 @@ public class ProjectileLauncher implements IUpdatable
       case LASER:
         return laserDefaultStats;
       default:
-        return new ProjectileStatistics(1, new Vector3D(), color(0), color(0));
+        return new ProjectileStatistics(1, 5, color(0), color(0), 20, 20, 20);
     }
   }
   
@@ -88,15 +90,22 @@ public class ProjectileLauncher implements IUpdatable
     
     switch( GetSelectedProjectileType() ){
       case BALL:
-        return new Ball(launchPosition.Copy(), direction);
+        println("Projectile Type : " + "BALL");
+        return new Ball(launchPosition.Copy(), direction, currentMassOffsetToApply);
       case BOULDER:
-        return new Boulder(launchPosition.Copy(), direction);
+        println("Projectile Type : " + "BOULDER");
+        return new Boulder(launchPosition.Copy(), direction, currentMassOffsetToApply);
       case FIREBALL:
-        return new Fireball(launchPosition.Copy(), direction);
+        println("Projectile Type : " + "FIREBALL");
+        return new Fireball(launchPosition.Copy(), direction, currentMassOffsetToApply);
       case LASER:
-        return new Laser(launchPosition.Copy(), direction);
+        println("Projectile Type : " + "LASER");
+        return new Laser(launchPosition.Copy(), direction, currentMassOffsetToApply);
       default:
-        return new Particle();
+      println("Projectile Type : " + "DEFAULT");
+        RigidBody rb = new RigidBody(1, new Vector3D());
+        rb.SetBox(5, 5, 5);
+        return rb;
     }
   }
   
@@ -122,6 +131,8 @@ public class ProjectileLauncher implements IUpdatable
     textDisplayInputs.Update(deltaTime);
     
     textDisplayProjectileStatistics.SetText(direction.GetText());
+
+    DrawTrajectory(deltaTime);
   }
   
   public void DrawTrajectory(float deltaTime)
@@ -133,6 +144,6 @@ public class ProjectileLauncher implements IUpdatable
     Vector3D accumForcePredicted = new Vector3D(0, 9.81, 0);
     accumForcePredicted = accumForcePredicted.MultiplyByScalar(projectileStatistics.mass);
     
-    physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, direction.Multiply(projectileStatistics.initialVelocityMultiplier), PhysicsUtilities.ComputeAccelerationByForce(projectileStatistics.mass, accumForcePredicted), c, 20.0, 2.0, 0.15, deltaTime);
+    physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, direction.MultiplyByScalar(projectileStatistics.initialVelocityMultiplier), PhysicsUtilities.ComputeAccelerationByForce(projectileStatistics.mass, accumForcePredicted), c, 20.0, 2.0, 0.15, deltaTime);
   }
 }
