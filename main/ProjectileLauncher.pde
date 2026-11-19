@@ -133,6 +133,7 @@ public class ProjectileLauncher implements IUpdatable
     textDisplayProjectileStatistics.SetText(direction.GetText());
 
     DrawTrajectory(deltaTime);
+    println("draw");
   }
   
   public void DrawTrajectory(float deltaTime)

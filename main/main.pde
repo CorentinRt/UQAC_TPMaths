@@ -37,10 +37,10 @@ PFont font;
 // ----- Projectiles ----- //
 ProjectileLauncher projectileLauncher = new ProjectileLauncher();
 
-ProjectileStatistics ballDefaultStats = new ProjectileStatistics(10, 30, color(0,0,255), color(0,0,255), 2, 4, 3);
-ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, 30, color(67,67,67), color(67,67,67), 8, 8, 23);
-ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20,50, color(255,150,0), color(255,150,0), 10, 13, 15);
-ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, 60, color(255,0,0), color(255,0,0), 10, 5, 5);
+ProjectileStatistics ballDefaultStats = new ProjectileStatistics(10, 2, color(0,0,255), color(0,0,255), 2, 4, 3);
+ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, 1, color(67,67,67), color(67,67,67), 8, 8, 23);
+ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20, 5, color(255,150,0), color(255,150,0), 10, 13, 15);
+ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, 7, color(255,0,0), color(255,0,0), 10, 5, 5);
 
 ArrayList<Particle> allParticles = new ArrayList<Particle>();
 ArrayList<Particle> inGameProjectiles = new ArrayList<Particle>();
@@ -95,6 +95,7 @@ void setup()
   updateManager.Register(deltaTimeDisplay);
   updateManager.Register(integrationSelector);
   updateManager.Register(collisionManager);
+  updateManager.Register(projectileLauncher);
   
   // GameManager
   gameManager = new GameManager(font);
