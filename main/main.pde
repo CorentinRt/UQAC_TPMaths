@@ -50,7 +50,7 @@ CollisionManager collisionManager = new CollisionManager();
 SpringsRegistry springsRegistry = new SpringsRegistry();
 
 // ----- Rigidbody ----- //
-
+ArrayList<RigidBody> inGameRigidBodies = new ArrayList<RigidBody>();
 
 // ----- Frame ----- //
 float lastFrameUpdate = 0;
@@ -109,16 +109,21 @@ void draw()
   camera(width/2, height/2, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
   translate(width/2, height/2, -100); //Center of Scene
   stroke(color(0,0,0));
+  lights();
+  fill(220, 120, 60); 
  
   //Delta time
   float deltaTime = (millis() - lastFrameUpdate) / 1000.0;
   lastFrameUpdate = millis();
+  
   
   if (isFirstFrame)
   {
     isFirstFrame = false;
     return;
   }
+
+  
 
   // Force Registry
   springsRegistry.ApplyAllSpringsForces();
@@ -149,6 +154,13 @@ void draw()
   {
     // Physique
     physicsEngine.UpdateAll(deltaTime);
+
+    //RigidBody
+    for (RigidBody rb : inGameRigidBodies)
+    {
+      rb.AddForce(gravity.MultiplyByScalar(rb.mass)); //On peut faire AddForceAtLocation a tester
+      rb.Integrate(deltaTime);
+    }
 
     // UpdateManager
     updateManager.UpdateAll(deltaTime);
@@ -194,7 +206,10 @@ void mousePressed()
     return; 
   }
   
-  projectileLauncher.LaunchProjectile();
+  //projectileLauncher.LaunchProjectile();
+  if (gameManager.state == GameState.PLAYING){
+    LaunchRigidBody(new Vector3D(2, 15, 0), new Vector3D(0, -0.3, -1), 25);
+  }
 
   // Restart game ? 
   if (gameManager.state == GameState.GAME_OVER)
@@ -228,4 +243,20 @@ void RemoveOutsideProjectiles()
 
     i++;
   }
+}
+
+void LaunchRigidBody(Vector3D startPos, Vector3D direction, float speed)
+{
+  Vector3D velocity = direction.Normalize().MultiplyByScalar(speed);
+
+  RigidBody rb = new RigidBody(
+    5f,
+    startPos,
+    velocity,
+    new Quaternion(new Vector3D(0, 0, 1), 0),
+    new Vector3D(0, 0, 3), //Vitesse angulaire mais on peut la mettre avec addposatloc
+    new Vector3D(10, 10, 0)
+  );
+  rb.SetBox(10f, 10f, 10f);
+  inGameRigidBodies.add(rb);
 }
