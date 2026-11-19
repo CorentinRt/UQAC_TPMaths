@@ -149,13 +149,13 @@ void draw()
   // Update texts
   deltaTimeDisplay.SetText("Delta Time : " + nf(deltaTime, 0, 3) + "ms");
    
-  // UpdateManager
-  updateManager.UpdateAll(deltaTime);
-  
   if (gameManager.state == GameState.PLAYING)
   {
     // Physique
     physicsEngine.UpdateAll(deltaTime);
+
+    // UpdateManager
+    updateManager.UpdateAll(deltaTime);
   }
   
   // Remove projectiles outside of screen on x positive and y positive (doesn't remove balls falling down back on screen)
