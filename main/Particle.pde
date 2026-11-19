@@ -147,25 +147,7 @@ class Particle implements IPhysicsEntity, IUpdatable
   // IUpdatable
   void Update(float deltaTime)
   {
-    color c = color(255, 0, 0);
-    
-    switch (integrationMethod)
-    {
-      case EULER:
-        c = eulerColor;
-        break;
-        
-      case VERLET:
-        c = verletColor;
-        break;
-        
-      default:
-        c = color(100, 50, 200);
-        break;
-      
-    }
-    
-    Draw(c,radius);
+    Draw();
   }
 
   // ------------

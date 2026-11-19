@@ -11,8 +11,8 @@ public class ProjectileLauncher implements IUpdatable
   float launchCooldown = 0.5f;
   float launchClock = 0.5f;
 
-  Vector3D currentMassOffsetToApply = new Vector3D();
-  Vector3D currentInitialAngularVelocityToApply = new Vector3D();
+  Vector3D currentMassOffsetToApply = new Vector3D(3, 2, 2);
+  Vector3D currentInitialAngularVelocityToApply = new Vector3D(10, 0, 0);
   
   // Physics Debug Predictor
   PhysicsDebugPredictor physicsDebugPredictor = new PhysicsDebugPredictor();
@@ -80,7 +80,7 @@ public class ProjectileLauncher implements IUpdatable
       case LASER:
         return laserDefaultStats;
       default:
-        return new ProjectileStatistics(1, 5, color(0), color(0), 20, 20, 20);
+        return new ProjectileStatistics(1, 5, color(0), color(0), 0.5f, 0.5f, 0.7f, 20, 20, 20, color(0));
     }
   }
   
@@ -134,7 +134,6 @@ public class ProjectileLauncher implements IUpdatable
     textDisplayProjectileStatistics.SetText(direction.GetText());
 
     DrawTrajectory(deltaTime);
-    println("draw");
   }
   
   public void DrawTrajectory(float deltaTime)

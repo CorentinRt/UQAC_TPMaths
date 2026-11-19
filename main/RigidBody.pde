@@ -9,6 +9,10 @@ class RigidBody extends Particle
     float width = 10f;
     float height = 10f;
     float depth = 10f;
+
+    float angularDamping = 0.98f;
+
+    color rigidBodyColor = color(255, 0, 0);
     
     Vector3D massOffset = new Vector3D();
 
@@ -36,7 +40,7 @@ class RigidBody extends Particle
         this.massOffset = massOffset;
     }
     
-    RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, Vector3D massOffset, float coefCineticFriction, float coefStaticFriction){
+    RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, Vector3D massOffset, float coefStaticFriction, float coefCineticFriction){
         this(mass, position, linearVelocity, rotation, angularVelocity, massOffset);
         this.coefCineticFriction = coefCineticFriction;
         this.coefStaticFriction = coefStaticFriction;
@@ -53,38 +57,52 @@ class RigidBody extends Particle
 
     void SetRotation(Quaternion newRotation){
         rotation = newRotation;
-        rotationMatrix = ComputeRotationMatrix();
+        rotationMatrix = ComputeRotationMatrix(rotation);
     }
 
-    Matrix3x3 ComputeRotationMatrix(){
-        float X = rotation.x;
-        float Y = rotation.y;
-        float Z = rotation.z;
-        float W = rotation.w;
+    Matrix3x3 ComputeRotationMatrix(Quaternion quaternionRotation){
+        float X = quaternionRotation.x;
+        float Y = quaternionRotation.y;
+        float Z = quaternionRotation.z;
+        float W = quaternionRotation.w;
 
         return new Matrix3x3(
             new float[] {
-                1 - 2 * (Y * Y + Z * Z), 2 * (X * Y + Z * W ), 2 * (X * Z - X * W),
-                2 * (X * Y - Z * W), 1 - 2 * (X * X + Z * Z), 2 * (Y * Z + X * W),
-                2 * (X * Z + Y * W), 2 * (Y * Z - X * W), 1 - 2 * (X * X + Y * Y)
+                1 - 2 * (Y * Y + Z * Z), 2 * (X * Y - Z * W ), 2 * (X * Z + Y * W),
+                2 * (X * Y + Z * W), 1 - 2 * (X * X + Z * Z), 2 * (Y * Z - X * W),
+                2 * (X * Z - Y * W), 2 * (Y * Z + X * W), 1 - 2 * (X * X + Y * Y)
             });
     }
 
-    void Draw(color c){
+    void Draw(){
+        super.Draw();
 
-        super.Draw(c, this.radius);
+        this.Draw(position, rotation, rigidBodyColor, true);
+    }
+    
+    void Draw(Vector3D positionToDraw, Quaternion rotationToDraw, color c, boolean fill){
 
         pushMatrix();
         stroke(4);
-        noFill();
 
-        float angle = 2 * acos(constrain(rotation.w, -1, 1));
-        float s = sqrt(1 - rotation.w * rotation.w);
-        if (s > 0.0001) rotate(angle, rotation.x / s, rotation.y / s, rotation.z / s);
+        if (fill){
+            fill(c);
+        }
+        else{
+            noFill();
+        }
 
-        translate((this.position.x - massOffset.x) * pixelsPerMeter,
-                (this.position.y - massOffset.y) * pixelsPerMeter,
-                (this.position.z - massOffset.z) * pixelsPerMeter);
+        Matrix3x3 currentRotationMatrix = ComputeRotationMatrix(rotationToDraw);
+
+        Vector3D rotatedOffset = Vector3D.MultiplyByMatrix(currentRotationMatrix, massOffset);
+
+        translate((positionToDraw.x - rotatedOffset.x) * pixelsPerMeter,
+                (positionToDraw.y - rotatedOffset.y) * pixelsPerMeter,
+                (positionToDraw.z - rotatedOffset.z) * pixelsPerMeter);
+
+        float angle = 2 * acos(constrain(rotationToDraw.w, -1, 1));
+        float s = sqrt(1 - rotationToDraw.w * rotationToDraw.w);
+        if (s > 0.0001) rotate(angle, rotationToDraw.x / s, rotationToDraw.y / s, rotationToDraw.z / s);
 
         box(width * pixelsPerMeter, height * pixelsPerMeter, depth * pixelsPerMeter);
 
@@ -113,7 +131,7 @@ class RigidBody extends Particle
     }
 
     void Update(float deltaTime){
-        Draw(color(255, 0, 0));
+        Draw();
     }
 
     void UpdatePhysics(float deltaTime){
@@ -130,6 +148,8 @@ class RigidBody extends Particle
 
     void IntegrateAngular(float deltaTime){
         angularVelocity = angularVelocity.Add(ComputeAngularAcceleration().MultiplyByScalar(deltaTime));
+
+        angularVelocity = angularVelocity.MultiplyByScalar(pow(angularDamping, deltaTime));
 
         Quaternion wQuaternion = new Quaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z);
 
