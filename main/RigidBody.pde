@@ -10,6 +10,8 @@ class RigidBody extends Particle
     float height = 10f;
     float depth = 10f;
 
+    float angularDamping = 0.98f;
+
     color rigidBodyColor = color(255, 0, 0);
     
     Vector3D massOffset = new Vector3D();
@@ -142,6 +144,8 @@ class RigidBody extends Particle
 
     void IntegrateAngular(float deltaTime){
         angularVelocity = angularVelocity.Add(ComputeAngularAcceleration().MultiplyByScalar(deltaTime));
+
+        angularVelocity = angularVelocity.MultiplyByScalar(pow(angularDamping, deltaTime));
 
         Quaternion wQuaternion = new Quaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z);
 

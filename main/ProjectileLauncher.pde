@@ -80,7 +80,7 @@ public class ProjectileLauncher implements IUpdatable
       case LASER:
         return laserDefaultStats;
       default:
-        return new ProjectileStatistics(1, 5, color(0), color(0), 0.5f, 0.5f, 20, 20, 20, color(0));
+        return new ProjectileStatistics(1, 5, color(0), color(0), 0.5f, 0.5f, 0.7f, 20, 20, 20, color(0));
     }
   }
   

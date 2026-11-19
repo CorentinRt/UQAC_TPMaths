@@ -22,9 +22,11 @@ public class ProjectileStatistics
   float coefStaticFriction = 0.5f;
   float coefCineticFriction = 0.3f;
 
+  float angularDamping = 0.98f;
+
   color drawOldPositionColor = color (255, 0, 0);
   
-  ProjectileStatistics(float mass, float initialVelocityMultiplier, color eulerColor, color verletColor, float coefStaticFriction, float coefCineticFriction, float width, float height, float depth, color drawOldPositionColor){
+  ProjectileStatistics(float mass, float initialVelocityMultiplier, color eulerColor, color verletColor, float coefStaticFriction, float coefCineticFriction, float angularDamping, float width, float height, float depth, color drawOldPositionColor){
     this.mass = mass;
     this.initialVelocityMultiplier = initialVelocityMultiplier;
     this.eulerColor = eulerColor;
@@ -35,6 +37,7 @@ public class ProjectileStatistics
     this.coefStaticFriction = coefStaticFriction;
     this.coefCineticFriction = coefCineticFriction;
     this.drawOldPositionColor = drawOldPositionColor;
+    this.angularDamping = angularDamping;
   }
 }
 
@@ -66,6 +69,7 @@ public class Projectile extends RigidBody
     super.SetBox(stat.width, stat.height, stat.depth);
 
     this.rigidBodyColor = stat.drawOldPositionColor;
+    this.angularDamping = stat.angularDamping;
   }
 
   void Update(float deltaTime)
