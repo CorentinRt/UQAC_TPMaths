@@ -57,20 +57,20 @@ class RigidBody extends Particle
 
     void SetRotation(Quaternion newRotation){
         rotation = newRotation;
-        rotationMatrix = ComputeRotationMatrix();
+        rotationMatrix = ComputeRotationMatrix(rotation);
     }
 
-    Matrix3x3 ComputeRotationMatrix(){
-        float X = rotation.x;
-        float Y = rotation.y;
-        float Z = rotation.z;
-        float W = rotation.w;
+    Matrix3x3 ComputeRotationMatrix(Quaternion quaternionRotation){
+        float X = quaternionRotation.x;
+        float Y = quaternionRotation.y;
+        float Z = quaternionRotation.z;
+        float W = quaternionRotation.w;
 
         return new Matrix3x3(
             new float[] {
-                1 - 2 * (Y * Y + Z * Z), 2 * (X * Y + Z * W ), 2 * (X * Z - X * W),
-                2 * (X * Y - Z * W), 1 - 2 * (X * X + Z * Z), 2 * (Y * Z + X * W),
-                2 * (X * Z + Y * W), 2 * (Y * Z - X * W), 1 - 2 * (X * X + Y * Y)
+                1 - 2 * (Y * Y + Z * Z), 2 * (X * Y - Z * W ), 2 * (X * Z + Y * W),
+                2 * (X * Y + Z * W), 1 - 2 * (X * X + Z * Z), 2 * (Y * Z - X * W),
+                2 * (X * Z - Y * W), 2 * (Y * Z + X * W), 1 - 2 * (X * X + Y * Y)
             });
     }
 
@@ -92,9 +92,13 @@ class RigidBody extends Particle
             noFill();
         }
 
-        translate((positionToDraw.x - massOffset.x) * pixelsPerMeter,
-                (positionToDraw.y - massOffset.y) * pixelsPerMeter,
-                (positionToDraw.z - massOffset.z) * pixelsPerMeter);
+        Matrix3x3 currentRotationMatrix = ComputeRotationMatrix(rotationToDraw);
+
+        Vector3D rotatedOffset = Vector3D.MultiplyByMatrix(currentRotationMatrix, massOffset);
+
+        translate((positionToDraw.x - rotatedOffset.x) * pixelsPerMeter,
+                (positionToDraw.y - rotatedOffset.y) * pixelsPerMeter,
+                (positionToDraw.z - rotatedOffset.z) * pixelsPerMeter);
 
         float angle = 2 * acos(constrain(rotationToDraw.w, -1, 1));
         float s = sqrt(1 - rotationToDraw.w * rotationToDraw.w);

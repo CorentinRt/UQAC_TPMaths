@@ -86,6 +86,7 @@ public class Projectile extends RigidBody
         continue;
       
       Draw(positionToDraw, rotationToDraw, drawOldPositionColor, false);
+      DrawAtPosition(positionToDraw, drawOldPositionColor, this.radius);
     }
   }
 
@@ -100,7 +101,7 @@ public class Projectile extends RigidBody
 
     lastPositions.add(new PositionRotationPair(this.position.Copy(), this.rotation.Copy()));
 
-    if (lastPositions.size() >= 5){
+    if (lastPositions.size() >= 10){
       PositionRotationPair firstPair = lastPositions.get(0);
 
       if (lastPositions != null){
