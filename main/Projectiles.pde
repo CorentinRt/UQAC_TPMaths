@@ -58,7 +58,7 @@ public class Projectile extends RigidBody
   ArrayList<PositionRotationPair> lastPositions = new ArrayList<PositionRotationPair>();
   color drawOldPositionColor = color(0, 255, 0);
 
-  float timeBetweenEachOldPosition = 0.25f;
+  float timeBetweenEachOldPosition = 0.15f;
   float currentDurationBeforeDrawNewOldPosition = 0f;
 
   Projectile(ProjectileStatistics stat, Vector3D position, Vector3D direction, Vector3D massOffset, Vector3D initialAngularVelocity){

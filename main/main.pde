@@ -37,10 +37,10 @@ PFont font;
 // ----- Projectiles ----- //
 ProjectileLauncher projectileLauncher = new ProjectileLauncher();
 
-ProjectileStatistics ballDefaultStats = new ProjectileStatistics(10, 2, color(0,0,255), color(0,0,255), 0.4f, 0.3f, 0.8f, 2, 4, 3, color(0,255,0));
-ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, 1, color(67,67,67), color(67,67,67), 0.3f, 0.5f, 0.4f, 8, 8, 23, color(255,0,255));
-ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20, 5, color(255,150,0), color(255,150,0), 0.7f, 0.2f, 0.3f, 10, 13, 15, color(0,150,255));
-ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, 7, color(255,0,0), color(255,0,0), 0f, 0f, 0.9f, 10, 5, 5, color(0,0,255));
+ProjectileStatistics ballDefaultStats = new ProjectileStatistics(10, 1, color(0,0,255), color(0,0,255), 0.4f, 0.3f, 0.8f, 2, 4, 3, color(0,255,0));
+ProjectileStatistics boulderDefaultStats = new ProjectileStatistics(100, 3, color(67,67,67), color(67,67,67), 0.3f, 0.5f, 0.4f, 8, 8, 23, color(255,0,255));
+ProjectileStatistics fireballDefaultStats = new ProjectileStatistics(20, 2, color(255,150,0), color(255,150,0), 0.7f, 0.2f, 0.3f, 10, 13, 15, color(0,150,255));
+ProjectileStatistics laserDefaultStats = new ProjectileStatistics(1, 3, color(255,0,0), color(255,0,0), 0f, 0f, 0.9f, 10, 5, 5, color(0,0,255));
 
 ArrayList<Particle> allParticles = new ArrayList<Particle>();
 ArrayList<Particle> inGameProjectiles = new ArrayList<Particle>();
