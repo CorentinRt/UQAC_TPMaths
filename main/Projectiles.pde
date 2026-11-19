@@ -25,58 +25,32 @@ public class ProjectileStatistics
 
 //Different Classes extending from Particle 
 
-public class Ball extends Particle
-{
-  
+public class Ball extends RigidBody
+{ 
   Ball(Vector3D position, Vector3D direction){
-    this.position = position;
-    this.linearVelocity = direction.Multiply(ballDefaultStats.initialVelocityMultiplier);
-    this.mass = ballDefaultStats.mass;
-    this.eulerColor = ballDefaultStats.eulerColor;
-    this.verletColor = ballDefaultStats.verletColor;
-    this.coefStaticFriction = 0.4;
-    this.coefCineticFriction = 0.3;
+    super(ballDefaultStats.mass, position, direction.Multiply(ballDefaultStats.initialVelocityMultiplier), new Quaternion(), new Vector3D(), new Vector3D(), 0.4, 0.3);
   }
 }
 
-public class Boulder extends Particle
+public class Boulder extends RigidBody
 {
-  
   Boulder(Vector3D position, Vector3D direction){
-    this.position = position;
-    this.linearVelocity = direction.Multiply(boulderDefaultStats.initialVelocityMultiplier);
-    this.mass = boulderDefaultStats.mass;
-    this.eulerColor = boulderDefaultStats.eulerColor;
-    this.verletColor = boulderDefaultStats.verletColor;
-    this.coefStaticFriction = 0.7;
-    this.coefCineticFriction = 0.5;
+    super(boulderDefaultStats.mass, position, direction.Multiply(boulderDefaultStats.initialVelocityMultiplier), new Quaternion(), new Vector3D(), new Vector3D(), 0.7, 0.5);
   }
 }
 
-public class Fireball extends Particle
-{
-  
+public class Fireball extends RigidBody
+{ 
   Fireball(Vector3D position, Vector3D direction){
-    this.position = position;
-    this.linearVelocity = direction.Multiply(fireballDefaultStats.initialVelocityMultiplier);
-    this.mass = fireballDefaultStats.mass;
+    super(fireballDefaultStats.mass, position, direction.Multiply(fireballDefaultStats.initialVelocityMultiplier), new Quaternion(), new Vector3D(), new Vector3D(), 0.3, 0.1);
     this.eulerColor = fireballDefaultStats.eulerColor;
     this.verletColor = fireballDefaultStats.verletColor;
-    this.coefStaticFriction = 0.3;
-    this.coefCineticFriction = 0.1;
   }
 }
 
-public class Laser extends Particle
+public class Laser extends RigidBody
 {
-  
   Laser(Vector3D position, Vector3D direction){
-    this.position = position;
-    this.linearVelocity = direction.Multiply(laserDefaultStats.initialVelocityMultiplier);
-    this.mass = laserDefaultStats.mass;
-    this.eulerColor = laserDefaultStats.eulerColor;
-    this.verletColor = laserDefaultStats.verletColor;
-    this.coefStaticFriction = 0;
-    this.coefCineticFriction = 0;
+    super(laserDefaultStats.mass, position, direction.Multiply(laserDefaultStats.initialVelocityMultiplier), new Quaternion(), new Vector3D(), new Vector3D(), 0, 0);
   }
 }

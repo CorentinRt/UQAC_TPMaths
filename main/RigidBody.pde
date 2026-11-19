@@ -36,8 +36,8 @@ class RigidBody extends Particle
         this.massOffset = massOffset;
     }
     
-    RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, float coefCineticFriction, float coefStaticFriction){
-        this(mass, position, linearVelocity, rotation, angularVelocity);
+    RigidBody(float mass, Vector3D position, Vector3D linearVelocity, Quaternion rotation, Vector3D angularVelocity, Vector3D massOffset, float coefCineticFriction, float coefStaticFriction){
+        this(mass, position, linearVelocity, rotation, angularVelocity, massOffset);
         this.coefCineticFriction = coefCineticFriction;
         this.coefStaticFriction = coefStaticFriction;
     }
