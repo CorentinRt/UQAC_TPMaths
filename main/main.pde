@@ -59,6 +59,10 @@ boolean isFirstFrame = true;
 Corridor corridor;
 float camZ;
 
+// ----- Slider ----- //
+boolean bIsSelectingSlider = false;
+VectorSlider massOffsetSlider;
+
 // ----- Fullscreen ----- //
 static 
 {
@@ -125,6 +129,8 @@ void setup()
 
   corridor = new Corridor(0, corridorHeight / 2, 0, corridorWidth, corridorHeight, corridorLength, wallTex, floorTex, ceilTex);
   updateManager.Register(corridor);
+
+  massOffsetSlider = new VectorSlider(0, 400, width / 4, 20, 40, "Mass Offset", color(255, 93, 93), color(255, 170, 170), color(255, 60, 60));
 
   // Posters
   for (int i = 1; i <= 15; i++)
@@ -242,7 +248,10 @@ void mousePressed()
   
   //projectileLauncher.LaunchProjectile();
   if (gameManager.state == GameState.PLAYING){
-    LaunchRigidBody(new Vector3D(2, 15, 0), new Vector3D(0, -0.3, -1), 25);
+    if (!massOffsetSlider.IsMouseOver() || bIsSelectingSlider)
+    {
+        LaunchRigidBody(new Vector3D(2, 15, 0), new Vector3D(0, -0.3, -1), 25);
+    }
   }
 
   // Restart game ? 

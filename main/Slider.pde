@@ -5,10 +5,12 @@ class Slider implements IUpdatable
     float x, y;
     float minPosition, maxPosition;
     color sliderColor;
+    color buttonColorDefault;
+    color buttonColorPressed;
     boolean selected = false;
-    float thresholdSelection = 5.f;
+    float thresholdSelection = 1f;
 
-    Slider(float x, float y, float givenWidth, float givenHeight, color sliderColor)
+    Slider(float x, float y, float givenWidth, float givenHeight, color sliderColor, color buttonColorDefault, color buttonColorPressed)
     {
         this.sliderWidth = givenWidth;
         this.sliderHeight = givenHeight;
@@ -18,37 +20,53 @@ class Slider implements IUpdatable
         this.minPosition = x;
         this.maxPosition = x + givenWidth;
         this.sliderColor = sliderColor;
+        this.buttonColorDefault = buttonColorDefault;
+        this.buttonColorPressed = buttonColorPressed;
 
         updateManager.Register(this);
     }
 
     void Draw(){
+        pushMatrix();
+
+        resetMatrix();
+        camera();
+
         noStroke();
         fill(sliderColor);
         rect(minPosition, y, this.sliderWidth, this.sliderHeight);
-        if (IsMouseOver() || selected) {
-         fill(0, 0, 0);
-        } else {
-         fill(102, 102, 102);
+        if (IsMouseOver() || selected)
+        {
+            fill(buttonColorPressed);
+        } 
+        else 
+        {
+            fill(buttonColorDefault);
         }
-        rect(currentPosition - this.sliderHeight/2, y, this.sliderHeight, this.sliderHeight * 1.5);
+        rect(currentPosition - this.sliderHeight / 2, y - this.sliderHeight / 3, this.sliderHeight, this.sliderHeight * 1.5);
+
+        popMatrix();
     }
 
     void Update(float deltaTime)
     {
-        Vector3D mousePosition = new Vector3D(mouseX - width/2, mouseY - height/2, 0).MultiplyByScalar(1.08f);
-        if (IsMouseOver() && mousePressed) { selected = true; }
+        if (!bIsSelectingSlider && IsMouseOver() && mousePressed) 
+        {
+            bIsSelectingSlider = true; 
+            selected = true; 
+        }
         
         if (selected)
         {
             println("SELECTED");
             if (!mousePressed) 
             { 
-                selected = false; 
+                bIsSelectingSlider = false;
+                selected = false;
             }
             else
             {
-                currentPosition = constrain(mousePosition.x, minPosition, maxPosition);
+                currentPosition = constrain(mouseX, minPosition, maxPosition);
             }
         }
 
@@ -57,8 +75,7 @@ class Slider implements IUpdatable
 
     boolean IsMouseOver()
     {
-        Vector3D mousePosition = new Vector3D(mouseX - width/2, mouseY - height/2, 0).MultiplyByScalar(1.08f);
-        if (mousePosition.x > x - thresholdSelection && mousePosition.x < x + this.sliderWidth + thresholdSelection && mousePosition.y > y - thresholdSelection && mousePosition.y < y + this.sliderHeight + thresholdSelection) 
+        if (mouseX > x - thresholdSelection && mouseX < x + this.sliderWidth + thresholdSelection && mouseY > y - thresholdSelection && mouseY < y + this.sliderHeight + thresholdSelection) 
         {
             return true;
         } 
