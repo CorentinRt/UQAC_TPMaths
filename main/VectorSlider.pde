@@ -71,4 +71,13 @@ class VectorSlider
         }
         return false;
     }
+
+    Vector3D GetValueVector(Vector3D minValue, Vector3D maxValue)
+    {
+        float xSliderValue = sliders.get(0).GetValue(minValue.x, maxValue.x);
+        float ySliderValue = sliders.get(1).GetValue(minValue.y, maxValue.y);
+        float zSliderValue = sliders.get(2).GetValue(minValue.z, maxValue.z);
+
+        return new Vector3D(xSliderValue, ySliderValue, zSliderValue);
+    }
 }

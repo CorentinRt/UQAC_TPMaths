@@ -26,6 +26,14 @@ public class ProjectileLauncher implements IUpdatable
   String prefixText = "Current Selected Projectile : ";
   String prefixMassText = "Mass : ";
   String prefixVelocityText = ", Velocity Multiplier : ";
+
+  public void SetMassOffsetToApply(Vector3D newMassOffset){
+    currentMassOffsetToApply = newMassOffset;
+  }
+
+  public void SetInitialAngularVelocityToApply(Vector3D initialAngularVelocity){
+    currentInitialAngularVelocityToApply = initialAngularVelocity;
+  }
     
   public void CreateTexts(float x, float y, PFont font){
     textDisplaySelectedProjectile = new TextDisplay(prefixText + availableProjectiles[selectedProjectile], x, y, font);

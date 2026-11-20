@@ -58,7 +58,6 @@ class Slider implements IUpdatable
         
         if (selected)
         {
-            println("SELECTED");
             if (!mousePressed) 
             { 
                 bIsSelectingSlider = false;

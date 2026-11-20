@@ -130,7 +130,7 @@ void setup()
   corridor = new Corridor(0, corridorHeight / 2, 0, corridorWidth, corridorHeight, corridorLength, wallTex, floorTex, ceilTex);
   updateManager.Register(corridor);
 
-  massOffsetSlider = new VectorSlider(0, 400, width / 4, 20, 40, "Mass Offset", color(255, 93, 93), color(255, 170, 170), color(255, 60, 60));
+  massOffsetSlider = new VectorSlider(0, 200, width / 4, 20, 40, "Mass Offset", color(255, 93, 93), color(255, 170, 170), color(255, 60, 60));
 
   // Posters
   for (int i = 1; i <= 15; i++)
@@ -208,6 +208,11 @@ void draw()
   
   // Remove projectiles outside of screen on x positive and y positive (doesn't remove balls falling down back on screen)
   RemoveOutsideProjectiles();
+
+  //Update Values according to Slider :
+  //TODO: Mettre les vrai valeur de width, height et depth du rigidbody
+  Vector3D massOffset = massOffsetSlider.GetValueVector(new Vector3D(-5f, -5f, -5f), new Vector3D(5f, 5f, 5f));
+  projectileLauncher.SetMassOffsetToApply(massOffset);
 
   popMatrix();
   camera();
@@ -298,7 +303,7 @@ void LaunchRigidBody(Vector3D startPos, Vector3D direction, float speed)
     velocity,
     new Quaternion(new Vector3D(0, 0, 1), 0),
     new Vector3D(0, 0, 3), //Vitesse angulaire mais on peut la mettre avec addposatloc
-    new Vector3D(10, 10, 0)
+    projectileLauncher.currentMassOffsetToApply
   );
   rb.SetBox(10f, 10f, 10f);
   inGameRigidBodies.add(rb);
