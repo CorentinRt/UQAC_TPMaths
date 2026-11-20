@@ -125,6 +125,17 @@ void setup()
 
   corridor = new Corridor(0, corridorHeight / 2, 0, corridorWidth, corridorHeight, corridorLength, wallTex, floorTex, ceilTex);
   updateManager.Register(corridor);
+
+  // Posters
+  for (int i = 1; i <= 15; i++)
+  {
+      corridor.AddPosterTexture(loadImage("poster" + i + ".jpg"));
+  }
+
+  for (int i = 0; i < 30; i++)
+  {
+      corridor.AddRandomPoster(random(0.2, 0.7));
+  }
 }
 
 // ----- Draw ----- //
