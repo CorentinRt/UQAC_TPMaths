@@ -62,6 +62,7 @@ float camZ;
 // ----- Slider ----- //
 boolean bIsSelectingSlider = false;
 VectorSlider massOffsetSlider;
+VectorSlider angularVelocitySlider;
 
 // ----- Fullscreen ----- //
 static 
@@ -131,6 +132,7 @@ void setup()
   updateManager.Register(corridor);
 
   massOffsetSlider = new VectorSlider(0, 200, width / 4, 20, 40, "Mass Offset", color(255, 93, 93), color(255, 170, 170), color(255, 60, 60));
+  angularVelocitySlider = new VectorSlider(0, 500, width / 4, 20, 40, "Initial Angular Velocity", color(255, 247, 53), color(255, 249, 123), color(241, 231, 0));
 
   // Posters
   for (int i = 1; i <= 15; i++)
@@ -213,6 +215,8 @@ void draw()
   //TODO: Mettre les vrai valeur de width, height et depth du rigidbody
   Vector3D massOffset = massOffsetSlider.GetValueVector(new Vector3D(-5f, -5f, -5f), new Vector3D(5f, 5f, 5f));
   projectileLauncher.SetMassOffsetToApply(massOffset);
+  Vector3D angularVelocity = angularVelocitySlider.GetValueVector(new Vector3D(-20f, -20f, -20f), new Vector3D(20f, 20f, 20f));
+  projectileLauncher.SetInitialAngularVelocityToApply(angularVelocity);
 
   popMatrix();
   camera();
@@ -302,7 +306,7 @@ void LaunchRigidBody(Vector3D startPos, Vector3D direction, float speed)
     startPos,
     velocity,
     new Quaternion(new Vector3D(0, 0, 1), 0),
-    new Vector3D(0, 0, 3), //Vitesse angulaire mais on peut la mettre avec addposatloc
+    projectileLauncher.currentInitialAngularVelocityToApply, //Vitesse angulaire mais on peut la mettre avec addposatloc
     projectileLauncher.currentMassOffsetToApply
   );
   rb.SetBox(10f, 10f, 10f);
