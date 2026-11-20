@@ -63,6 +63,7 @@ float camZ;
 boolean bIsSelectingSlider = false;
 VectorSlider massOffsetSlider;
 VectorSlider angularVelocitySlider;
+VectorSlider forceOffsetSlider;
 
 // ----- Fullscreen ----- //
 static 
@@ -131,8 +132,11 @@ void setup()
   corridor = new Corridor(0, corridorHeight / 2, 0, corridorWidth, corridorHeight, corridorLength, wallTex, floorTex, ceilTex);
   updateManager.Register(corridor);
 
-  massOffsetSlider = new VectorSlider(0, 200, width / 4, 20, 40, "Mass Offset", color(255, 93, 93), color(255, 170, 170), color(255, 60, 60));
-  angularVelocitySlider = new VectorSlider(0, 500, width / 4, 20, 40, "Initial Angular Velocity", color(255, 247, 53), color(255, 249, 123), color(241, 231, 0));
+  //Sliders
+  massOffsetSlider = new VectorSlider(5, height - 650, width / 4, 20, 35, "Mass Offset", color(255, 93, 93), color(255, 170, 170), color(255, 60, 60));
+  angularVelocitySlider = new VectorSlider(5, height - 475, width / 4, 20, 35, "Initial Angular Velocity", color(255, 247, 53), color(255, 249, 123), color(241, 231, 0));
+  forceOffsetSlider = new VectorSlider(5, height - 300, width / 4, 20, 35, "Launch Force Offset", color(122, 187, 255), color(201, 227, 255), color(87, 150, 216));
+
 
   // Posters
   for (int i = 1; i <= 15; i++)
@@ -212,11 +216,22 @@ void draw()
   RemoveOutsideProjectiles();
 
   //Update Values according to Slider :
-  //TODO: Mettre les vrai valeur de width, height et depth du rigidbody
-  Vector3D massOffset = massOffsetSlider.GetValueVector(new Vector3D(-5f, -5f, -5f), new Vector3D(5f, 5f, 5f));
+
+  //--- TODO: Mettre les vrai valeur de width, height et depth du rigidbody
+  Vector3D RigidbodyWHD = new Vector3D(10.f, 10.f, 10.f);
+  Vector3D minValue = new Vector3D(- RigidbodyWHD.x /2, - RigidbodyWHD.y / 2, - RigidbodyWHD.z / 2);
+  Vector3D maxValue = new Vector3D(- RigidbodyWHD.x /2, RigidbodyWHD.y / 2, RigidbodyWHD.z / 2);
+
+  Vector3D massOffset = massOffsetSlider.GetValueVector(minValue, maxValue);
   projectileLauncher.SetMassOffsetToApply(massOffset);
+
+   //--- TODO: Implémenter la valeur de force Offset et Mettre les vrai valeur de width, height et depth du rigidbody
+  Vector3D forceOffset = forceOffsetSlider.GetValueVector(minValue, maxValue);
+
   Vector3D angularVelocity = angularVelocitySlider.GetValueVector(new Vector3D(-20f, -20f, -20f), new Vector3D(20f, 20f, 20f));
   projectileLauncher.SetInitialAngularVelocityToApply(angularVelocity);
+ 
+
 
   popMatrix();
   camera();
@@ -257,7 +272,7 @@ void mousePressed()
   
   //projectileLauncher.LaunchProjectile();
   if (gameManager.state == GameState.PLAYING){
-    if (!massOffsetSlider.IsMouseOver() || bIsSelectingSlider)
+    if (!massOffsetSlider.IsMouseOver() && !forceOffsetSlider.IsMouseOver() && !angularVelocitySlider.IsMouseOver() && !bIsSelectingSlider)
     {
         LaunchRigidBody(new Vector3D(2, 15, 0), new Vector3D(0, -0.3, -1), 25);
     }

@@ -74,7 +74,7 @@ class Slider implements IUpdatable
 
     boolean IsMouseOver()
     {
-        if (mouseX > x - thresholdSelection && mouseX < x + this.sliderWidth + thresholdSelection && mouseY > y - thresholdSelection && mouseY < y + this.sliderHeight + thresholdSelection) 
+        if (mouseX > x - thresholdSelection && mouseX < x + this.sliderWidth + thresholdSelection && mouseY > y - thresholdSelection && mouseY < y + (this.sliderHeight * 1.5) + thresholdSelection) 
         {
             return true;
         } 
