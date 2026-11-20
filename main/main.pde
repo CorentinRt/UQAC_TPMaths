@@ -12,7 +12,6 @@ Matrix3x3UnitTest Matrix3x3Tests = new Matrix3x3UnitTest();
 Matrix4x4UnitTests Matrix4x4Tests = new Matrix4x4UnitTests();
 QuaternionUnitTests QuaternionTests = new QuaternionUnitTests();
 
-
 // ----- Update ----- //
 UpdateManager updateManager = new UpdateManager();
 
@@ -55,6 +54,10 @@ ArrayList<RigidBody> inGameRigidBodies = new ArrayList<RigidBody>();
 // ----- Frame ----- //
 float lastFrameUpdate = 0;
 boolean isFirstFrame = true;
+
+// ----- Level ----- //
+Corridor corridor;
+float camZ;
 
 // ----- Fullscreen ----- //
 static 
@@ -99,6 +102,26 @@ void setup()
   
   // GameManager
   gameManager = new GameManager(font);
+
+  // Level
+  pixelsPerMeter = 15; // a voir si besoin de faire 
+  camZ = (height / 2.0f) / tan(PI / 6); // pi / 3 c le fov par défaut de processing à 60 degres
+
+  float sceneOffsetZ = -100; // pour compenser le translate au draw apres la cam de -100                        
+  float k = (camZ - sceneOffsetZ) / camZ * 1.02f;
+
+  float corridorWidth  = width  * k / pixelsPerMeter;
+  float corridorHeight = height * k / pixelsPerMeter;
+  float corridorLength = 500;
+
+  corridor = new Corridor(0,                    
+                          corridorHeight / 2,   
+                          0,                    
+                          corridorWidth,
+                          corridorHeight,
+                          corridorLength,
+                          1);
+  updateManager.Register(corridor);
 }
 
 // ----- Draw ----- //
@@ -106,7 +129,7 @@ void draw()
 {
   pushMatrix();
   background(100);
-  camera(width/2, height/2, (height/2) / tan(PI/6), width/2, height/2, 0, 0, 1, 0);
+  camera(width/2, height/2, camZ, width/2, height/2, 0, 0, 1, 0);
   translate(width/2, height/2, -100); //Center of Scene
   stroke(color(0,0,0));
   lights();
