@@ -284,11 +284,12 @@ void mousePressed()
     return; 
   }
   
-  //projectileLauncher.LaunchProjectile();
   if (gameManager.state == GameState.PLAYING){
     if (!massOffsetSlider.IsMouseOver() && !forceOffsetSlider.IsMouseOver() && !angularVelocitySlider.IsMouseOver() && !bIsSelectingSlider)
     {
-        LaunchRigidBody(new Vector3D(2, 15, 0), new Vector3D(0, -0.3, -1), 25);
+        //LaunchRigidBody(new Vector3D(2, 15, 0), new Vector3D(0, -0.3, -1), 25);
+        Vector3D offset = forceOffsetSlider.GetValueVector(new Vector3D(-10,-10,-10), new Vector3D(10,10,10));
+        projectileLauncher.LaunchProjectile(offset);
     }
   }
 
