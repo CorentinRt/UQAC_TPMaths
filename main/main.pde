@@ -70,6 +70,7 @@ void setup()
 {
   fullScreen(P3D);
   background(100);
+  ((PGraphicsOpenGL)g).textureSampling(2);   // 2 = pixels nets, sans lissage
 
   // Unit tests
   VectorTests.TestAll();
@@ -103,6 +104,14 @@ void setup()
   // GameManager
   gameManager = new GameManager(font);
 
+  // Textures
+  textureMode(NORMAL);   // UV en nombre de répétitions
+  textureWrap(REPEAT);   // la texture se répète au lieu de s'étirer
+
+  PImage wallTex  = loadImage("wall.png");
+  PImage floorTex = loadImage("floor.png");
+  PImage ceilTex  = loadImage("ceiling.png");
+
   // Level
   pixelsPerMeter = 15; // a voir si besoin de faire 
   camZ = (height / 2.0f) / tan(PI / 6); // pi / 3 c le fov par défaut de processing à 60 degres
@@ -114,13 +123,7 @@ void setup()
   float corridorHeight = height * k / pixelsPerMeter;
   float corridorLength = 500;
 
-  corridor = new Corridor(0,                    
-                          corridorHeight / 2,   
-                          0,                    
-                          corridorWidth,
-                          corridorHeight,
-                          corridorLength,
-                          1);
+  corridor = new Corridor(0, corridorHeight / 2, 0, corridorWidth, corridorHeight, corridorLength, wallTex, floorTex, ceilTex);
   updateManager.Register(corridor);
 }
 
@@ -139,14 +142,11 @@ void draw()
   float deltaTime = (millis() - lastFrameUpdate) / 1000.0;
   lastFrameUpdate = millis();
   
-  
   if (isFirstFrame)
   {
     isFirstFrame = false;
     return;
   }
-
-  
 
   // Force Registry
   springsRegistry.ApplyAllSpringsForces();

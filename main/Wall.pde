@@ -1,28 +1,52 @@
 class Wall
 {
     // ----- FIELDS ----- //
-    Vector3D center;
-    Vector3D halfSize;   
+    Vector3D cornerA;
+    Vector3D cornerB; 
+    Vector3D cornerC; 
+    Vector3D cornerD; 
+
     color wallColor;
-    PImage tex; // asset en bonus
+    PImage tex;
+    float tileSize = 16; // taille de texture (en metres)
     // ----- FIELDS ----- //
 
-    Wall(Vector3D center, Vector3D size, color wallColor)
+    Wall(Vector3D cornerA, Vector3D cornerB, Vector3D cornerC, Vector3D cornerD, color wallColor, PImage tex)
     {
-        this.center = center;
-        this.halfSize = size.MultiplyByScalar(0.5f);
+        this.cornerA = cornerA; 
+        this.cornerB = cornerB; 
+        this.cornerC = cornerC; 
+        this.cornerD = cornerD;
+
         this.wallColor = wallColor;
+        this.tex = tex;
     }
 
     void Draw()
     {
-        pushMatrix();
+        // répétitions : longueur de a->b et de b->c divisées par la taille d'un motif
+        float u = dist(cornerA.x, cornerA.y, cornerA.z, cornerB.x, cornerB.y, cornerB.z) / tileSize;
+        float v = dist(cornerB.x, cornerB.y, cornerB.z, cornerC.x, cornerC.y, cornerC.z) / tileSize;
 
-        // Draw box at pos
-        translate(center.x * pixelsPerMeter, center.y * pixelsPerMeter, center.z * pixelsPerMeter);
-        fill(wallColor);
-        box(halfSize.x * 2 * pixelsPerMeter, halfSize.y * 2 * pixelsPerMeter, halfSize.z * 2 * pixelsPerMeter);
+        noStroke();
+        beginShape(QUADS);
 
-        popMatrix();
+        if (tex != null) 
+        { 
+            fill(255); 
+            texture(tex); 
+        }
+        else             
+        { 
+            fill(wallColor);
+        }
+
+        // Quad
+        vertex(cornerA.x * pixelsPerMeter, cornerA.y * pixelsPerMeter, cornerA.z * pixelsPerMeter, 0, 0);
+        vertex(cornerB.x * pixelsPerMeter, cornerB.y * pixelsPerMeter, cornerB.z * pixelsPerMeter, u, 0);
+        vertex(cornerC.x * pixelsPerMeter, cornerC.y * pixelsPerMeter, cornerC.z * pixelsPerMeter, u, v);
+        vertex(cornerD.x * pixelsPerMeter, cornerD.y * pixelsPerMeter, cornerD.z * pixelsPerMeter, 0, v);
+
+        endShape();
     }
 }
