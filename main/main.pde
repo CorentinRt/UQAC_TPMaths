@@ -65,6 +65,9 @@ VectorSlider massOffsetSlider;
 VectorSlider angularVelocitySlider;
 VectorSlider forceOffsetSlider;
 
+// ----- Targets ----- //
+TargetManager targetManager = new TargetManager();
+
 // ----- Fullscreen ----- //
 static 
 {
@@ -137,7 +140,6 @@ void setup()
   angularVelocitySlider = new VectorSlider(5, height - 475, width / 4, 20, 35, "Initial Angular Velocity", color(255, 247, 53), color(255, 249, 123), color(241, 231, 0));
   forceOffsetSlider = new VectorSlider(5, height - 300, width / 4, 20, 35, "Launch Force Offset", color(122, 187, 255), color(201, 227, 255), color(87, 150, 216));
 
-
   // Posters
   for (int i = 1; i <= 15; i++)
   {
@@ -147,6 +149,14 @@ void setup()
   for (int i = 0; i < 30; i++)
   {
       corridor.AddRandomPoster(random(0.2, 0.7));
+  }
+
+  // Targets
+  for (int i = 0; i < 5; i++)
+  {
+      Target target = new Target(new Vector3D(0, 0, 0), 50);  
+      target.RespawnElsewhere();                               
+      targetManager.AddTarget(target);
   }
 }
 
@@ -210,6 +220,10 @@ void draw()
 
     // UpdateManager
     updateManager.UpdateAll(deltaTime);
+
+    // Targets
+    targetManager.CheckCollisions(inGameProjectiles);
+    targetManager.DrawAll();
   }
   
   // Remove projectiles outside of screen on x positive and y positive (doesn't remove balls falling down back on screen)
