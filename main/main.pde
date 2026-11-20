@@ -234,7 +234,7 @@ void draw()
   //--- TODO: Mettre les vrai valeur de width, height et depth du rigidbody
   Vector3D RigidbodyWHD = new Vector3D(10.f, 10.f, 10.f);
   Vector3D minValue = new Vector3D(- RigidbodyWHD.x /2, - RigidbodyWHD.y / 2, - RigidbodyWHD.z / 2);
-  Vector3D maxValue = new Vector3D(- RigidbodyWHD.x /2, RigidbodyWHD.y / 2, RigidbodyWHD.z / 2);
+  Vector3D maxValue = new Vector3D(RigidbodyWHD.x /2, RigidbodyWHD.y / 2, RigidbodyWHD.z / 2);
 
   Vector3D massOffset = massOffsetSlider.GetValueVector(minValue, maxValue);
   projectileLauncher.SetMassOffsetToApply(massOffset);
