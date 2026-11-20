@@ -328,16 +328,19 @@ void RemoveOutsideProjectiles()
 
 void LaunchRigidBody(Vector3D startPos, Vector3D direction, float speed)
 {
-  Vector3D velocity = direction.Normalize().MultiplyByScalar(speed);
+  Vector3D offset = forceOffsetSlider.GetValueVector(new Vector3D(-10,-10,-10), new Vector3D(10,10,10));
+  //Vector3D velocity = direction.Normalize().MultiplyByScalar(speed);
+  Vector3D velocity = new Vector3D(0,0,0);
 
   RigidBody rb = new RigidBody(
     5f,
     startPos,
     velocity,
-    new Quaternion(new Vector3D(0, 0, 1), 0),
-    projectileLauncher.currentInitialAngularVelocityToApply, //Vitesse angulaire mais on peut la mettre avec addposatloc
+    new Quaternion(),
+    new Vector3D(0,0,0), //Vitesse angulaire mais on peut la mettre avec addposatloc
     projectileLauncher.currentMassOffsetToApply
   );
   rb.SetBox(10f, 10f, 10f);
   inGameRigidBodies.add(rb);
+  rb.AddForceAtPosition(new Vector3D(0,0,-10000), offset);
 }
