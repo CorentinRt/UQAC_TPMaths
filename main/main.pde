@@ -289,7 +289,9 @@ void mousePressed()
     {
         //LaunchRigidBody(new Vector3D(2, 15, 0), new Vector3D(0, -0.3, -1), 25);
         Vector3D offset = forceOffsetSlider.GetValueVector(new Vector3D(-10,-10,-10), new Vector3D(10,10,10));
-        projectileLauncher.LaunchProjectile(offset);
+        Particle p = projectileLauncher.LaunchProjectile(offset);
+        //pas sur mais on test
+        inGameProjectiles.add(p);
     }
   }
 

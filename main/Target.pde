@@ -25,7 +25,15 @@ class Target
   boolean CheckCollision(Particle p)
   {
     if (isHit) return false; //Basecase if target is already on
+
+    if (p.CollidesWithSphere(position, radius / pixelsPerMeter))
+    {
+      TriggerHit();
+      return true;
+    }
+    return false;
     
+    /*
     //Distance between particle & target
     float distPtoT = pow(p.position.x - position.x, 2) + pow(p.position.y - position.y, 2) + pow(p.position.z - position.z, 2);
                    
@@ -37,6 +45,7 @@ class Target
       return true;
     }
     return false;
+    */
   }
   
   void TriggerHit()
