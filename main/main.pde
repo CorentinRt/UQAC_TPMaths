@@ -226,8 +226,9 @@ void draw()
 
   //Update Values according to Slider :
 
-  //--- TODO: Mettre les vrai valeur de width, height et depth du rigidbody
-  Vector3D RigidbodyWHD = new Vector3D(10.f, 10.f, 10.f);
+  ProjectileStatistics stats = projectileLauncher.GetSelectedProjectileStatistics();
+
+  Vector3D RigidbodyWHD = new Vector3D(stats.width, stats.height, stats.depth);
   Vector3D minValue = new Vector3D(- RigidbodyWHD.x /2, - RigidbodyWHD.y / 2, - RigidbodyWHD.z / 2);
   Vector3D maxValue = new Vector3D(RigidbodyWHD.x /2, RigidbodyWHD.y / 2, RigidbodyWHD.z / 2);
 
