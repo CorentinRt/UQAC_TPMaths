@@ -58,7 +58,7 @@ class Target
   {
     float margin = radius / pixelsPerMeter;
 
-    position = corridor.GetRandomPointInside(margin, 0.1f, 0.8f);
+    position = corridor.GetRandomPointInside(margin, 0.05f, 0.5f);
     isHit = false;
   }
   

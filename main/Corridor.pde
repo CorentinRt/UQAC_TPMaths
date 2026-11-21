@@ -142,4 +142,9 @@ class Corridor implements IUpdatable
 
         return new Vector3D(x, y, z);
     }
+
+    void ResetPosters()
+    {
+        placedPosters.clear();
+    }
 }

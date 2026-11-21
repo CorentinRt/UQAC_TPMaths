@@ -146,11 +146,6 @@ void setup()
       corridor.AddPosterTexture(loadImage("poster" + i + ".jpg"));
   }
 
-  for (int i = 0; i < 30; i++)
-  {
-      corridor.AddRandomPoster(random(0.2, 0.7));
-  }
-
   // Targets
   for (int i = 0; i < 5; i++)
   {
