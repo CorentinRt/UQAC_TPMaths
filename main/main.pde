@@ -235,9 +235,6 @@ void draw()
   Vector3D massOffset = massOffsetSlider.GetValueVector(minValue, maxValue);
   projectileLauncher.SetMassOffsetToApply(massOffset);
 
-   //--- TODO: Implémenter la valeur de force Offset et Mettre les vrai valeur de width, height et depth du rigidbody
-  Vector3D forceOffset = forceOffsetSlider.GetValueVector(minValue, maxValue);
-
   Vector3D angularVelocity = angularVelocitySlider.GetValueVector(new Vector3D(-20f, -20f, -20f), new Vector3D(20f, 20f, 20f));
   projectileLauncher.SetInitialAngularVelocityToApply(angularVelocity);
  

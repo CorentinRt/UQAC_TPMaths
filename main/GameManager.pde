@@ -4,7 +4,7 @@ class GameManager
   
   // Score & timer
   ScoreManager scoreManager = new ScoreManager();
-  GameTimer gameTimer = new GameTimer(40); // secondes par partie (court pour test)
+  GameTimer gameTimer = new GameTimer(40); // secondes par partie
 
   // Texts
   TextDisplay scoreDisplay;
@@ -60,6 +60,15 @@ class GameManager
     hasWon = false; //Garder les textes
     scoreManager.Reset();
     gameTimer.Start();
+
+    for (RigidBody rb : inGameRigidBodies){
+        rb.DestroyParticle();
+    }
+    inGameRigidBodies.clear();
+    for (Particle p : inGameProjectiles){
+        p.DestroyParticle();
+    }
+    inGameProjectiles.clear();
   }
   
   void EndGame()
