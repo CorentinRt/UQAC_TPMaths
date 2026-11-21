@@ -202,4 +202,41 @@ class RigidBody extends Particle
 
         return result;
     }
+
+    boolean CollidesWithSphere(Vector3D center, float sphereRadius)
+    {
+    Matrix3x3 R = ComputeRotationMatrix(rotation);
+
+    //centre reel de la boîte
+    Vector3D rotatedOffset = Vector3D.MultiplyByMatrix(R, massOffset);
+    float cx = position.x - rotatedOffset.x;
+    float cy = position.y - rotatedOffset.y;
+    float cz = position.z - rotatedOffset.z;
+
+    //centre boite
+    float dx = center.x - cx;
+    float dy = center.y - cy;
+    float dz = center.z - cz;
+
+    //axe local to world
+    Vector3D ax = Vector3D.MultiplyByMatrix(R, new Vector3D(1, 0, 0));
+    Vector3D ay = Vector3D.MultiplyByMatrix(R, new Vector3D(0, 1, 0));
+    Vector3D az = Vector3D.MultiplyByMatrix(R, new Vector3D(0, 0, 1));
+
+    //sphere in box
+    float lx = dx*ax.x + dy*ax.y + dz*ax.z;
+    float ly = dx*ay.x + dy*ay.y + dz*ay.z;
+    float lz = dx*az.x + dy*az.y + dz*az.z;
+
+    //point de la boite + proche de la sphere
+    float px = constrain(lx, -width  / 2, width  / 2);
+    float py = constrain(ly, -height / 2, height / 2);
+    float pz = constrain(lz, -depth  / 2, depth  / 2);
+
+    float ex = lx - px;
+    float ey = ly - py;
+    float ez = lz - pz;
+
+    return ex*ex + ey*ey + ez*ez <= sphereRadius * sphereRadius;
+    }
 }
