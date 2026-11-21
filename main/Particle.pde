@@ -277,6 +277,15 @@ class Particle implements IPhysicsEntity, IUpdatable
   {
       return otherPosition.Distance(position) < radius + threshold;
   }
+
+  boolean CollidesWithSphere(Vector3D center, float sphereRadius)
+  {
+    float dx = position.x - center.x;
+    float dy = position.y - center.y;
+    float dz = position.z - center.z;
+    float r = radius + sphereRadius;
+    return dx*dx + dy*dy + dz*dz <= r*r;
+  }
   
   
 }

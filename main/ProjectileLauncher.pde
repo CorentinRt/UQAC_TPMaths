@@ -7,6 +7,8 @@ public class ProjectileLauncher implements IUpdatable
   
   Vector3D direction = new Vector3D(1, 1, -1);
   Vector3D launchPosition = new Vector3D(2, 15, -1);
+  Vector3D offsetForce = new Vector3D(0, 0, -100);
+
   
   float launchCooldown = 0.5f;
   float launchClock = 0.5f;
@@ -101,17 +103,23 @@ public class ProjectileLauncher implements IUpdatable
       case BALL:
         println("Projectile Type : " + "BALL");
         Ball ball = new Ball(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
-        ball.AddForceAtPosition(new Vector3D(0,0,0),offset);
+        ball.AddForceAtPosition(offsetForce,offset);
         return ball;
       case BOULDER:
         println("Projectile Type : " + "BOULDER");
-        return new Boulder(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        Boulder boulder = new Boulder(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        boulder.AddForceAtPosition(offsetForce,offset);
+        return boulder; 
       case FIREBALL:
         println("Projectile Type : " + "FIREBALL");
-        return new Fireball(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        Fireball fireball = new Fireball(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        fireball.AddForceAtPosition(offsetForce,offset);
+        return fireball;
       case LASER:
         println("Projectile Type : " + "LASER");
-        return new Laser(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        Laser laser = new Laser(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        laser.AddForceAtPosition(offsetForce,offset);
+        return laser;
       default:
       println("Projectile Type : " + "DEFAULT");
         RigidBody rb = new RigidBody(1, launchPosition.Copy(), direction, new Quaternion(), currentInitialAngularVelocityToApply, currentMassOffsetToApply);
