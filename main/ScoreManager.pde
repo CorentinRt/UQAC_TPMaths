@@ -12,6 +12,8 @@ class ScoreManager
     currentScore += amount;
 
     corridor.AddRandomPoster(random(0.2, 0.7));
+
+    scoreSound.play();
   }
    
   int GetScore()

@@ -1,5 +1,6 @@
 import java.util.Map;
 import java.util.HashMap;
+import processing.sound.*;
 
 // ----- Constants ----- //
 Vector3D gravity = new Vector3D(0, 9.81, 0);
@@ -67,6 +68,9 @@ VectorSlider forceOffsetSlider;
 
 // ----- Targets ----- //
 TargetManager targetManager = new TargetManager();
+
+// ----- Sounds ------ //
+SoundFile scoreSound;
 
 // ----- Fullscreen ----- //
 static 
@@ -153,6 +157,9 @@ void setup()
       target.RespawnElsewhere();                               
       targetManager.AddTarget(target);
   }
+
+  // Sounds
+  scoreSound = new SoundFile(this, "score.mp3");
 }
 
 // ----- Draw ----- //
