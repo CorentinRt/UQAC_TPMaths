@@ -122,7 +122,7 @@ class RigidBody extends Particle
         Matrix3x3 invIWorld = Matrix3x3.Multiply(R, invertInertiaTensor);
         invIWorld = Matrix3x3.Multiply(invIWorld, Matrix3x3.Transpose(R));
 
-        Vector3D acceleration = Vector3D.MultiplyByMatrix(invertInertiaTensor, torqueAccum);
+        Vector3D acceleration = Vector3D.MultiplyByMatrix(invIWorld, torqueAccum);
 
         //println("Test : " + acceleration.GetText());
 
@@ -152,7 +152,7 @@ class RigidBody extends Particle
 
         Quaternion wQuaternion = new Quaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z);
 
-        Quaternion qw = rotation.MultiplyByQ(wQuaternion).MultiplyByF(deltaTime * 0.5);
+        Quaternion qw = rotation.MultiplyByQ(wQuaternion.MultiplyByF(deltaTime * 0.5));
         SetRotation(rotation.Add(qw).Normalize());
     }
 
