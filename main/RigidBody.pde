@@ -152,7 +152,7 @@ class RigidBody extends Particle
 
         Quaternion wQuaternion = new Quaternion(0, angularVelocity.x, angularVelocity.y, angularVelocity.z);
 
-        Quaternion qw = rotation.MultiplyByQ(wQuaternion.MultiplyByF(deltaTime * 0.5));
+        Quaternion qw = wQuaternion.MultiplyByF(deltaTime * 0.5).MultiplyByQ(rotation);
         SetRotation(rotation.Add(qw).Normalize());
     }
 
