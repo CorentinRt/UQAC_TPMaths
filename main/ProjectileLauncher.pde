@@ -157,6 +157,7 @@ public class ProjectileLauncher implements IUpdatable
     textDisplayProjectileStatistics.SetText(direction.GetText());
 
     DrawTrajectory(deltaTime);
+    DrawRigidBodyPreview();
   }
   
   public void DrawTrajectory(float deltaTime)
@@ -169,5 +170,52 @@ public class ProjectileLauncher implements IUpdatable
     accumForcePredicted = accumForcePredicted.MultiplyByScalar(projectileStatistics.mass);
     
     physicsDebugPredictor.DrawDebugSimulation(integrationSelector.GetIntegrationMethod(), launchPosition, direction.MultiplyByScalar(projectileStatistics.initialVelocityMultiplier), PhysicsUtilities.ComputeAccelerationByForce(projectileStatistics.mass, accumForcePredicted), c, 20.0, 2.0, 0.15, deltaTime);
+  }
+
+  public void DrawRigidBodyPreview(){
+    pushMatrix();
+
+    stroke(4);
+    strokeWeight(4);
+    noFill();
+
+    ProjectileStatistics stats = GetSelectedProjectileStatistics();
+
+    Vector3D previewPosition = new Vector3D(width / (2 * pixelsPerMeter) - 20, height / (2 * pixelsPerMeter) - 20, 0);
+
+    translate(previewPosition.x * pixelsPerMeter,
+            previewPosition.y * pixelsPerMeter,
+            previewPosition.z * pixelsPerMeter);
+
+    //rotateY();
+
+    box(stats.width * pixelsPerMeter * 2, stats.height * pixelsPerMeter * 2, stats.depth * pixelsPerMeter * 2);
+    
+    pushMatrix();
+
+    Vector3D massOffset = currentMassOffsetToApply.MultiplyByScalar(pixelsPerMeter * 2);
+    translate(massOffset.x, massOffset.y, massOffset.z);
+    
+    strokeWeight(1);
+    noStroke();
+    fill(color(255, 0, 0));
+    sphere((stats.width * pixelsPerMeter)/2.5f);
+
+    popMatrix();
+
+    pushMatrix();
+    
+    Vector3D forceOffset = forceOffsetSlider.GetValueVector(new Vector3D(-10,-10,-10), new Vector3D(10,10,10));
+    forceOffset = forceOffset.MultiplyByScalar(pixelsPerMeter * 2);
+    translate(forceOffset.x, forceOffset.y, forceOffset.z);
+    
+    strokeWeight(1);
+    noStroke();
+    fill(color(201, 227, 255));
+    sphere((stats.width * pixelsPerMeter)/2.5f);
+
+    popMatrix();
+
+    popMatrix();
   }
 }
