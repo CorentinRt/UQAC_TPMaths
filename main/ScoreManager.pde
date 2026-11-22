@@ -10,6 +10,8 @@ class ScoreManager
   void AddScore(int amount)
   {
     currentScore += amount;
+
+    corridor.AddRandomPoster(random(0.2, 0.7));
   }
    
   int GetScore()
@@ -20,5 +22,7 @@ class ScoreManager
   void Reset()
   {
     currentScore = 0;
+
+    corridor.ResetPosters();
   }
 }

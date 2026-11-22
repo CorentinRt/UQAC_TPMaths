@@ -15,8 +15,10 @@ class Corridor implements IUpdatable
     float entranceZ;       
     float endZ;       
     
-    float nextFreeZLeft;    // prochain Z libre sur le mur gauche
-    float nextFreeZRight;   // prochain Z libre sur le mur droit
+    float nextFreeZLeft; // prochain Z libre sur le mur gauche (poster)
+    float nextFreeZRight; // prochain Z libre sur le mur droit (poster)
+
+    float corridorLength;
     // ----- FIELDS ----- //
 
     Corridor(float centerX, float floorY, float startZ,
@@ -29,6 +31,8 @@ class Corridor implements IUpdatable
         floorLevelY = floorY;
         entranceZ = startZ;
         endZ = startZ - corridorLength;
+
+        this.corridorLength = corridorLength;
 
         // Mur gauche
         walls.add(new Wall(new Vector3D(leftWallX, ceilingY, entranceZ), new Vector3D(leftWallX, ceilingY, endZ),
@@ -125,5 +129,22 @@ class Corridor implements IUpdatable
             nextFreeZRight = nearEdgeZ - posterWidthMeters;
 
         return true;
+    }
+
+    // Random point pour les targets
+    Vector3D GetRandomPointInside(float margin, float minDepthRatio, float maxDepthRatio)
+    {
+        float x = random(leftWallX + margin, rightWallX - margin);
+        float y = random(ceilingY + margin, floorLevelY - margin);
+
+        float depth = random(minDepthRatio, maxDepthRatio) * corridorLength;
+        float z = entranceZ - depth;
+
+        return new Vector3D(x, y, z);
+    }
+
+    void ResetPosters()
+    {
+        placedPosters.clear();
     }
 }

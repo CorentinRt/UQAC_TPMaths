@@ -25,7 +25,15 @@ class Target
   boolean CheckCollision(Particle p)
   {
     if (isHit) return false; //Basecase if target is already on
+
+    if (p.CollidesWithSphere(position, radius / pixelsPerMeter))
+    {
+      TriggerHit();
+      return true;
+    }
+    return false;
     
+    /*
     //Distance between particle & target
     float distPtoT = pow(p.position.x - position.x, 2) + pow(p.position.y - position.y, 2) + pow(p.position.z - position.z, 2);
                    
@@ -37,6 +45,7 @@ class Target
       return true;
     }
     return false;
+    */
   }
   
   void TriggerHit()
@@ -47,21 +56,9 @@ class Target
   
   void RespawnElsewhere()
   {
-    // Spawn écran milieu droite
-    float minXPixel = width * 0.50;
-    float maxXPixel = width * 0.90;
-    
-    float minYPixel = height * 0.30;
-    float maxYPixel = height * 0.65;
-    
-    float xPixel = random(minXPixel, maxXPixel);
-    float yPixel = random(minYPixel, maxYPixel);
-    
-    // Conversion pixels -> mètres, relatif au centre de la scène (width/2, height/2)
-    float newX = (xPixel - width / 2.0) / pixelsPerMeter;
-    float newY = (yPixel - height / 2.0) / pixelsPerMeter;
-    
-    position = new Vector3D(newX, newY, 0);
+    float margin = radius / pixelsPerMeter;
+
+    position = corridor.GetRandomPointInside(margin, 0.05f, 0.5f);
     isHit = false;
   }
   

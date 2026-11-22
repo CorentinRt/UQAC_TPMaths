@@ -65,6 +65,9 @@ VectorSlider massOffsetSlider;
 VectorSlider angularVelocitySlider;
 VectorSlider forceOffsetSlider;
 
+// ----- Targets ----- //
+TargetManager targetManager = new TargetManager();
+
 // ----- Fullscreen ----- //
 static 
 {
@@ -137,16 +140,18 @@ void setup()
   angularVelocitySlider = new VectorSlider(5, height - 475, width / 4, 20, 35, "Initial Angular Velocity", color(255, 247, 53), color(255, 249, 123), color(241, 231, 0));
   forceOffsetSlider = new VectorSlider(5, height - 300, width / 4, 20, 35, "Launch Force Offset", color(122, 187, 255), color(201, 227, 255), color(87, 150, 216));
 
-
   // Posters
   for (int i = 1; i <= 15; i++)
   {
       corridor.AddPosterTexture(loadImage("poster" + i + ".jpg"));
   }
 
-  for (int i = 0; i < 30; i++)
+  // Targets
+  for (int i = 0; i < 5; i++)
   {
-      corridor.AddRandomPoster(random(0.2, 0.7));
+      Target target = new Target(new Vector3D(0, 0, 0), 50);  
+      target.RespawnElsewhere();                               
+      targetManager.AddTarget(target);
   }
 }
 
@@ -210,6 +215,10 @@ void draw()
 
     // UpdateManager
     updateManager.UpdateAll(deltaTime);
+
+    // Targets
+    targetManager.CheckCollisions(inGameProjectiles);
+    targetManager.DrawAll();
   }
   
   // Remove projectiles outside of screen on x positive and y positive (doesn't remove balls falling down back on screen)
@@ -217,16 +226,14 @@ void draw()
 
   //Update Values according to Slider :
 
-  //--- TODO: Mettre les vrai valeur de width, height et depth du rigidbody
-  Vector3D RigidbodyWHD = new Vector3D(10.f, 10.f, 10.f);
+  ProjectileStatistics stats = projectileLauncher.GetSelectedProjectileStatistics();
+
+  Vector3D RigidbodyWHD = new Vector3D(stats.width, stats.height, stats.depth);
   Vector3D minValue = new Vector3D(- RigidbodyWHD.x /2, - RigidbodyWHD.y / 2, - RigidbodyWHD.z / 2);
-  Vector3D maxValue = new Vector3D(- RigidbodyWHD.x /2, RigidbodyWHD.y / 2, RigidbodyWHD.z / 2);
+  Vector3D maxValue = new Vector3D(RigidbodyWHD.x /2, RigidbodyWHD.y / 2, RigidbodyWHD.z / 2);
 
   Vector3D massOffset = massOffsetSlider.GetValueVector(minValue, maxValue);
   projectileLauncher.SetMassOffsetToApply(massOffset);
-
-   //--- TODO: Implémenter la valeur de force Offset et Mettre les vrai valeur de width, height et depth du rigidbody
-  Vector3D forceOffset = forceOffsetSlider.GetValueVector(minValue, maxValue);
 
   Vector3D angularVelocity = angularVelocitySlider.GetValueVector(new Vector3D(-20f, -20f, -20f), new Vector3D(20f, 20f, 20f));
   projectileLauncher.SetInitialAngularVelocityToApply(angularVelocity);
@@ -270,11 +277,14 @@ void mousePressed()
     return; 
   }
   
-  //projectileLauncher.LaunchProjectile();
   if (gameManager.state == GameState.PLAYING){
     if (!massOffsetSlider.IsMouseOver() && !forceOffsetSlider.IsMouseOver() && !angularVelocitySlider.IsMouseOver() && !bIsSelectingSlider)
     {
-        LaunchRigidBody(new Vector3D(2, 15, 0), new Vector3D(0, -0.3, -1), 25);
+        //LaunchRigidBody(new Vector3D(2, 15, 0), new Vector3D(0, -0.3, -1), 25);
+        Vector3D offset = forceOffsetSlider.GetValueVector(new Vector3D(-10,-10,-10), new Vector3D(10,10,10));
+        Particle p = projectileLauncher.LaunchProjectile(offset);
+        //pas sur mais on test
+        inGameProjectiles.add(p);
     }
   }
 
@@ -314,16 +324,19 @@ void RemoveOutsideProjectiles()
 
 void LaunchRigidBody(Vector3D startPos, Vector3D direction, float speed)
 {
-  Vector3D velocity = direction.Normalize().MultiplyByScalar(speed);
+  Vector3D offset = forceOffsetSlider.GetValueVector(new Vector3D(-10,-10,-10), new Vector3D(10,10,10));
+  //Vector3D velocity = direction.Normalize().MultiplyByScalar(speed);
+  Vector3D velocity = new Vector3D(0,0,0);
 
   RigidBody rb = new RigidBody(
     5f,
     startPos,
     velocity,
-    new Quaternion(new Vector3D(0, 0, 1), 0),
-    projectileLauncher.currentInitialAngularVelocityToApply, //Vitesse angulaire mais on peut la mettre avec addposatloc
+    new Quaternion(),
+    new Vector3D(0,0,0), //Vitesse angulaire mais on peut la mettre avec addposatloc
     projectileLauncher.currentMassOffsetToApply
   );
   rb.SetBox(10f, 10f, 10f);
   inGameRigidBodies.add(rb);
+  rb.AddForceAtPosition(new Vector3D(0,0,-10000), offset);
 }

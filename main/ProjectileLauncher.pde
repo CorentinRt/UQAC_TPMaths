@@ -5,8 +5,10 @@ public class ProjectileLauncher implements IUpdatable
   int selectedProjectile = 0;
   EProjectileType[] availableProjectiles = {EProjectileType.BALL, EProjectileType.BOULDER, EProjectileType.FIREBALL, EProjectileType.LASER};
   
-  Vector3D direction = new Vector3D(1, 1, 1);
-  Vector3D launchPosition = new Vector3D(-40, 20, 0);
+  Vector3D direction = new Vector3D(1, 1, -1);
+  Vector3D launchPosition = new Vector3D(2, 15, -1);
+  Vector3D offsetForce = new Vector3D(0, 0, -100);
+
   
   float launchCooldown = 0.5f;
   float launchClock = 0.5f;
@@ -92,7 +94,7 @@ public class ProjectileLauncher implements IUpdatable
     }
   }
   
-  public Particle LaunchProjectile()
+  public Particle LaunchProjectile(Vector3D offset)
   {
     launchClock = 0;
     println("direction" + direction.GetText());
@@ -100,20 +102,29 @@ public class ProjectileLauncher implements IUpdatable
     switch( GetSelectedProjectileType() ){
       case BALL:
         println("Projectile Type : " + "BALL");
-        return new Ball(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        Ball ball = new Ball(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        ball.AddForceAtPosition(offsetForce,offset);
+        return ball;
       case BOULDER:
         println("Projectile Type : " + "BOULDER");
-        return new Boulder(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        Boulder boulder = new Boulder(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        boulder.AddForceAtPosition(offsetForce,offset);
+        return boulder; 
       case FIREBALL:
         println("Projectile Type : " + "FIREBALL");
-        return new Fireball(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        Fireball fireball = new Fireball(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        fireball.AddForceAtPosition(offsetForce,offset);
+        return fireball;
       case LASER:
         println("Projectile Type : " + "LASER");
-        return new Laser(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        Laser laser = new Laser(launchPosition.Copy(), direction, currentMassOffsetToApply, currentInitialAngularVelocityToApply);
+        laser.AddForceAtPosition(offsetForce,offset);
+        return laser;
       default:
       println("Projectile Type : " + "DEFAULT");
         RigidBody rb = new RigidBody(1, launchPosition.Copy(), direction, new Quaternion(), currentInitialAngularVelocityToApply, currentMassOffsetToApply);
         rb.SetBox(5, 5, 5);
+        rb.AddForceAtPosition(new Vector3D(0,0,-100000),offset);
         return rb;
     }
   }
@@ -126,7 +137,11 @@ public class ProjectileLauncher implements IUpdatable
   // IUpdatable
   void Update(float deltaTime)
   {
-    Vector3D mousePosition = new Vector3D((mouseX - width/2)/pixelsPerMeter, (mouseY - height/2)/pixelsPerMeter, launchPosition.z);
+    float depth = 100;
+    float depthScale = depth / pixelsPerMeter;
+
+
+    Vector3D mousePosition = new Vector3D((mouseX - width/2)/pixelsPerMeter * depthScale, (mouseY - height/2)/pixelsPerMeter * depthScale, -depth);
     direction = (mousePosition.Substract(launchPosition)).Normalize();
     direction = direction.MultiplyByScalar(pixelsPerMeter * 1.5);
     
