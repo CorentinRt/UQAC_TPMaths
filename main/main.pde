@@ -1,5 +1,6 @@
 import java.util.Map;
 import java.util.HashMap;
+import processing.sound.*;
 
 // ----- Constants ----- //
 Vector3D gravity = new Vector3D(0, 9.81, 0);
@@ -67,6 +68,11 @@ VectorSlider forceOffsetSlider;
 
 // ----- Targets ----- //
 TargetManager targetManager = new TargetManager();
+
+// ----- Sounds ------ //
+SoundFile scoreSound;
+SoundFile musicSound;
+SoundFile shootSound;
 
 // ----- Fullscreen ----- //
 static 
@@ -153,6 +159,11 @@ void setup()
       target.RespawnElsewhere();                               
       targetManager.AddTarget(target);
   }
+
+  // Sounds
+  scoreSound = new SoundFile(this, "score.mp3");
+  musicSound = new SoundFile(this, "music.mp3");
+  shootSound = new SoundFile(this, "shoot.mp3");
 }
 
 // ----- Draw ----- //
@@ -285,6 +296,9 @@ void mousePressed()
         Particle p = projectileLauncher.LaunchProjectile(offset);
         //pas sur mais on test
         inGameProjectiles.add(p);
+
+        // Sound
+        shootSound.play();
     }
   }
 
