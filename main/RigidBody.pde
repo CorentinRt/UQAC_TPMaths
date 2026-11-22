@@ -117,6 +117,11 @@ class RigidBody extends Particle
         
         Matrix3x3 invertInertiaTensor = Matrix3x3.Invert(inertiaTensor);
 
+        Matrix3x3 R = rotationMatrix;
+
+        Matrix3x3 invIWorld = Matrix3x3.Multiply(R, invertInertiaTensor);
+        invIWorld = Matrix3x3.Multiply(invIWorld, Matrix3x3.Transpose(R));
+
         Vector3D acceleration = Vector3D.MultiplyByMatrix(invertInertiaTensor, torqueAccum);
 
         //println("Test : " + acceleration.GetText());
@@ -138,12 +143,6 @@ class RigidBody extends Particle
         IntegrateAngular(deltaTime);
 
         super.UpdatePhysics(deltaTime);
-
-        //println("Torque : " + torqueAccum.GetText());
-
-        //println("Quaternion : (x: " + rotation.x + "y: " + rotation.y + "z: " + rotation.z + "w: " + rotation.w + ")");
-        //println(rotation.EulerAngles().GetText());
-        //println(rotationMatrix.GetText());
     }
 
     void IntegrateAngular(float deltaTime){
@@ -194,11 +193,15 @@ class RigidBody extends Particle
     }
 
     Matrix3x3 ComputeInertiaTensorPrimitive(){
-        Matrix3x3 result = new Matrix3x3();
+        float Ix = (1f/12f) * mass * (height * height + depth * depth);
+        float Iy = (1f/12f) * mass * (width * width + depth * depth);
+        float Iz = (1f/12f) * mass * (width * width + height * height);
 
-        float inertiaMultiplier = (1f/12f) * mass * (width * width + depth * depth);
-
-        result.MultiplyByScalar(inertiaMultiplier);
+        Matrix3x3 result = new Matrix3x3(new float[] {
+            Ix, 0, 0,
+            0, Iy, 0,
+            0, 0, Iz
+        });
 
         return result;
     }
