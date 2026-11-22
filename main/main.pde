@@ -71,6 +71,7 @@ TargetManager targetManager = new TargetManager();
 
 // ----- Sounds ------ //
 SoundFile scoreSound;
+SoundFile musicSound;
 
 // ----- Fullscreen ----- //
 static 
@@ -160,6 +161,7 @@ void setup()
 
   // Sounds
   scoreSound = new SoundFile(this, "score.mp3");
+  musicSound = new SoundFile(this, "music.mp3");
 }
 
 // ----- Draw ----- //

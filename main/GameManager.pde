@@ -69,6 +69,9 @@ class GameManager
         p.DestroyParticle();
     }
     inGameProjectiles.clear();
+
+    // Music
+    musicSound.loop();
   }
   
   void EndGame()
@@ -78,6 +81,9 @@ class GameManager
     gameTimer.Stop();
     
     gameOverDisplayScore.SetText("Partie terminée ! Score final : " + scoreManager.GetScore());
+
+    // Music
+    musicSound.stop();
   }
 
   void WinGame()
@@ -90,6 +96,9 @@ class GameManager
     gameTimer.Stop();
 
     gameOverDisplayScore.SetText("Niveau terminé ! Score final : " + scoreManager.GetScore());
+
+    // Music
+    musicSound.stop();
   }
 
   boolean CheckEndCondition()
