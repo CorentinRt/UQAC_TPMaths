@@ -72,6 +72,7 @@ TargetManager targetManager = new TargetManager();
 // ----- Sounds ------ //
 SoundFile scoreSound;
 SoundFile musicSound;
+SoundFile shootSound;
 
 // ----- Fullscreen ----- //
 static 
@@ -162,6 +163,7 @@ void setup()
   // Sounds
   scoreSound = new SoundFile(this, "score.mp3");
   musicSound = new SoundFile(this, "music.mp3");
+  shootSound = new SoundFile(this, "shoot.mp3");
 }
 
 // ----- Draw ----- //
@@ -294,6 +296,9 @@ void mousePressed()
         Particle p = projectileLauncher.LaunchProjectile(offset);
         //pas sur mais on test
         inGameProjectiles.add(p);
+
+        // Sound
+        shootSound.play();
     }
   }
 
