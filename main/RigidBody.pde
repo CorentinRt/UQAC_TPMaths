@@ -130,7 +130,7 @@ class RigidBody extends Particle
     }
 
     Vector3D ComputeTorque(Vector3D forceApplied, Vector3D l){
-        torqueAccum = torqueAccum.Add(forceApplied.VectorProduct(l));
+        torqueAccum = torqueAccum.Add(l.VectorProduct(forceApplied));
 
         return torqueAccum;
     }
